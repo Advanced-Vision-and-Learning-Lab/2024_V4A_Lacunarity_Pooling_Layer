@@ -1,5 +1,5 @@
-# Transparent Reasoning for Remote Sensing Image Classification:
-**Transparent Reasoning for Remote Sensing Image Classification**
+# Feature extraction through lacunarity Pooling layer:
+** Feature extraction through lacunarity Pooling layer**
 
 _Joshua Peeples and Akshatha Mohan_
 
@@ -18,7 +18,7 @@ In this repository, we provide the paper and code for the "Transparent Reasoning
 
 ## Installation Prerequisites
 
-This code uses python, pytorch, quantus, and captum. 
+This code uses python, pytorch. 
 Please use [[`Pytorch's website`](https://pytorch.org/get-started/locally/)] to download necessary packages.
 [Quantus](https://quantus.readthedocs.io/en/latest/getting_started/installation.html) 
 and [Captum](https://captum.ai/#quickstart) are used for the XAI model. Please follow the instructions on each website to download the modules.
