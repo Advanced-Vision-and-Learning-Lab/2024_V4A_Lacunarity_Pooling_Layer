@@ -18,6 +18,7 @@ import pickle
 import argparse
 import pdb
 
+
 ## PyTorch dependencies
 import torch
 import torch.nn as nn
@@ -30,6 +31,7 @@ from Prepare_Data import Prepare_DataLoaders
 from Utils.Confusion_mats import plot_confusion_matrix, plot_avg_confusion_matrix
 from Utils.Generate_Learning_Curves import Plot_Learning_Curves
 from Datasets.Pytorch_Dataset_Names import Get_Class_Names
+
 
 plt.ioff()
 
@@ -58,14 +60,24 @@ def main(Params):
     # Initialize arrays for results
     cm_stack = np.zeros((len(class_names), len(class_names)))
     cm_stats = np.zeros((len(class_names), len(class_names), NumRuns))
+    df_metrics_avg_rank = []
+    df_metrics_avg_score = []
     FDR_scores = np.zeros((len(class_names), NumRuns))
     log_FDR_scores = np.zeros((len(class_names), NumRuns))
     accuracy = np.zeros(NumRuns)
     MCC = np.zeros(NumRuns)
     
     for split in range(0, NumRuns):
+        torch.manual_seed(split)
+        np.random.seed(split)
+        np.random.seed(split)
+        torch.cuda.manual_seed(split)
+        torch.cuda.manual_seed_all(split)
+        torch.manual_seed(split)
         
-        sub_dir = '{}/{}/{}/{}/Run_{}/'.format(Params['folder'],
+        sub_dir = '{}/{}/{}/{}/{}/{}/Run_{}/'.format(Params['folder'],
+                                            Params["pooling_layer"],
+                                            Params["agg_func"],
                                                  Params['mode'],
                                                  Params['Dataset'],
                                                  Params['Model_name'],
@@ -82,17 +94,19 @@ def main(Params):
     
         # Remove pickle files
         del train_pkl_file, test_pkl_file
+
+        dataloaders_dict = Prepare_DataLoaders(Params, split)
     
-    
-        # Initialize the histogram model for this run
-        model, input_size = initialize_model(model_name, num_classes,
+        model, input_size = initialize_model(model_name, num_classes, dataloaders_dict,
                                                 feature_extract=Params['feature_extraction'],
                                                 use_pretrained=Params['use_pretrained'],
-                                                channels = Params["channels"])
+                                                channels = Params["channels"][Dataset],
+                                                poolingLayer = Params["pooling_layer"],
+                                                aggFunc = Params["agg_func"])
+
     
         # Set device to cpu or gpu (if available)
         device_loc = torch.device(device)
-    
         # Generate learning curves
         Plot_Learning_Curves(train_dict['train_acc_track'],
                              train_dict['train_error_track'],
@@ -104,18 +118,16 @@ def main(Params):
         # If parallelized, need to set change model
         if Params['Parallelize']:
             model = nn.DataParallel(model)
+           
     
         model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
         model = model.to(device)
-    
-        dataloaders_dict = Prepare_DataLoaders(Params, split,
-                                                input_size=input_size)
+
     
         if (Params['TSNE_visual']):
             print("Initializing Datasets and Dataloaders...")
     
-            dataloaders_dict = Prepare_DataLoaders(params, split,
-                                                    input_size=input_size)
+            dataloaders_dict = Prepare_DataLoaders(params, split)
             print('Creating TSNE Visual...')
             
             #Remove fully connected layer
@@ -137,7 +149,7 @@ def main(Params):
             
         # Create CM for testing data
         cm = confusion_matrix(test_dict['GT'], test_dict['Predictions'])
-        
+
         # Create classification report
         report = classification_report(test_dict['GT'], test_dict['Predictions'],
                                        target_names=class_names, output_dict=True)
@@ -172,7 +184,7 @@ def main(Params):
             output.write(str(MCC[split]))
         directory = os.path.dirname(os.path.dirname(sub_dir)) + '/'
     
-        print('**********Run ' +  str(split + 1) + ' Finished**********')
+        print('**********Run ' +  str(split + 1) + '  Finished**********')
     
     directory = os.path.dirname(os.path.dirname(sub_dir)) + '/'
     np.set_printoptions(precision=2)
@@ -181,6 +193,7 @@ def main(Params):
                               title=avg_plot_name, ax=ax5, fontsize=font_size)
     fig5.savefig((directory + 'Average Confusion Matrix.png'), dpi=fig5.dpi)
     plt.close()
+    
     
     # Write to text file
     with open((directory + 'Overall_Accuracy.txt'), "w") as output:
@@ -210,27 +223,35 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                         help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models/Test_Code/',
+    parser.add_argument('--folder', type=str, default='Saved_Models',
                         help='Location to save models')
-    parser.add_argument('--data_selection', type=int, default=6,
-                        help='Dataset selection:  1: FashionMNIST, 2:SVHN, 3:CIFAR10, 4:CIFAR100,5:CIFAR100_Coarse, 6:UCMerced')
+    parser.add_argument('--pooling_layer', type=int, default=3,
+                        help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
+    parser.add_argument('--agg_func', type=int, default=2,
+                        help='Dataset selection: 1:global, 2:local')  
+    parser.add_argument('--data_selection', type=int, default=2,
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
-    parser.add_argument('--train_batch_size', type=int, default=16,
+    parser.add_argument('--train_batch_size', type=int, default=128,
                         help='input batch size for training (default: 128)')
-    parser.add_argument('--val_batch_size', type=int, default=32,
+    parser.add_argument('--val_batch_size', type=int, default=128,
                         help='input batch size for validation (default: 512)')
-    parser.add_argument('--test_batch_size', type=int, default=32,
+    parser.add_argument('--test_batch_size', type=int, default=128,
                         help='input batch size for testing (default: 256)')
+    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
+                        help='enables xai interpretability')
+    parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
+                        help='enables parallel functionality')
     parser.add_argument('--num_epochs', type=int, default=10,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')
     parser.add_argument('--lr', type=float, default=0.001,
                         help='learning rate (default: 0.01)')
-    parser.add_argument('--model', type=str, default='convnext',
+    parser.add_argument('--model', type=str, default='Net',
                         help='backbone architecture to use (default: 0.01)')
     parser.add_argument('--use-cuda', action='store_true', default=True,
                         help='enables CUDA training')

@@ -11,19 +11,15 @@ from torchvision import datasets
 from Datasets.Pytorch_Datasets import *
 
 
+
 def Get_Class_Names(Dataset,data_dir):
 
-    if Dataset == 'UCMerced':
-        dataset = UCMerced_Index(data_dir, split='train',download=True)
+    if Dataset == 'BloodMNIST':
+        dataset = BloodMNIST(data_dir, split='train',download=True)
 
-    elif Dataset == 'EuroSAT':
-        dataset = Eurosat_Index(data_dir, split='train',download=True)  
+    elif Dataset == 'PneumoniaMNIST':
+        dataset = PneumoniaMNIST(data_dir, split='train',download=True)
 
-    elif Dataset == 'Resisc45':
-        dataset = Resisc45_Index(data_dir, split='train',download=True)
-    
-    elif Dataset == 'Eurosat_MSI':
-        dataset = Eurosat_MSI(data_dir, split='train',download=True)
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 

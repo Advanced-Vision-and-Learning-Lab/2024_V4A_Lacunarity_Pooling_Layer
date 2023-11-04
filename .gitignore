@@ -6,10 +6,7 @@ Saved_Models/
 *.pyc
 __pycache__/
 Utils/__pycache__
-Datasets/EuroSAT
-Datasets/Eurosat_MSI
-Datasets/FashionMNIST
-Datasets/Resisc45
-Datasets/UCMerced
+Datasets/BloodMNIST
+Datasets/PneumoniaMNIST
 Datasets/MedMNIST
-
+Images

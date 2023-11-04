@@ -2,12 +2,11 @@
 """
 Return index of built in Pytorch datasets 
 """
-import PIL
 import numpy as np
 from torch.utils.data import Dataset
-from torchvision.datasets import CIFAR100
 from torchvision import datasets
 import pdb
+
 import torch
 import torchvision.transforms as T
 
@@ -23,32 +22,25 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
           
 class MedMNIST(Dataset):
 
-    flag_to_class = {
-        "pneumoniamnist": PneumoniaMNIST,
-    }
-
-    flag = 'pneumoniamnist'
+    flag = ...
 
     def __init__(self,
                  root,
                  split='train',
                  transform=None,
                  target_transform=None,
-                 download=False):
+                 download=True
+                 ):
         ''' dataset
         :param split: 'train', 'val' or 'test', select subset
         :param transform: data transformation
         :param target_transform: target transformation
     
         '''
-
+        self.c=5
         self.info = INFO[self.flag]
         self.as_rgb = True
         self.root = root
-        task = self.info['task']
-        num_channels = self.info['n_channels']
-        num_classes = len(self.info['label'])
-
         if download:
             self.download()
 
@@ -62,6 +54,7 @@ class MedMNIST(Dataset):
         self.split = split
         self.transform = transform
         self.target_transform = target_transform
+        self.classes = list(self.info["label"].values())
 
         if self.split == 'train':
             self.img = npz_file['train_images']
@@ -75,9 +68,9 @@ class MedMNIST(Dataset):
 
     def __getitem__(self, index):
         img, target = self.img[index], self.label[index].astype(int)
-        img = np.stack([img / 255.0] * (3 if self.as_rgb else 1), axis=0)
-        img = img.transpose(1,2,0)
         img = Image.fromarray(np.uint8(img))
+
+        # img = img.convert('RGB')
 
         if self.transform is not None:
             img = self.transform(img)
@@ -89,7 +82,26 @@ class MedMNIST(Dataset):
 
     def __len__(self):
         return self.img.shape[0]
-    
+
+    def __repr__(self):
+        '''Adapted from torchvision.
+        '''
+        _repr_indent = 4
+        head = "Dataset " + self.__class__.__name__
+
+        body = ["Number of datapoints: {}".format(self.__len__())]
+        body.append("Root location: {}".format(self.root))
+        body.append("Split: {}".format(self.split))
+        body.append("Task: {}".format(self.info["task"]))
+        body.append("Number of channels: {}".format(self.info["n_channels"]))
+        body.append("Meaning of labels: {}".format(self.info["label"]))
+        body.append("Number of samples: {}".format(self.info["n_samples"]))
+        body.append("Description: {}".format(self.info["description"]))
+        body.append("License: {}".format(self.info["license"]))
+
+        lines = [head] + [" " * _repr_indent + line for line in body]
+        return '\n'.join(lines)
+
     def download(self):
         try:
             from torchvision.datasets.utils import download_url
@@ -101,7 +113,49 @@ class MedMNIST(Dataset):
             raise RuntimeError('Something went wrong when downloading! ' +
                                'Go to the homepage to download manually. ' +
                                'https://github.com/MedMNIST/MedMNIST')
-        
+
+
+class PathMNIST(MedMNIST):
+    flag = "pathmnist"
+
+class BloodMNIST(MedMNIST):
+    flag = "bloodmnist"
+
+class OCTMNIST(MedMNIST):
+    flag = "octmnist"
+
+
 class PneumoniaMNIST(MedMNIST):
     flag = "pneumoniamnist"
+
+
+class ChestMNIST(MedMNIST):
+    flag = "chestmnist"
+
+
+class DermaMNIST(MedMNIST):
+    flag = "dermamnist"
+
+
+class RetinaMNIST(MedMNIST):
+    flag = "retinamnist"
+
+
+class BreastMNIST(MedMNIST):
+    flag = "breastmnist"
+
+
+class OrganMNISTAxial(MedMNIST):
+    flag = "organmnist_axial"
+
+
+class OrganMNISTCoronal(MedMNIST):
+    flag = "organmnist_coronal"
+
+
+class OrganMNISTSagittal(MedMNIST):
+    flag = "organmnist_sagittal"
+    
+
+
 

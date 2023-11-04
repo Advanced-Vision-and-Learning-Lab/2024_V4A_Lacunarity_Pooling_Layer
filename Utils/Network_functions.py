@@ -16,9 +16,16 @@ from torchvision import models
 
 ## Local external libraries
 from barbar import Bar
-from .pytorchtools import EarlyStopping
+from Utils.pytorchtools import EarlyStopping
 import pdb
+import os
+import torch.nn.functional as F
+from Utils.LacunarityPoolingLayer import Global_Lacunarity
+from Utils.CustomNN import Net
+from Utils.Compute_sizes import get_feat_size
+import matplotlib.pyplot as plt
 
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 def train_model(model, dataloaders, criterion, optimizer, device,
                 num_epochs=25, scheduler=None):
     
@@ -29,7 +36,7 @@ def train_model(model, dataloaders, criterion, optimizer, device,
     train_error_history = []
     val_error_history = []
     
-    early_stopping = EarlyStopping(patience=10, verbose=True)
+    early_stopping = EarlyStopping(patience=30, verbose=True)
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -53,9 +60,10 @@ def train_model(model, dataloaders, criterion, optimizer, device,
                 # Iterate over data.
                 for idx, (inputs, labels, index) in enumerate(Bar(dataloaders[phase])):
                     inputs = inputs.to(device)
+                    inputs.requires_grad = True
                     labels = labels.to(device)
                     index = index.to(device)
-        
+  
                     # zero the parameter gradients
                     optimizer.zero_grad()
                   
@@ -65,9 +73,10 @@ def train_model(model, dataloaders, criterion, optimizer, device,
                         
                         # Get model outputs and calculate loss
                         outputs = model(inputs)
-                        
-                        #Backward produces 2 losses
-                        loss = criterion(outputs, labels.squeeze(1).long()).mean()
+                        labels=labels.squeeze().long()
+                        # labels = labels.clone().detach()
+                        loss = criterion(outputs, labels).mean()
+                        #pdb.set_trace()
                      
                         _, preds = torch.max(outputs, 1)
         
@@ -184,20 +193,24 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
             index = index.to(device)
     
             #Run data through best model
+            #pdb.set_trace()
             outputs = model(inputs)
          
             #Make model predictions
             _, preds = torch.max(outputs, 1)
             
             #Compute loss
-            loss = criterion(outputs, labels.squeeze(1).long()).mean() ##########CHANGED
-
+            labels=labels.squeeze().long()
+            # labels = labels.clone().detach()
+            loss = criterion(outputs, labels).mean()
+            
             #If test, accumulate labels for confusion matrix
             GT = np.concatenate((GT,labels.detach().cpu().numpy()),axis=None)
             Predictions = np.concatenate((Predictions,preds.detach().cpu().numpy()),axis=None)
             Index = np.concatenate((Index,index.detach().cpu().numpy()),axis=None)
             
             #Keep track of correct predictions
+            #pdb.set_trace()
             running_corrects += torch.sum(preds == labels.data)
             
             # statistics
@@ -216,45 +229,28 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     
     return test_dict
 
-def lacunarity_global(x, eps = 10e-6):
-    '''
-    Lacunarity definition from Fast Unsupervised Seafloor Characterization
-    in Sonar Imagery Using Lacunarity
-    '''
-    ##Convert input to tensor
-    x_tensor = torch.tensor(x).unsqueeze(0).unsqueeze(0).float()
-    squared_x_tensor = x_tensor ** 2
-    n_pts = np.prod(np.asarray(x_tensor.shape))
-    #Define sum pooling 
-    gap_layer = nn.AdaptiveAvgPool2d(1)(x_tensor)
-    
-    #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
-    L_numerator = ((n_pts)**2) * (nn.AdaptiveAvgPool2d(1)(squared_x_tensor))
-    L_denominator = (n_pts * gap_layer)**2
 
-    #Lacunarity is L_numerator / L_denominator - 1
-    L_torch = (L_numerator / L_denominator) - 1
-    
-    # Convert back to numpy array
-    L_torch = L_torch.squeeze(0).squeeze(0)
-    L_numpy = L_torch.detach().cpu().numpy()
-
-    return L_numpy
-
-    
-def initialize_model(model_name, num_classes,feature_extract=False,
-                     use_pretrained=False, channels = 3):
+def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
+                     use_pretrained=False, channels = 3, poolingLayer="max", aggFunc="global"):
     
     # Initialize these variables which will be set in this if statement. Each of these
-    #   variables is model specific.
-    model_ft = None
-    input_size = 0
-
+    # variables is model specific.
     model_ft = None
     input_size = 0
   
     #Select backbone architecture
-    if model_name == "resnet18":
+    if model_name == "convnext":
+        model_ft = models.convnext_tiny(pretrained=use_pretrained,
+                                        weights='ConvNeXt_Tiny_Weights.IMAGENET1K_V1')
+        set_parameter_requires_grad(model_ft, feature_extract)
+        if not(channels == 3):
+            model_ft.features[0][0] = nn.Conv2d(channels, 96, kernel_size=(4,4),stride=(4,4))
+        
+        num_ftrs = model_ft.classifier[2].in_features
+        model_ft.classifier[2] = nn.Linear(model_ft.classifier[2].in_features, num_classes)
+        input_size = 224
+
+    elif model_name == "resnet18":
         """ Resnet18
         """
         model_ft = models.resnet18(pretrained=use_pretrained)
@@ -263,73 +259,36 @@ def initialize_model(model_name, num_classes,feature_extract=False,
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
-    elif model_name == "resnet50":
-        """ Resnet50
-        """
-        model_ft = models.resnet50(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-        
-    elif model_name == "resnet50_wide":
-        model_ft = models.wide_resnet50_2(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-        
-    elif model_name == "resnet50_next":
-        model_ft = models.resnext50_32x4d(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-        
-    elif model_name == "densenet121":
-        model_ft = models.densenet121(pretrained=use_pretrained,memory_efficient=True)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.classifier.in_features
-        model_ft.classifier = nn.Sequential()
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-    elif model_name == "convnext":
-        model_ft = models.convnext_base(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        if not(channels == 3):
-            model_ft.features[0][0] = nn.Conv2d(channels, 128, kernel_size=(4,4),stride=(4,4))
-        
-        num_ftrs = model_ft.classifier[2].in_features
-        model_ft.classifier[2] = nn.Linear(model_ft.classifier[2].in_features, num_classes)
-        
-        #Option 1: Replace first convolution layer to match input bands
-        #model_ft.features[0][0] = nn.Conv2d(13,128,kernel_size=(4,4),stride=(4,4))
-        
-        #Option 2: Add 1x1 conv to reduce number of input channels to 3
-        #model_ft = nn.Sequential(nn.Conv2d(13,3,kernel_size=(1,1)),model_ft)        
-        input_size = 224
-
     elif model_name == "vit":
         model_ft = models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT)
         set_parameter_requires_grad(model_ft, feature_extract)
         if not(channels == 3):
-            model_ft.conv_proj = nn.Conv2d(13, 768, kernel_size=(16,16),stride=(16,16)) 
+             model_ft.conv_proj = nn.Conv2d(channels, 768, kernel_size=(16,16),stride=(16,16)) 
         num_ftrs = model_ft.heads.head.in_features
         model_ft.heads.head = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
-    elif model_name == "Swin":
-        model_ft = models.swin_t(weights=models.Swin_T_Weights.DEFAULT)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.head.in_features
-        model_ft.head = nn.Linear(num_ftrs, num_classes)
 
-    elif model_name == "retinaNet":
-        model_ft = models.detection.retinanet_resnet50_fpn_v2()
-    
+    elif model_name == "resnet18_lacunarity":
+        model_ft = models.resnet18(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        model_ft.avgpool = Global_Lacunarity(kernel=[2,2], stride=[2,2])
+        
+        # Modify the final fully connected layer for the desired number of classes
+        num_ftrs = model_ft.fc.in_features
+        
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+    elif model_name == "Net":
+        num_ftrs = get_feat_size(pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
+        model_ft = Net(num_ftrs, num_classes=num_classes, pooling_layer=poolingLayer, agg_func=aggFunc)
+        if not(channels == 3):
+            model_ft.feature_extractor[0] = nn.Conv2d(channels, out_channels=3, kernel_size=3, stride=2)
+        input_size = 224
+
+        
     else:
         raise RuntimeError('{} not implemented'.format(model_name))
-    
     return model_ft, input_size
 

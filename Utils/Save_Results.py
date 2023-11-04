@@ -15,7 +15,9 @@ import torch
 def save_results(train_dict, test_dict, split, Network_parameters, num_params,
                  model_ft):
     # Baseline model
-    filename = '{}/{}/{}/{}/Run_{}/'.format(Network_parameters['folder'],
+    filename = '{}/{}/{}/{}/{}/{}/Run_{}/'.format(Network_parameters['folder'],
+                                            Network_parameters["pooling_layer"],
+                                            Network_parameters["agg_func"],
                                              Network_parameters['mode'],
                                              Network_parameters['Dataset'],
                                              Network_parameters['Model_name'],

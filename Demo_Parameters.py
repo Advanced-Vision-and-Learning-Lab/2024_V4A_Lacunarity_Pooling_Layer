@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Parameters for LACE experiments
+Parameters for XAI experiments
 """
 import os
 import sys
@@ -11,20 +11,28 @@ def Parameters(args):
     #Flag for if results are to be saved out
     #Set to True to save results out and False to not save results
     save_results = args.save_results
+
+    #use xai interpretability
+    xai = args.xai
     
     #Location to store trained models
     #Always add slash (/) after folder name
     folder = args.folder
+    pooling_layer_selection = args.pooling_layer
+    pooling_layer_names = {1:'max', 2:'avg', 3:'lacunarity'}
+    pooling_layer = pooling_layer_names[pooling_layer_selection]
+
+    agg_func_selection = args.agg_func
+    agg_func_names = {1:'global', 2:'local'}
+    agg_func = agg_func_names[agg_func_selection]
     
     #Select dataset
     data_selection = args.data_selection
-    Dataset_names = {1:'MedMNIST'}
+    Dataset_names = {1:'PneumoniaMNIST',
+                     2:'BloodMNIST'}
     
     #Flag for feature extraction. False, train whole model. True, only update
-    #fully connected and histogram layers parameters (default: False)
     #Flag to use pretrained model from ImageNet or train from scratch (default: True)
-    #Flag to add BN to convolutional features (default:True)
-    #Location/Scale at which to apply histogram layer (default: 5 (at the end))
     feature_extraction = args.feature_extraction
     use_pretrained = args.use_pretrained
     add_bn = True
@@ -33,7 +41,6 @@ def Parameters(args):
     #Set learning rate for new and pretrained (pt) layers
     lr = args.lr
     
-    #Parameters of Histogram Layer
     #For no padding, set 0. If padding is desired,
     #enter amount of zero padding to add to each side of image
     #(did not use padding in paper, recommended value is 0 for padding)
@@ -84,7 +91,9 @@ def Parameters(args):
     TSNE_visual = True
     Num_TSNE_images = 5000
     
-    #Set to True if more than one GPU was used
+    #Set to True if more than one GPU was used 
+    #False for UCMerced dataset only
+    #True for EuroSAT and MSTAR dataset
     Parallelize_model = False
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
@@ -94,7 +103,8 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'MedMNIST': './Datasets/MedMNIST'}
+    Data_dirs = {'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
+                 'BloodMNIST': 'Datasets/BloodMNIST'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -102,19 +112,23 @@ def Parameters(args):
     Model_name = args.model
     
     #channels in each dataset
-    channels = {'MedMNIST': 3}
+    channels = {'PneumoniaMNIST': 1,
+                'BloodMNIST': 3}
     
     #Number of classes in each dataset
-    num_classes = {'MedMNIST': 2}
+    num_classes = {'PneumoniaMNIST': 2,
+                'BloodMNIST': 8}
     
     #Number of runs and/or splits for each dataset
-    Splits = {'MedMNIST': 3}
+    Splits = {'PneumoniaMNIST': 3,
+                'BloodMNIST': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]
     
     #Return dictionary of parameters
     Params = {'save_results': save_results,'folder': folder,
+              'pooling_layer': pooling_layer, 'agg_func': agg_func,
             'Dataset': Dataset, 'data_dir': data_dir,
             'num_workers': num_workers, 'mode': mode,
             'lr': lr,'step_size': step_size,'gamma': gamma, 
@@ -123,6 +137,7 @@ def Parameters(args):
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
+            'xai': xai,
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,

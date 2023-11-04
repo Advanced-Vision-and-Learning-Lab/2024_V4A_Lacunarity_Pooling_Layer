@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
+Main script for XAI experiments
 """
 import argparse
 
@@ -15,7 +15,8 @@ from Demo_Parameters import Parameters
 from Utils.Save_Results import save_results
 from Prepare_Data import Prepare_DataLoaders
 from Utils.Network_functions import initialize_model, train_model, test_model
-
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #Turn off plotting
 plt.ioff()
 
@@ -48,13 +49,19 @@ def main(Params):
         torch.cuda.manual_seed(split)
         torch.cuda.manual_seed_all(split)
         torch.manual_seed(split)
-                
+
+        # Create training and validation dataloaders
+        print("Initializing Datasets and Dataloaders...")
+        dataloaders_dict = Prepare_DataLoaders(Params, split)         
+
 
         # Initialize the histogram model for this run
-        model_ft, input_size = initialize_model(model_name, num_classes,
+        model_ft, input_size = initialize_model(model_name, num_classes, dataloaders_dict,
                                                 feature_extract=Params['feature_extraction'],
                                                 use_pretrained=Params['use_pretrained'],
-                                                channels = Params["channels"][Dataset])
+                                                channels = Params["channels"][Dataset],
+                                                poolingLayer = Params["pooling_layer"],
+                                                aggFunc = Params["agg_func"])
 
         # Send the model to GPU if available, use multiple if available
         if torch.cuda.device_count() > 1:
@@ -63,9 +70,7 @@ def main(Params):
             model_ft = nn.DataParallel(model_ft)
         model_ft = model_ft.to(device)
 
-        # Create training and validation dataloaders
-        print("Initializing Datasets and Dataloaders...")
-        dataloaders_dict = Prepare_DataLoaders(Params, split, input_size=input_size)
+
 
             
         # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
@@ -77,7 +82,7 @@ def main(Params):
     
         #Loss function
         criterion = nn.CrossEntropyLoss()
-       
+     
         scheduler = None
 
         # Train and evaluate
@@ -86,6 +91,7 @@ def main(Params):
                                   scheduler=scheduler)
         test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
                                 device, model_weights = train_dict['best_model_wts'])
+
 
         # Save results
         if (Params['save_results']):
@@ -104,27 +110,35 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                         help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models/Test_Code/',
+    parser.add_argument('--folder', type=str, default='Saved_Models',
                         help='Location to save models')
-    parser.add_argument('--data_selection', type=int, default=1,
-                        help='Dataset selection: 1:MedMNIST')
-    parser.add_argument('--feature_extraction', default=False, action=argparse.BooleanOptionalAction,
+    parser.add_argument('--pooling_layer', type=int, default=3,
+                        help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
+    parser.add_argument('--agg_func', type=int, default=2,
+                        help='Dataset selection: 1:global, 2:local')    
+    parser.add_argument('--data_selection', type=int, default=2,
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST')
+    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
+    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
+                        help='enables xai interpretability')
+    parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
+                        help='enables parallel functionality')
     parser.add_argument('--train_batch_size', type=int, default=128,
                         help='input batch size for training (default: 128)')
     parser.add_argument('--val_batch_size', type=int, default=128,
                         help='input batch size for validation (default: 512)')
     parser.add_argument('--test_batch_size', type=int, default=128,
-                        help='input batch size for testing (default:c 256)')
-    parser.add_argument('--num_epochs', type=int, default=30,
+                        help='input batch size for testing (default: 256)')
+    parser.add_argument('--num_epochs', type=int, default=1,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')
     parser.add_argument('--lr', type=float, default=0.001,
                         help='learning rate (default: 0.01)')
-    parser.add_argument('--model', type=str, default='resnet18',
+    parser.add_argument('--model', type=str, default='Net',
                         help='backbone architecture to use (default: 0.01)')
     parser.add_argument('--use-cuda', action='store_true', default=True,
                         help='enables CUDA training')
