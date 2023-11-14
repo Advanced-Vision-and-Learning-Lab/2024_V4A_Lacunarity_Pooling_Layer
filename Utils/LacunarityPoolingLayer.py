@@ -5,6 +5,7 @@ from torchvision import transforms
 import pdb
 import matplotlib.pyplot as plt
 import math
+import torch.nn.functional as F
 
 
 class Global_Lacunarity(nn.Module):
@@ -59,8 +60,10 @@ class Global_Lacunarity(nn.Module):
         #pdb.set_trace()
         squared_x_tensor = x ** 2
 
-        #Get number of samples 
+        #Get number of samples
         n_pts = np.prod(np.asarray(self.kernel))
+        if (self.kernel == None):
+            n_pts = np.prod(np.asarray(x.shape[-2:]))
 
 
         #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
@@ -73,20 +76,36 @@ class Global_Lacunarity(nn.Module):
         y = (torch.pow(x.abs() + 1, lambda_param) - 1) / lambda_param
         return y
     
-    
-if __name__ == "__main__":
 
-    use_cuda = True
-    device = torch.device("cuda" if use_cuda else "cpu")
+
+
+class CustomPoolingLayer(nn.Module):
+    def __init__(self, r=3, window_size=3):
+        super(CustomPoolingLayer, self).__init__()
+        self.r = r
+        self.window_size = window_size
+
+
+    def forward(self, image):
+        windows_horizontal = []
+        Lr_all_horizontal = []
+
+        for i in range(image.size(2) - self.window_size + 1):
+            for j in range(image.size(3) - self.window_size + 1):
+                window = image[:, :, i:i+self.window_size, j:j+self.window_size]
+                windows_horizontal.append(window)
+
+                max_pool = nn.MaxPool2d(kernel_size=window.shape[2])
+                max_pool_output = F.max_pool2d(window, kernel_size=window.shape[2])
+                min_pool_output = -F.max_pool2d(-window, kernel_size=window.shape[2])
+                nr = torch.ceil(max_pool_output / self.r) - torch.ceil(min_pool_output / self.r) - 1
+                Mr = torch.sum(nr)
+                Q_mr = nr / (self.window_size - self.r + 1)
+                L_r = (Mr.item()**2) * Q_mr / (Mr * Q_mr)**2
+                Lr_all_horizontal.append(L_r)
+                pdb.set_trace()
+
+        return Lr_all_horizontal
     
-    #load image, if you use grayscale iamge, cosine similarity will be 1 (input dim = 1)
-    X = np.array( [[0.6078, 0.6078, 0.6000],[0.9216, 0.9137, 0.9059],[0.5686, 0.5686, 0.5686]], dtype=np.int16)
-    
-    #Convert to Pytorch tensor (Batch x num channels x height x width)
-    X = transforms.ToTensor()(X).unsqueeze(0).float()
-    
-    #Compute similarity feature (currenlty have 'norm' or 'cosine')
-    channels = X.shape[1]
-    Lancunarity_Layer = Global_Lacunarity()
-    similarity_features = Lancunarity_Layer(X)
+
 

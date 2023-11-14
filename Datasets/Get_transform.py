@@ -14,6 +14,9 @@ from torchvision import transforms
 import torch.nn as nn
 
 
+## Local external libraries
+from Datasets import preprocess
+
 def get_transform(Network_parameters, input_size=224):
     Dataset = Network_parameters['Dataset']
     data_dir = Network_parameters['data_dir']
@@ -23,14 +26,10 @@ def get_transform(Network_parameters, input_size=224):
         std = [1]
         data_transforms = {
         'train': transforms.Compose([
-            transforms.Resize(Network_parameters['resize_size']),
-            transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[.5], std=[.5]),
         ]),
         'test':  transforms.Compose([
-            transforms.Resize(Network_parameters['resize_size']),
-            transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[.5], std=[.5]),
         ]),

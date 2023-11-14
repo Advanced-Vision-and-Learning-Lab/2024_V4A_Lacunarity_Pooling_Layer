@@ -27,9 +27,10 @@ class MedMNIST(Dataset):
     def __init__(self,
                  root,
                  split='train',
+                 as_rgb = False,
                  transform=None,
                  target_transform=None,
-                 download=True
+                 download=True,
                  ):
         ''' dataset
         :param split: 'train', 'val' or 'test', select subset
@@ -39,7 +40,7 @@ class MedMNIST(Dataset):
         '''
         self.c=5
         self.info = INFO[self.flag]
-        self.as_rgb = True
+        self.as_rgb = as_rgb
         self.root = root
         if download:
             self.download()
@@ -69,7 +70,6 @@ class MedMNIST(Dataset):
     def __getitem__(self, index):
         img, target = self.img[index], self.label[index].astype(int)
         img = Image.fromarray(np.uint8(img))
-
         # img = img.convert('RGB')
 
         if self.transform is not None:
@@ -114,18 +114,68 @@ class MedMNIST(Dataset):
                                'Go to the homepage to download manually. ' +
                                'https://github.com/MedMNIST/MedMNIST')
 
+class MedMNIST2D(MedMNIST):
+
+    def __getitem__(self, index):
+        '''
+        return: (without transform/target_transofrm)
+            img: PIL.Image
+            target: np.array of `L` (L=1 for single-label)
+        '''
+        img, target = self.img[index], self.label[index].astype(int)
+        img = Image.fromarray(img)
+        if self.as_rgb:
+            img = img.convert('RGB')
+
+        if self.transform is not None:
+            img = self.transform(img)
+
+        if self.target_transform is not None:
+            target = self.target_transform(target)
+
+        return img, target, index
+
+    def save(self, folder, postfix="png", write_csv=True):
+
+        from medmnist.utils import save2d
+
+        save2d(imgs=self.img,
+               labels=self.label,
+               img_folder=os.path.join(folder, self.flag),
+               split=self.split,
+               postfix=postfix,
+               csv_path=os.path.join(folder, f"{self.flag}.csv") if write_csv else None)
+
+    def montage(self, length=20, replace=False, save_folder=None):
+        from medmnist.utils import montage2d
+
+        n_sel = length * length
+        sel = np.random.choice(self.__len__(), size=n_sel, replace=replace)
+
+        montage_img = montage2d(imgs=self.img,
+                                n_channels=self.info['n_channels'],
+                                sel=sel)
+
+        if save_folder is not None:
+            if not os.path.exists(save_folder):
+                os.makedirs(save_folder)
+            montage_img.save(os.path.join(save_folder,
+                                          f"{self.flag}_{self.split}_montage.jpg"))
+
+        return montage_img
+
 
 class PathMNIST(MedMNIST):
     flag = "pathmnist"
 
-class BloodMNIST(MedMNIST):
+class BloodMNIST(MedMNIST2D):
     flag = "bloodmnist"
 
 class OCTMNIST(MedMNIST):
     flag = "octmnist"
 
 
-class PneumoniaMNIST(MedMNIST):
+class PneumoniaMNIST(MedMNIST2D):
     flag = "pneumoniamnist"
 
 

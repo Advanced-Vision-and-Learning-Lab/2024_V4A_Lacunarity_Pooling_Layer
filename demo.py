@@ -116,7 +116,7 @@ def parse_args():
                         help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
     parser.add_argument('--agg_func', type=int, default=2,
                         help='Dataset selection: 1:global, 2:local')    
-    parser.add_argument('--data_selection', type=int, default=2,
+    parser.add_argument('--data_selection', type=int, default=1,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
@@ -132,7 +132,7 @@ def parse_args():
                         help='input batch size for validation (default: 512)')
     parser.add_argument('--test_batch_size', type=int, default=128,
                         help='input batch size for testing (default: 256)')
-    parser.add_argument('--num_epochs', type=int, default=1,
+    parser.add_argument('--num_epochs', type=int, default=100,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')
