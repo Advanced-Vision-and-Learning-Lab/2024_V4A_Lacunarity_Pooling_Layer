@@ -74,8 +74,10 @@ class Global_Lacunarity(nn.Module):
         x = (L_numerator / (L_denominator + self.eps)) - 1
         lambda_param = 0.5 #boxcox transformation
         y = (torch.pow(x.abs() + 1, lambda_param) - 1) / lambda_param
+        pdb.set_trace()
         return y
     
+
 
 
 
@@ -85,27 +87,42 @@ class CustomPoolingLayer(nn.Module):
         self.r = r
         self.window_size = window_size
 
-
     def forward(self, image):
-        windows_horizontal = []
-        Lr_all_horizontal = []
+        image_scaled = image * 255
+        batch_size, channels, image_height, image_width = image.size()
 
-        for i in range(image.size(2) - self.window_size + 1):
-            for j in range(image.size(3) - self.window_size + 1):
-                window = image[:, :, i:i+self.window_size, j:j+self.window_size]
-                windows_horizontal.append(window)
+        # Initialize variables to accumulate results across batches
+        all_L_r = []
 
-                max_pool = nn.MaxPool2d(kernel_size=window.shape[2])
-                max_pool_output = F.max_pool2d(window, kernel_size=window.shape[2])
-                min_pool_output = -F.max_pool2d(-window, kernel_size=window.shape[2])
+        # Iterate over batches
+        for batch in range(batch_size):
+            # Iterate over channels
+            channel_L_r = []
+            for channel in range(channels):
+                # Extract the current batch's unfolded window for the current channel
+                windows_horizontal = image_scaled[batch, channel].unfold(0, self.window_size, 1).unfold(1, self.window_size, 1)
+                windows_horizontal = windows_horizontal.squeeze(0)
+
+                # Perform operations independently for each window in the current channel
+                max_pool = nn.MaxPool2d(kernel_size=self.window_size)
+                max_pool_output = max_pool(windows_horizontal)
+                min_pool_output = -max_pool(-windows_horizontal)
+
                 nr = torch.ceil(max_pool_output / self.r) - torch.ceil(min_pool_output / self.r) - 1
                 Mr = torch.sum(nr)
                 Q_mr = nr / (self.window_size - self.r + 1)
-                L_r = (Mr.item()**2) * Q_mr / (Mr * Q_mr)**2
-                Lr_all_horizontal.append(L_r)
-                pdb.set_trace()
+                L_r = (Mr**2) * Q_mr / (Mr * Q_mr)**2
 
-        return Lr_all_horizontal
-    
+                # Accumulate the result for the current channel
+                channel_L_r.append(L_r)
+
+            # Stack results across channels for the current batch
+            channel_L_r = torch.stack(channel_L_r)
+            all_L_r.append(channel_L_r)
+
+        # Stack results across batches
+        all_L_r = torch.stack(all_L_r)
+
+        return all_L_r
 
 

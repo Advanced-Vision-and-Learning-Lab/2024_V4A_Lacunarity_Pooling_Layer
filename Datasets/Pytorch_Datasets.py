@@ -71,7 +71,7 @@ class MedMNIST(Dataset):
         img, target = self.img[index], self.label[index].astype(int)
         img = Image.fromarray(np.uint8(img))
         # img = img.convert('RGB')
-
+        
         if self.transform is not None:
             img = self.transform(img)
 
@@ -168,14 +168,14 @@ class MedMNIST2D(MedMNIST):
 class PathMNIST(MedMNIST):
     flag = "pathmnist"
 
-class BloodMNIST(MedMNIST2D):
+class BloodMNIST(MedMNIST):
     flag = "bloodmnist"
 
 class OCTMNIST(MedMNIST):
     flag = "octmnist"
 
 
-class PneumoniaMNIST(MedMNIST2D):
+class PneumoniaMNIST(MedMNIST):
     flag = "pneumoniamnist"
 
 

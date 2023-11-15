@@ -22,21 +22,17 @@ def get_transform(Network_parameters, input_size=224):
     data_dir = Network_parameters['data_dir']
     
     if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST':
-        mean = [0]
-        std = [1]
         data_transforms = {
-        'train': transforms.Compose([
+        'train':
             transforms.ToTensor(),
-            transforms.Normalize(mean=[.5], std=[.5]),
-        ]),
-        'test':  transforms.Compose([
+ 
+        'test':  
             transforms.ToTensor(),
-            transforms.Normalize(mean=[.5], std=[.5]),
-        ]),
+ 
     }
         
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     
-    return data_transforms, mean, std
+    return data_transforms
 

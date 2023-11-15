@@ -284,7 +284,7 @@ def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
         num_ftrs = get_feat_size(pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
         model_ft = Net(num_ftrs, num_classes=num_classes, pooling_layer=poolingLayer, agg_func=aggFunc)
         if not(channels == 3):
-            model_ft.conv1 = nn.Conv2d(channels, out_channels=1, kernel_size=3, stride=2)
+            model_ft.conv1 = nn.Conv2d(channels, out_channels=3, kernel_size=3, stride=2)
         input_size = 224
 
         

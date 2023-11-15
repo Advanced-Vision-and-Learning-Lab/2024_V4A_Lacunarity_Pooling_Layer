@@ -38,19 +38,21 @@ class Net(nn.Module):
             elif pooling_layer == "avg":                                                                                                                                                                                                                            
                 self.pooling_layer = nn.AvgPool2d((3, 3), stride=(2, 2), padding=(0, 0))
             elif pooling_layer == "lacunarity":
-                self.pooling_layer = CustomPoolingLayer()
+                self.pooling_layer = Global_Lacunarity(kernel=(3,3), stride =(2,2))
+                """ self.pooling_layer = Global_Lacunarity(kernel=(3,3), stride =(2,2)) """
 
 
         self.conv1 = nn.Conv2d(3, out_channels=3, kernel_size=3, stride=2)
         self.relu1 = nn.ReLU()
 
-        self.fc = nn.Linear(num_ftrs, num_classes)
+        self.fc = nn.Linear(363, num_classes)
 
 
 
     def forward(self, x):
         x = self.conv1(x)
         x = self.relu1(x)
+        x = x * 255
         x = self.pooling_layer(x)
         x = torch.flatten(x, 1)
         x = self.fc(x)

@@ -49,16 +49,14 @@ def Prepare_DataLoaders(Network_parameters, split):
     # Data transformations as described in:
     # http://openaccess.thecvf.com/content_cvpr_2018/papers/Xue_Deep_Texture_Manifold_CVPR_2018_paper.pdf
     global data_transforms
-    data_transforms, mean, std = get_transform(Network_parameters, input_size=224)
-    Network_parameters['mean'] = mean
-    Network_parameters['std'] = std
+    data_transforms = get_transform(Network_parameters, input_size=224)
        
-    if Dataset == 'BloodMNIST': #See people also use .5, .5 for normalization
+    if Dataset == 'BloodMNIST':
         train_dataset = BloodMNIST(data_dir, split='train', transform = data_transforms['train'], target_transform=None)
         test_dataset = BloodMNIST(data_dir, split='test', transform = data_transforms['test'], target_transform=None)
         val_dataset = BloodMNIST(data_dir, split='val', transform = data_transforms['test'], target_transform=None)
 
-    elif Dataset == 'PneumoniaMNIST': #See people also use .5, .5 for normalization
+    elif Dataset == 'PneumoniaMNIST':
         train_dataset = PneumoniaMNIST(data_dir, split='train', transform = data_transforms['train'], target_transform=None)
         test_dataset = PneumoniaMNIST(data_dir, split='test', transform = data_transforms['test'], target_transform=None)
         val_dataset = PneumoniaMNIST(data_dir, split='val', transform = data_transforms['test'], target_transform=None)
@@ -76,11 +74,8 @@ def Prepare_DataLoaders(Network_parameters, split):
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],
                                                         batch_size=Network_parameters['batch_size'][x],
                                                         shuffle=True,
-                                                        #num_workers=Network_parameters['num_workers'],
-                                                        #pin_memory=Network_parameters['pin_memory'],
-                                                        #collate_fn = collate_fn[x],
-                                                        #sampler = dataset_sampler[x]
                                                         )
                                                         for x in ['train', 'val','test']}
+    
 
     return dataloaders_dict
