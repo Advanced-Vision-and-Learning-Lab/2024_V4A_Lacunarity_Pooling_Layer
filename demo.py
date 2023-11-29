@@ -109,8 +109,8 @@ def main(Params):
 def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
-                        help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models',
+                        help='Save results of experiment`s(default: True)')
+    parser.add_argument('--folder', type=str, default='`Saved_Models/tanh/k_3/1 to 2',
                         help='Location to save models')
     parser.add_argument('--pooling_layer', type=int, default=3,
                         help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
@@ -132,7 +132,7 @@ def parse_args():
                         help='input batch size for validation (default: 512)')
     parser.add_argument('--test_batch_size', type=int, default=128,
                         help='input batch size for testing (default: 256)')
-    parser.add_argument('--num_epochs', type=int, default=100,
+    parser.add_argument('--num_epochs', type=int, default=150,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')

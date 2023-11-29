@@ -70,7 +70,7 @@ class MedMNIST(Dataset):
     def __getitem__(self, index):
         img, target = self.img[index], self.label[index].astype(int)
         img = Image.fromarray(np.uint8(img))
-        # img = img.convert('RGB')
+        #img = img.convert('L')
         
         if self.transform is not None:
             img = self.transform(img)

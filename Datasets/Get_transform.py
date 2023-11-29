@@ -23,12 +23,14 @@ def get_transform(Network_parameters, input_size=224):
     
     if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST':
         data_transforms = {
-        'train':
+        'train': transforms.Compose([
             transforms.ToTensor(),
- 
-        'test':  
+            transforms.Normalize(mean=[.5], std=[.5]),
+        ]),
+        'test':  transforms.Compose([
             transforms.ToTensor(),
- 
+            transforms.Normalize(mean=[.5], std=[.5]),
+        ]),
     }
         
     else:

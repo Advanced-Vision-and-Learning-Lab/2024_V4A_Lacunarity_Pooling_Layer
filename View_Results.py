@@ -223,13 +223,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                         help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models',
+    parser.add_argument('--folder', type=str, default='Saved_Models/tanh/k_5/0 to 2',
                         help='Location to save models')
     parser.add_argument('--pooling_layer', type=int, default=3,
                         help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
-    parser.add_argument('--agg_func', type=int, default=1,
+    parser.add_argument('--agg_func', type=int, default=2,
                         help='Dataset selection: 1:global, 2:local')  
-    parser.add_argument('--data_selection', type=int, default=1,
+    parser.add_argument('--data_selection', type=int, default=2,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
