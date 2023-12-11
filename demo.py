@@ -54,9 +54,8 @@ def main(Params):
         print("Initializing Datasets and Dataloaders...")
         dataloaders_dict = Prepare_DataLoaders(Params, split)         
 
-
         # Initialize the histogram model for this run
-        model_ft, input_size = initialize_model(model_name, num_classes, dataloaders_dict,
+        model_ft, input_size = initialize_model(model_name, num_classes, dataloaders_dict, Params,
                                                 feature_extract=Params['feature_extraction'],
                                                 use_pretrained=Params['use_pretrained'],
                                                 channels = Params["channels"][Dataset],
@@ -109,15 +108,29 @@ def main(Params):
 def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
-                        help='Save results of experiment`s(default: True)')
-    parser.add_argument('--folder', type=str, default='`Saved_Models/tanh/k_3/1 to 2',
+                        help='Save results of experiments(default: True)')
+    parser.add_argument('--folder', type=str, default='Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.5_minsize=2_numl=6',
                         help='Location to save models')
+    parser.add_argument('--kernel', type=int, default=4,
+                        help='Input kernel size')
+    parser.add_argument('--stride', type=int, default=1,
+                        help='Input stride size')
+    parser.add_argument('--padding', type=int, default=0,
+                        help='Input padding size')
+    parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(10, 50)],
+                    help='Input scales')
+    parser.add_argument('--num_levels', type=int, default=6,
+                        help='Input number of levels')
+    parser.add_argument('--sigma', type=int, default=0.5,
+                        help='Input sigma value')
+    parser.add_argument('--min_size', type=int, default=2,
+                        help='Input min size')
     parser.add_argument('--pooling_layer', type=int, default=3,
-                        help='Dataset selection: 1:max, 2:avg, 3:lacunarity')
+                        help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid')
     parser.add_argument('--agg_func', type=int, default=2,
-                        help='Dataset selection: 1:global, 2:local')    
+                        help='agg func: 1:global, 2:local')
     parser.add_argument('--data_selection', type=int, default=2,
-                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST')
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
@@ -132,7 +145,7 @@ def parse_args():
                         help='input batch size for validation (default: 512)')
     parser.add_argument('--test_batch_size', type=int, default=128,
                         help='input batch size for testing (default: 256)')
-    parser.add_argument('--num_epochs', type=int, default=150,
+    parser.add_argument('--num_epochs', type=int, default=200,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')

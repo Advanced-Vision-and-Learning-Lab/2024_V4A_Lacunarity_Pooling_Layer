@@ -17,12 +17,21 @@ import torch.nn as nn
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Global_Lacunarity, CustomPoolingLayer, Scale_Lacunarity
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid
 
 
 class Net(nn.Module):
-    def __init__(self, num_ftrs, num_classes, pooling_layer="lacunarity", agg_func="global"):
+    def __init__(self, num_ftrs, num_classes, Params, pooling_layer="lacunarity", agg_func="global"):
+
         super(Net, self).__init__()
+
+        kernel = Params["kernel"]
+        stride = Params["stride"]
+        padding = Params["conv_padding"]
+        scales = Params["scales"]
+        num_levels = Params["num_levels"]
+        sigma = Params["sigma"]
+        min_size = Params["min_size"]
 
         self.agg_func = agg_func
         if agg_func == "global":
@@ -31,14 +40,20 @@ class Net(nn.Module):
             elif pooling_layer == "avg":
                 self.pooling_layer = nn.AdaptiveAvgPool2d(1)
             elif pooling_layer == "lacunarity":
-                self.pooling_layer = Global_Lacunarity()
+                self.pooling_layer = Pixel_Lacunarity()
         elif agg_func == "local":
             if pooling_layer == "max":
-                self.pooling_layer = nn.MaxPool2d(kernel_size=(4, 4), stride=(1, 1), padding=(0, 0))
+                self.pooling_layer = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
             elif pooling_layer == "avg":                                                                                                                                                                                                                            
-                self.pooling_layer = nn.AvgPool2d((4, 4), stride=(1,1), padding=(0, 0))
-            elif pooling_layer == "lacunarity":
-                self.pooling_layer = Scale_Lacunarity(scales=[i/10 for i in range(10, 21)], kernel=(5,5), stride =(1,1))
+                self.pooling_layer = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif pooling_layer == "Pixel_Lacunarity":
+                self.pooling_layer = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride))
+            elif pooling_layer == "ScalePyramid_Lacunarity":
+                self.pooling_layer = ScalePyramid_Lacunarity(num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+            elif pooling_layer == "BuildPyramid":
+                self.pooling_layer = BuildPyramid(num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+
+                """Scale_Lacunarity(kernel=(3,3), stride =(1,1))"""
                 """ self.pooling_layer = Global_Lacunarity(scales=[i/10.0 for i in range(0, 20)], kernel=(4,4), stride =(1,1)) """
                 """[i/10 for i in range(10, 21)]"""
                 """[i/10 for i in range(10, 31)]"""
@@ -46,7 +61,7 @@ class Net(nn.Module):
 
         self.conv1 = nn.Conv2d(3, out_channels=3, kernel_size=3, stride=2)
         self.relu1 = nn.ReLU()
-        self.fc = nn.Linear(243, num_classes)
+        self.fc = nn.Linear(num_ftrs, num_classes)
         
 
 

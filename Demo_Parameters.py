@@ -19,7 +19,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'lacunarity'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -29,7 +29,18 @@ def Parameters(args):
     #Select dataset
     data_selection = args.data_selection
     Dataset_names = {1:'PneumoniaMNIST',
-                     2:'BloodMNIST'}
+                     2:'BloodMNIST',
+                     3:'OrganMNISTCoronal',
+                     4: 'FashionMNIST'}
+    
+    #Lacunarity Parameters
+    kernel = args.kernel
+    stride = args.stride
+    conv_padding = args.padding
+    scales = args.scales
+    num_levels = args.num_levels
+    sigma = args.sigma
+    min_size = args.min_size
     
     #Flag for feature extraction. False, train whole model. True, only update
     #Flag to use pretrained model from ImageNet or train from scratch (default: True)
@@ -103,8 +114,10 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
-                 'BloodMNIST': 'Datasets/BloodMNIST'}
+    Data_dirs = {'FashionMNIST':'Datasets/FashionMNIST',
+                'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
+                'BloodMNIST': 'Datasets/BloodMNIST',
+                'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -112,16 +125,22 @@ def Parameters(args):
     Model_name = args.model
     
     #channels in each dataset
-    channels = {'PneumoniaMNIST': 1,
-                'BloodMNIST': 3}
+    channels = {'FashionMNIST': 1,
+                'PneumoniaMNIST': 1,
+                'BloodMNIST': 3,
+                'OrganMNISTCoronal': 1}
     
     #Number of classes in each dataset
-    num_classes = {'PneumoniaMNIST': 2,
-                'BloodMNIST': 8}
+    num_classes = {'FashionMNIST': 10,
+                'PneumoniaMNIST': 2,
+                'BloodMNIST': 8,
+                'OrganMNISTCoronal': 11}
     
     #Number of runs and/or splits for each dataset
-    Splits = {'PneumoniaMNIST': 3,
-                'BloodMNIST': 3}
+    Splits = {'FashionMNIST': 3,
+                'PneumoniaMNIST': 3,
+                'BloodMNIST': 3,
+                'OrganMNISTCoronal': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]
@@ -131,7 +150,10 @@ def Parameters(args):
               'pooling_layer': pooling_layer, 'agg_func': agg_func,
             'Dataset': Dataset, 'data_dir': data_dir,
             'num_workers': num_workers, 'mode': mode,
-            'lr': lr,'step_size': step_size,'gamma': gamma, 
+            'kernel': args.kernel, 'stride': args.stride, 'conv_padding': args.padding,
+            'scales': args.scales, 'num_levels': args.num_levels, 'sigma':args.sigma,
+            'min_size': args.min_size,
+            'lr': lr,'step_size': step_size,'gamma': gamma,
             'batch_size' : batch_size, 'num_epochs': num_epochs, 
             'resize_size': resize_size, 'center_size': center_size, 
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 

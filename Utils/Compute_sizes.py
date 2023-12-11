@@ -17,11 +17,14 @@ import torch.nn as nn
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Global_Lacunarity
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity
 import math
 
 
-def get_feat_size(pooling_layer, agg_func, dataloaders):
+def get_feat_size(Params, pooling_layer, agg_func, dataloaders):
+    kernel = Params["kernel"]
+    stride = Params["stride"]
+
     if agg_func == "global":
         num_ftrs = 3
 
@@ -29,10 +32,11 @@ def get_feat_size(pooling_layer, agg_func, dataloaders):
     else:
         for idx, (inputs, labels, index) in enumerate(dataloaders['train']):
             batch, channels, h, w = inputs.shape
+            out_channels = 3
             conv_parameters = math.floor(((h - 3) / 2) + 1) #conv2d
             #relu parameters remains the same
             #self.pooling layer
-            pooling_output = math.floor((conv_parameters - 3) / 2) + 1
-            num_ftrs = channels * pooling_output * pooling_output
+            pooling_output = math.floor((conv_parameters - kernel) / stride) + 1
+            num_ftrs = out_channels * pooling_output * pooling_output
 
     return num_ftrs

@@ -20,6 +20,11 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == 'PneumoniaMNIST':
         dataset = PneumoniaMNIST(data_dir, split='train',download=True)
 
+    elif Dataset == 'OrganMNISTCoronal':
+        dataset = OrganMNISTCoronal(data_dir, split='train',download=True)
+    
+    elif Dataset == 'FashionMNIST':
+        dataset = FashionMNIST_Index(data_dir, train=True,download=True)
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 

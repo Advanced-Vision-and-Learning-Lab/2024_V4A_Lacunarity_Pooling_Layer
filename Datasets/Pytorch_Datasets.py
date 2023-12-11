@@ -12,13 +12,28 @@ import torchvision.transforms as T
 
 from PIL import Image
 import medmnist
-from medmnist.dataset import PneumoniaMNIST
 from medmnist.evaluator import getAUC, getACC
 from medmnist.info import INFO
 import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+
+class FashionMNIST_Index(Dataset):
+    def __init__(self,directory,transform=None,train=True,download=True): 
+        
+        self.transform = transform
+        self.images = datasets.FashionMNIST(directory,train=train,transform=transform,
+                                       download=download)
+        self.classes = self.images.classes
+        self.targets = self.images.targets
+        
+    def __getitem__(self, index):
+        data, target = self.images[index]
+        return data, target, index
+
+    def __len__(self):
+        return len(self.images)
           
 class MedMNIST(Dataset):
 
@@ -196,15 +211,15 @@ class BreastMNIST(MedMNIST):
 
 
 class OrganMNISTAxial(MedMNIST):
-    flag = "organmnist_axial"
+    flag = "organamnist"
 
 
 class OrganMNISTCoronal(MedMNIST):
-    flag = "organmnist_coronal"
+    flag = "organcmnist"
 
 
 class OrganMNISTSagittal(MedMNIST):
-    flag = "organmnist_sagittal"
+    flag = "organsmnist"
     
 
 

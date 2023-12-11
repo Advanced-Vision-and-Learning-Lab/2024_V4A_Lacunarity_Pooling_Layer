@@ -20,7 +20,7 @@ from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Global_Lacunarity
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity
 from Utils.CustomNN import Net
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
@@ -36,7 +36,7 @@ def train_model(model, dataloaders, criterion, optimizer, device,
     train_error_history = []
     val_error_history = []
     
-    early_stopping = EarlyStopping(patience=30, verbose=True)
+    early_stopping = EarlyStopping(patience=50, verbose=True)
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -59,6 +59,7 @@ def train_model(model, dataloaders, criterion, optimizer, device,
     
                 # Iterate over data.
                 for idx, (inputs, labels, index) in enumerate(Bar(dataloaders[phase])):
+
                     inputs = inputs.to(device)
                     inputs.requires_grad = True
                     labels = labels.to(device)
@@ -217,6 +218,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
             running_loss += loss.item() * inputs.size(0)
             
     epoch_loss = running_loss / (len(dataloader.sampler))
+
     test_acc = running_corrects.double() / (len(dataloader.sampler))
     
     test_loss = {'total': epoch_loss}
@@ -230,7 +232,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     return test_dict
 
 
-def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
+def initialize_model(model_name, num_classes,dataloaders, Params, feature_extract=False,
                      use_pretrained=False, channels = 3, poolingLayer="max", aggFunc="global"):
     
     # Initialize these variables which will be set in this if statement. Each of these
@@ -255,6 +257,8 @@ def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
         """
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
+        if not(channels == 3):
+            model_ft.conv1 = nn.Conv2d(channels, 64, kernel_size=(7,7),stride=(2,2), padding=(3,3), bias=False) 
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
@@ -272,7 +276,7 @@ def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
     elif model_name == "resnet18_lacunarity":
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
-        model_ft.avgpool = Global_Lacunarity(kernel=[2,2], stride=[2,2])
+        model_ft.avgpool = Pixel_Lacunarity(kernel=[2,2], stride=[2,2])
         
         # Modify the final fully connected layer for the desired number of classes
         num_ftrs = model_ft.fc.in_features
@@ -281,8 +285,8 @@ def initialize_model(model_name, num_classes,dataloaders, feature_extract=False,
         input_size = 224
 
     elif model_name == "Net":
-        num_ftrs = get_feat_size(pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = Net(num_ftrs, num_classes=num_classes, pooling_layer=poolingLayer, agg_func=aggFunc)
+        num_ftrs = get_feat_size(Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
+        model_ft = Net(num_ftrs, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
         if not(channels == 3):
             model_ft.conv1 = nn.Conv2d(channels, out_channels=3, kernel_size=3, stride=2)
         input_size = 224

@@ -21,7 +21,7 @@ def get_transform(Network_parameters, input_size=224):
     Dataset = Network_parameters['Dataset']
     data_dir = Network_parameters['data_dir']
     
-    if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST':
+    if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST' or Dataset == 'OrganMNISTCoronal':
         data_transforms = {
         'train': transforms.Compose([
             transforms.ToTensor(),
@@ -33,6 +33,17 @@ def get_transform(Network_parameters, input_size=224):
         ]),
     }
         
+    elif Dataset == 'FashionMNIST':
+        data_transforms = {
+            'train': transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[.5], std=[.5]),
+            ]),
+            'test':  transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[.5], std=[.5]),
+            ]),
+    }
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     
