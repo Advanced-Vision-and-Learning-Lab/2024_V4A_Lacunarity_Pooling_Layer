@@ -11,13 +11,13 @@ import kornia.geometry.transform as T
 
 
 class Pixel_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None):
+    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
 
 
         # inherit nn.module
         super(Pixel_Lacunarity, self).__init__()
 
-        self.avg = True
+        self.bias = bias
         # define layer properties
         self.dim = dim
         self.eps = eps
@@ -28,7 +28,7 @@ class Pixel_Lacunarity(nn.Module):
         self.normalize = nn.Tanh()
         
         
-        if self.avg == True:
+        if self.bias == False: #Non learnable parameters
             self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3, bias = False)
             self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
             self.conv1x1.weight.requires_grad = False #Don't update weights

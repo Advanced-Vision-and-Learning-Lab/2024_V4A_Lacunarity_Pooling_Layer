@@ -14,6 +14,7 @@ def Parameters(args):
 
     #use xai interpretability
     xai = args.xai
+    bias = args.bias
     
     #Location to store trained models
     #Always add slash (/) after folder name
@@ -159,7 +160,7 @@ def Parameters(args):
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
-            'xai': xai,
+            'xai': xai, 'bias':bias,
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,

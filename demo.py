@@ -127,9 +127,11 @@ def parse_args():
                         help='Input min size')
     parser.add_argument('--pooling_layer', type=int, default=3,
                         help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid')
+    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
+                        help='enables bias in Pixel Lacunarity')
     parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
-    parser.add_argument('--data_selection', type=int, default=2,
+    parser.add_argument('--data_selection', type=int, default=4,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')

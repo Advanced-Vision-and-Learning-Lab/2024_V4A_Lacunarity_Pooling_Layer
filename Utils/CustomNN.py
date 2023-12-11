@@ -32,6 +32,7 @@ class Net(nn.Module):
         num_levels = Params["num_levels"]
         sigma = Params["sigma"]
         min_size = Params["min_size"]
+        bias = Params["bias"]
 
         self.agg_func = agg_func
         if agg_func == "global":
@@ -47,7 +48,7 @@ class Net(nn.Module):
             elif pooling_layer == "avg":                                                                                                                                                                                                                            
                 self.pooling_layer = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
             elif pooling_layer == "Pixel_Lacunarity":
-                self.pooling_layer = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride))
+                self.pooling_layer = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
             elif pooling_layer == "ScalePyramid_Lacunarity":
                 self.pooling_layer = ScalePyramid_Lacunarity(num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
             elif pooling_layer == "BuildPyramid":

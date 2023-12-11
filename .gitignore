@@ -7,6 +7,7 @@ Saved_Models/
 __pycache__/
 Utils/__pycache__
 Datasets/BloodMNIST
+Datasets/FashionMNIST
 Datasets/PneumoniaMNIST
 Datasets/MedMNIST
 Images
