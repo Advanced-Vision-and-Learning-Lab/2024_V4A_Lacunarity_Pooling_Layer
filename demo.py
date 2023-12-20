@@ -109,7 +109,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                         help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.5_minsize=2_numl=6',
+    parser.add_argument('--folder', type=str, default='Saved_Models/Scale_Pyramid/k=4_s=1_sigma=0.2_minsize=2_numl=10',
                         help='Location to save models')
     parser.add_argument('--kernel', type=int, default=4,
                         help='Input kernel size')
@@ -119,19 +119,19 @@ def parse_args():
                         help='Input padding size')
     parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(10, 50)],
                     help='Input scales')
-    parser.add_argument('--num_levels', type=int, default=6,
+    parser.add_argument('--num_levels', type=int, default=10,
                         help='Input number of levels')
-    parser.add_argument('--sigma', type=int, default=0.5,
+    parser.add_argument('--sigma', type=float, default=0.2,
                         help='Input sigma value')
     parser.add_argument('--min_size', type=int, default=2,
                         help='Input min size')
-    parser.add_argument('--pooling_layer', type=int, default=3,
+    parser.add_argument('--pooling_layer', type=int, default=4,
                         help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid')
     parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                         help='enables bias in Pixel Lacunarity')
     parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
-    parser.add_argument('--data_selection', type=int, default=4,
+    parser.add_argument('--data_selection', type=int, default=2,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
