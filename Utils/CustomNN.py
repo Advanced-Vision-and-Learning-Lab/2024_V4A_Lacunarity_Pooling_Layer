@@ -17,7 +17,7 @@ import torch.nn as nn
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC
 
 
 class Net(nn.Module):
@@ -53,6 +53,8 @@ class Net(nn.Module):
                 self.pooling_layer = ScalePyramid_Lacunarity(num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
             elif pooling_layer == "BuildPyramid":
                 self.pooling_layer = BuildPyramid(num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+            elif pooling_layer == "DBC":
+                self.pooling_layer = DBC(r_values = scales, window_size = 2)
 
                 """Scale_Lacunarity(kernel=(3,3), stride =(1,1))"""
                 """ self.pooling_layer = Global_Lacunarity(scales=[i/10.0 for i in range(0, 20)], kernel=(4,4), stride =(1,1)) """

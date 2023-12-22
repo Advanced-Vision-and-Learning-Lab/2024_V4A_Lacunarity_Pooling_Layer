@@ -20,7 +20,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid', 6:'DBC'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -89,7 +89,7 @@ def Parameters(args):
     #Set number of workers, i.e., how many subprocesses to use for data loading.
     #Usually set to 0 or 1. Can set to more if multiple machines are used.
     #Number of workers for experiments for two GPUs was three
-    num_workers = 0
+    num_workers = 3
 
     #Visualization of results parameters
     #Visualization parameters for figures
@@ -106,7 +106,7 @@ def Parameters(args):
     #Set to True if more than one GPU was used 
     #False for UCMerced dataset only
     #True for EuroSAT and MSTAR dataset
-    Parallelize_model = False
+    Parallelize_model = True
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
     if feature_extraction:

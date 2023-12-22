@@ -11,7 +11,7 @@ import kornia.geometry.transform as T
 
 
 class Pixel_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
+    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = True):
 
 
         # inherit nn.module
@@ -268,9 +268,8 @@ class BuildPyramid(nn.Module):
         return reduced_output
 
 class DBC(nn.Module):
-    def __init__(self, r=3, window_size=3, eps = 10E-6):
+    def __init__(self, r_values=3, window_size=3, eps = 10E-6):
         super(DBC, self).__init__()
-        self.r = r
         self.window_size = window_size
         self.normalize = nn.Tanh()
         self.r_values = [0.015, 0.0625, 0.5, 0.25, 0.125, 0.2, 0.4, 0.3, 0.75, 0.6, 0.9, 0.8, 1, 2]
@@ -280,7 +279,7 @@ class DBC(nn.Module):
 
 
     def forward(self, image):
-        image = ((self.normalize(x) + 1)/2)* 255
+        image = ((self.normalize(image) + 1)/2)* 255
         L_r_all = []
 
         # Perform operations independently for each window in the current channel
@@ -299,3 +298,37 @@ class DBC(nn.Module):
         reduced_output = self.conv1x1(channel_L_r)
 
         return reduced_output
+    
+
+class GDCB(nn.Module):
+    def __init__(self, mfs_dim=25, nlv_bcd=6):
+        super(GDCB, self).__init__()
+        self.mfs_dim = mfs_dim
+        self.nlv_bcd = nlv_bcd
+        self.pool = nn.ModuleList()
+
+        for i in range(self.nlv_bcd - 1):
+            self.pool.add_module(str(i), nn.MaxPool2d(kernel_size=i + 2, stride=(i + 2) // 2))
+        self.ReLU = nn.ReLU()
+
+    def forward(self, input):
+        tmp = []
+        for i in range(self.nlv_bcd - 1):
+            output_item = self.pool[i](input)
+            tmp.append(torch.sum(torch.sum(output_item, dim=2, keepdim=True), dim=3, keepdim=True))
+        
+        output = torch.cat(tuple(tmp), 2)
+        output = torch.log2(self.ReLU(output) + 1)
+        lacunarity = torch.var(output) / (torch.mean(output) + 1e-6)
+
+        return lacunarity
+
+
+input_tensor = torch.randn(1, 3, 13, 13)
+gdcb = GDCB()
+lacunarity_output = gdcb(input_tensor)
+
+print("Lacunarity Output Shape:", lacunarity_output.shape)
+print("Lacunarity Output Value:", lacunarity_output.item())
+
+
