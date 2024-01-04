@@ -8,6 +8,7 @@ import math
 import torch.nn.functional as F
 from kornia.geometry.transform import ScalePyramid, build_pyramid, resize
 import kornia.geometry.transform as T
+import csv
 
 
 class Pixel_Lacunarity(nn.Module):
@@ -90,8 +91,7 @@ class Pixel_Lacunarity(nn.Module):
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
             lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
-
+            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param            
             lacunarity_values.append(y)
         result = torch.cat(lacunarity_values, dim=1)
         reduced_output = self.conv1x1(result)
@@ -253,7 +253,7 @@ class BuildPyramid(nn.Module):
             L_denominator = (n_pts * self.gap_layer(scaled_x))**2
 
             #Lacunarity is L_numerator / L_denominator - 1
-            L_r = (L_numerator / (L_denominator + self.eps)) - 1
+            L_r = torch.div(L_numerator , (L_denominator + self.eps)) - 1
             lambda_param = 0.5 #boxcox transformation
             y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
 
@@ -268,11 +268,11 @@ class BuildPyramid(nn.Module):
         return reduced_output
 
 class DBC(nn.Module):
-    def __init__(self, r_values=3, window_size=3, eps = 10E-6):
+    def __init__(self, r_values=None, window_size=3, eps = 10E-6):
         super(DBC, self).__init__()
         self.window_size = window_size
         self.normalize = nn.Tanh()
-        self.r_values = [0.015, 0.0625, 0.5, 0.25, 0.125, 0.2, 0.4, 0.3, 0.75, 0.6, 0.9, 0.8, 1, 2]
+        self.r_values = r_values
         self.num_output_channels = 3
         self.eps = eps
         self.conv1x1 = nn.Conv2d(len(self.r_values) * 3, self.num_output_channels, kernel_size=1, groups = 3)
@@ -284,14 +284,14 @@ class DBC(nn.Module):
 
         # Perform operations independently for each window in the current channel
         for r in self.r_values:
-            max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1)
-            max_pool_output = max_pool(image)
-            min_pool_output = -max_pool(-image)
+            max_pool_output = F.max_pool2d(image, kernel_size=self.window_size, stride=1)
+            min_pool_output = -F.max_pool2d(-image, kernel_size=self.window_size, stride=1 )
 
             nr = torch.ceil(max_pool_output / (r + self.eps)) - torch.ceil(min_pool_output / (r + self.eps)) - 1
             Mr = torch.sum(nr)
-            Q_mr = nr / (self.window_size - r + 1)
+            Q_mr = torch.div(nr , (self.window_size - r + 1))
             L_r = (Mr**2) * Q_mr / (Mr * Q_mr + self.eps)**2
+            L_r = torch.div(torch.mul(torch.square(Mr), Q_mr), torch.square(torch.add(torch.mul(Mr, Q_mr), self.eps)))
             L_r = L_r.squeeze(-1).squeeze(-1)
             L_r_all.append(L_r)
         channel_L_r = torch.cat(L_r_all, dim=1)
@@ -300,35 +300,50 @@ class DBC(nn.Module):
         return reduced_output
     
 
+
+
 class GDCB(nn.Module):
-    def __init__(self, mfs_dim=25, nlv_bcd=6):
-        super(GDCB, self).__init__()
-        self.mfs_dim = mfs_dim
-        self.nlv_bcd = nlv_bcd
-        self.pool = nn.ModuleList()
+    def __init__(self, window_sizes, num_output_channels=3, eps=10E-6):
+        super(DBC, self).__init__()
+        self.window_sizes = window_sizes  # List of window sizes for lacunarity calculation
+        self.normalize = nn.Tanh()
+        self.num_output_channels = num_output_channels
+        self.eps = eps
+        self.conv1x1 = nn.Conv2d(len(self.window_sizes), self.num_output_channels, kernel_size=1)
 
-        for i in range(self.nlv_bcd - 1):
-            self.pool.add_module(str(i), nn.MaxPool2d(kernel_size=i + 2, stride=(i + 2) // 2))
-        self.ReLU = nn.ReLU()
+    def forward(self, image):
+        image = ((self.normalize(image) + 1) / 2) * 255
+        lacunarity_values = []
 
-    def forward(self, input):
-        tmp = []
-        for i in range(self.nlv_bcd - 1):
-            output_item = self.pool[i](input)
-            tmp.append(torch.sum(torch.sum(output_item, dim=2, keepdim=True), dim=3, keepdim=True))
-        
-        output = torch.cat(tuple(tmp), 2)
-        output = torch.log2(self.ReLU(output) + 1)
-        lacunarity = torch.var(output) / (torch.mean(output) + 1e-6)
+        for d in self.window_sizes:
+            max_pool_output = F.max_pool2d(image, kernel_size=d, stride=1)
+            mean = torch.mean(max_pool_output)
+            variance = torch.var(max_pool_output)
+            lacunarity = variance / (mean**2)
+            lacunarity_values.append(lacunarity)
 
-        return lacunarity
+        channel_lacunarity = torch.cat(lacunarity_values, dim=1)
+        reduced_output = self.conv1x1(channel_lacunarity)
+
+        return reduced_output
 
 
-input_tensor = torch.randn(1, 3, 13, 13)
-gdcb = GDCB()
-lacunarity_output = gdcb(input_tensor)
+# # Example usage
+# # Assuming input is a tensor of shape [batch_size, channels, height, width]
+# input = torch.randn(32, 3, 13, 13)  # Batch size is 32
 
-print("Lacunarity Output Shape:", lacunarity_output.shape)
-print("Lacunarity Output Value:", lacunarity_output.item())
+# num_patch_sizes = 10  # Choose the number of patch sizes to consider
+
+# # Initialize the LacunarityCalculator
+# lacunarity_calculator = DBC()
+
+# # Forward pass to calculate lacunarity values
+# lacunarity_values = lacunarity_calculator(input)
+
+# # Print or use the lacunarity values as needed
+# print("Lacunarity Values:")
+# print(lacunarity_values.shape)
+
+
 
 

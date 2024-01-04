@@ -17,7 +17,7 @@ import torch.nn as nn
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB
 
 
 class Net(nn.Module):
@@ -40,8 +40,8 @@ class Net(nn.Module):
                 self.pooling_layer = nn.AdaptiveMaxPool2d(1)
             elif pooling_layer == "avg":
                 self.pooling_layer = nn.AdaptiveAvgPool2d(1)
-            elif pooling_layer == "lacunarity":
-                self.pooling_layer = Pixel_Lacunarity()
+            elif pooling_layer == "Pixel_Lacunarity":
+                self.pooling_layer = Pixel_Lacunarity(scales=scales, bias = bias)
         elif agg_func == "local":
             if pooling_layer == "max":
                 self.pooling_layer = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
@@ -54,7 +54,9 @@ class Net(nn.Module):
             elif pooling_layer == "BuildPyramid":
                 self.pooling_layer = BuildPyramid(num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
             elif pooling_layer == "DBC":
-                self.pooling_layer = DBC(r_values = scales, window_size = 2)
+                self.pooling_layer = DBC(r_values = scales, window_size = kernel)
+            elif pooling_layer == "GDCB":
+                self.pooling_layer = GDCB(3,5)
 
                 """Scale_Lacunarity(kernel=(3,3), stride =(1,1))"""
                 """ self.pooling_layer = Global_Lacunarity(scales=[i/10.0 for i in range(0, 20)], kernel=(4,4), stride =(1,1)) """

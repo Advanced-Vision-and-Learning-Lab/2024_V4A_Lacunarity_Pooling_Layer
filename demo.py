@@ -45,8 +45,10 @@ def main(Params):
         #eacah embedding approach
         torch.manual_seed(split)
         np.random.seed(split)
+        np.random.seed(split)
         torch.cuda.manual_seed(split)
         torch.cuda.manual_seed_all(split)
+        torch.manual_seed(split)
 
         # Create training and validation dataloaders
         print("Initializing Datasets and Dataloaders...")
@@ -132,10 +134,9 @@ def main(Params):
             axarr[1, channel].set_title('Activation Channel {}'.format(channel + 1))
 
         plt.tight_layout()
-        plt.show()
-
+        pooling_layer = Params["pooling_layer"]
         # Save the combined figure
-        fig.savefig(os.path.join(save_dir, f'feature_maps_combined_{split}.png'))
+        fig.savefig(os.path.join(save_dir, f'feature_maps_combined_{split}_{pooling_layer}.png'))
         plt.close(fig)
 
 
@@ -164,19 +165,19 @@ def parse_args():
                         help='Input stride size')
     parser.add_argument('--padding', type=int, default=0,
                         help='Input padding size')
-    parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(10, 50)],
+    parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(1, 50)],
                     help='Input scales')
-    parser.add_argument('--num_levels', type=float, default=6,
+    parser.add_argument('--num_levels', type=float, default=2,
                         help='Input number of levels')
-    parser.add_argument('--sigma', type=int, default=0.2,
+    parser.add_argument('--sigma', type=int, default=0.6,
                         help='Input sigma value')
     parser.add_argument('--min_size', type=float, default=2,
                         help='Input min size')
     parser.add_argument('--pooling_layer', type=int, default=3,
-                        help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid, 6:DBC')
+                        help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid, 6:DBC, 7:GDCB')
     parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                         help='enables bias in Pixel Lacunarity')
-    parser.add_argument('--agg_func', type=int, default=2,
+    parser.add_argument('--agg_func', type=int, default=1,
                         help='agg func: 1:global, 2:local')
     parser.add_argument('--data_selection', type=int, default=2,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST')
@@ -188,11 +189,11 @@ def parse_args():
                         help='enables xai interpretability')
     parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                         help='enables parallel functionality')
-    parser.add_argument('--train_batch_size', type=int, default=1,
+    parser.add_argument('--train_batch_size', type=int, default=32,
                         help='input batch size for training (default: 128)')
-    parser.add_argument('--val_batch_size', type=int, default=1,
+    parser.add_argument('--val_batch_size', type=int, default=32,
                         help='input batch size for validation (default: 512)')
-    parser.add_argument('--test_batch_size', type=int, default=1,
+    parser.add_argument('--test_batch_size', type=int, default=32,
                         help='input batch size for testing (default: 256)')
     parser.add_argument('--num_epochs', type=int, default=80,
                         help='Number of epochs to train each model for (default: 50)')

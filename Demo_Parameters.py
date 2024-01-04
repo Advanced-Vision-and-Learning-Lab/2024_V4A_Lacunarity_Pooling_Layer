@@ -20,7 +20,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid', 6:'DBC'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid', 6:'DBC', 7:'GDCB'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
