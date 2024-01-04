@@ -36,7 +36,7 @@ def train_model(model, dataloaders, criterion, optimizer, device,
     train_error_history = []
     val_error_history = []
     
-    early_stopping = EarlyStopping(patience=50, verbose=True)
+    early_stopping = EarlyStopping(patience=30, verbose=True)
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
