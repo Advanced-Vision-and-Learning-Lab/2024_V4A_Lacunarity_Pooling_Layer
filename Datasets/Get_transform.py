@@ -44,6 +44,20 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize(mean=[.5], std=[.5]),
             ]),
     }
+    elif Dataset == "PlantLeaf":
+        data_transforms = {
+            'train': transforms.Compose([
+                transforms.Resize(size = (200, 200)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[.5], std=[.5]),
+
+            ]),
+            'test':  transforms.Compose([
+                transforms.Resize(size = (200, 200)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[.5], std=[.5]),
+            ]),
+    }  
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     

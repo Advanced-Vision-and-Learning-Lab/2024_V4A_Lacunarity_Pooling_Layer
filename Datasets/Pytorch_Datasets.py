@@ -47,7 +47,7 @@ class PlantLeaf(Dataset):
             #Get training file
             sample_dir = os.path.join(imgset_dir,'train','train')
             classes = sorted(os.listdir(sample_dir))
-
+            self.classes = classes
             label = 0
             #Loop through data frame and get each image
             for img_folder in classes:
@@ -66,6 +66,7 @@ class PlantLeaf(Dataset):
         elif split == 'test':  # test
             sample_dir = os.path.join(imgset_dir,'test', 'test')
             classes = sorted(os.listdir(sample_dir))
+            self.classes = classes
             label = 0
             #Loop through data frame and get each image
             for img_folder in classes:
@@ -84,6 +85,7 @@ class PlantLeaf(Dataset):
         elif split == 'val':  # test
             sample_dir = os.path.join(imgset_dir,'valid', 'valid')
             classes = sorted(os.listdir(sample_dir))
+            self.classes = classes
             label = 0
             #Loop through data frame and get each image
             for img_folder in classes:
@@ -107,10 +109,10 @@ class PlantLeaf(Dataset):
         datafiles = self.files[index]
 
         img_file = datafiles["img"]
-        img = Image.open(img_file).convert('RGB')
+        img = Image.open(img_file)
 
         label_file = datafiles["label"]
-        label = torch.tensor(label_file)
+        label = torch.as_tensor(label_file)
 
         if self.img_transform is not None:
             img = self.img_transform(img)
@@ -319,7 +321,3 @@ class OrganMNISTCoronal(MedMNIST):
 
 class OrganMNISTSagittal(MedMNIST):
     flag = "organsmnist"
-    
-
-
-
