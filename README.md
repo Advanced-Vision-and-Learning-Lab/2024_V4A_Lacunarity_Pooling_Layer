@@ -1,5 +1,5 @@
-# Quantitative Analysis of Primary Attribution Explainable Artificial Intelligence Methods for Remote Sensing Image Classification:
-**Quantitative Analysis of Primary Attribution Explainable Artificial Intelligence Methods for Remote Sensing Image Classification**
+# Texture Analysis Through Lacunarity Pooling Layer:
+**Texture Analysis Through Lacunarity Pooling Layer**
 
 _Akshatha Mohan and Joshua Peeples_
 
