@@ -32,7 +32,8 @@ def Parameters(args):
     Dataset_names = {1:'PneumoniaMNIST',
                      2:'BloodMNIST',
                      3:'OrganMNISTCoronal',
-                     4: 'FashionMNIST'}
+                     4: 'FashionMNIST',
+                     5: 'PlantLeaf'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -118,7 +119,8 @@ def Parameters(args):
     Data_dirs = {'FashionMNIST':'Datasets/FashionMNIST',
                 'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
                 'BloodMNIST': 'Datasets/BloodMNIST',
-                'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal'}
+                'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal',
+                'PlantLeaf' : 'Datasets/PlantLeaf'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -129,19 +131,22 @@ def Parameters(args):
     channels = {'FashionMNIST': 1,
                 'PneumoniaMNIST': 1,
                 'BloodMNIST': 3,
-                'OrganMNISTCoronal': 1}
+                'OrganMNISTCoronal': 1,
+                'PlantLeaf': 3}
     
     #Number of classes in each dataset
     num_classes = {'FashionMNIST': 10,
                 'PneumoniaMNIST': 2,
                 'BloodMNIST': 8,
-                'OrganMNISTCoronal': 11}
+                'OrganMNISTCoronal': 11,
+                'PlantLeaf': 12}
     
     #Number of runs and/or splits for each dataset
     Splits = {'FashionMNIST': 3,
                 'PneumoniaMNIST': 3,
                 'BloodMNIST': 3,
-                'OrganMNISTCoronal': 3}
+                'OrganMNISTCoronal': 3,
+                'PlantLeaf': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]

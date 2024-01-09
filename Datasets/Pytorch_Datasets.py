@@ -18,6 +18,105 @@ import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+# -*- coding: utf-8 -*-
+"""
+Created on Mon July 01 16:01:36 2019
+GTOS data loader
+@author: jpeeples
+"""
+
+import os
+from PIL import Image
+from torch.utils.data import Dataset
+import pdb
+import torch
+
+
+class PlantLeaf(Dataset):
+
+    def __init__(self, texture_dir, split = 'train', transform = None):  # numset: 0~5
+        self.texture_dir = texture_dir
+        self.img_transform = transform
+        self.files = []  # empty list
+        self.targets = [] #labels
+
+        #pdb.set_trace()
+        imgset_dir = os.path.join(self.texture_dir)
+
+        if split == 'train':  # train
+            #Get training file
+            sample_dir = os.path.join(imgset_dir,'train','train')
+            classes = sorted(os.listdir(sample_dir))
+
+            label = 0
+            #Loop through data frame and get each image
+            for img_folder in classes:
+                #Set class label 
+                #Select folder and remove class number/space in name
+                temp_img_folder = os.path.join(sample_dir,img_folder)
+                for image in os.listdir(temp_img_folder):
+                    img_file = os.path.join(temp_img_folder,image)
+                    self.files.append({  # appends the images
+                            "img": img_file,
+                            "label": label
+                        })
+                    self.targets.append(label)
+                label +=1
+
+        elif split == 'test':  # test
+            sample_dir = os.path.join(imgset_dir,'test', 'test')
+            classes = sorted(os.listdir(sample_dir))
+            label = 0
+            #Loop through data frame and get each image
+            for img_folder in classes:
+                #Set class label 
+                #Select folder and remove class number/space in name
+                temp_img_folder = os.path.join(sample_dir,img_folder)
+                for image in os.listdir(temp_img_folder):
+                    img_file = os.path.join(temp_img_folder,image)
+                    self.files.append({  # appends the images
+                            "img": img_file,
+                            "label": label
+                        })
+                    self.targets.append(label)
+                label +=1
+        
+        elif split == 'val':  # test
+            sample_dir = os.path.join(imgset_dir,'valid', 'valid')
+            classes = sorted(os.listdir(sample_dir))
+            label = 0
+            #Loop through data frame and get each image
+            for img_folder in classes:
+                #Set class label 
+                #Select folder and remove class number/space in name
+                temp_img_folder = os.path.join(sample_dir,img_folder)
+                for image in os.listdir(temp_img_folder):
+                    img_file = os.path.join(temp_img_folder,image)
+                    self.files.append({  # appends the images
+                            "img": img_file,
+                            "label": label
+                        })
+                    self.targets.append(label)
+                label +=1
+
+    def __len__(self):
+        return len(self.files)
+
+    def __getitem__(self, index):
+
+        datafiles = self.files[index]
+
+        img_file = datafiles["img"]
+        img = Image.open(img_file).convert('RGB')
+
+        label_file = datafiles["label"]
+        label = torch.tensor(label_file)
+
+        if self.img_transform is not None:
+            img = self.img_transform(img)
+
+        return img, label,index
+
 
 class FashionMNIST_Index(Dataset):
     def __init__(self,directory,transform=None,train=True,download=True): 

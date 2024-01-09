@@ -26,6 +26,9 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == 'FashionMNIST':
         dataset = FashionMNIST_Index(data_dir, train=True,download=True)
 
+    elif Dataset == "PlantLeaf":
+        dataset = PlantLeaf(data_dir, split = "train")
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 

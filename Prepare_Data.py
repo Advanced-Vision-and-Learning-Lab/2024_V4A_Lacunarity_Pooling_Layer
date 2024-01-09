@@ -84,6 +84,12 @@ def Prepare_DataLoaders(Network_parameters, split):
         train_dataset = OrganMNISTCoronal(data_dir, split='train', transform = data_transforms['train'], target_transform=None)
         test_dataset = OrganMNISTCoronal(data_dir, split='test', transform = data_transforms['test'], target_transform=None)
         val_dataset = OrganMNISTCoronal(data_dir, split='val', transform = data_transforms['test'], target_transform=None)
+
+    elif Dataset == 'PlantLeaf':
+        train_dataset = PlantLeaf(data_dir, split='train', transform = data_transforms['train'])
+        test_dataset = PlantLeaf(data_dir, split='test', transform = data_transforms['test'])
+        val_dataset = PlantLeaf(data_dir, split='val', transform = data_transforms['test'])
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 
