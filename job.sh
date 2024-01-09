@@ -34,175 +34,186 @@ cd /home/grads/a/akshatha.mohan/Documents/Thesis/Lacunarity_Pooling
 
 ##########BASELINE#####################################################
 
-#-------------MAX-------------------------#
+# #-------------MAX-------------------------#
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
 
 
-# #-------------AVG-------------------------#
+# # #-------------AVG-------------------------#
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
 
 
 
-# ##########BLOODMNIST####################################################
-# # Run your Python script
+# # ##########BLOODMNIST####################################################
+# # # Run your Python script
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to1range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to1range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to1range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to1range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_0to5range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 2 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=2_s=1_1to5range'
 
 
 
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to1range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to1range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to1range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to1range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_0to5range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 4 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=4_s=1_1to5range'
 
 
 
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to1range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to1range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to1range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to1range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_0to5range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 5 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=5_s=1_1to5range'
 
 
 
 
 
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to1range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to1range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to1range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to1 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to1range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to2range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to2range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to2range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to2 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to2range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to3range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to3range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to3range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to3 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to3range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales0to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_0to5range'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to5range'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to5range'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to5range'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 3 --kernel 3 --stride 1 --scales $scales1to5 --folder 'Saved_Models/pixellacunarity/k=3_s=1_1to5range'
 
 
 
-#####BUILD PYRAMID############################################################################################
+# #####BUILD PYRAMID############################################################################################
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 2 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=2_s=1_3_levels'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 2 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=2_s=1_3_levels'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 2 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=2_s=1_3_levels'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 2 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=2_s=1_3_levels'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 3 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=3_s=1_3_levels'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 3 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=3_s=1_3_levels'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 3 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=3_s=1_3_levels'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 3 --stride 1 --num_levels 3  --folder 'Saved_Models/Build_Pyramid/k=3_s=1_3_levels'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 4 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=4_s=1_2_levels'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 4 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=4_s=1_2_levels'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 4 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=4_s=1_2_levels'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 4 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=4_s=1_2_levels'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 5 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=5_s=1_2_levels'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 5 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=5_s=1_2_levels'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 5 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=5_s=1_2_levels'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 5 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=5_s=1_2_levels'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 6 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=6_s=1_2_levels'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 6 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=6_s=1_2_levels'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 6 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=6_s=1_2_levels'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 5 --kernel 6 --stride 1 --num_levels 2  --folder 'Saved_Models/Build_Pyramid/k=6_s=1_2_levels'
 
 
-##############SCALE PYRAMID #####################################################################################
+# ##############SCALE PYRAMID #####################################################################################
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=2_numl=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=2_numl=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=2_numl=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=2_numl=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.1_minsize=2_numl=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.1_minsize=2_numl=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.1_minsize=2_numl=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.1_minsize=2_numl=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.2_minsize=2_numl=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.2_minsize=2_numl=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.2_minsize=2_numl=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.2_minsize=2_numl=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma3 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.4_minsize=2_numl=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma3 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.4_minsize=2_numl=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma3 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.4_minsize=2_numl=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma3 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.4_minsize=2_numl=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma4 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.6_minsize=2_numl=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma4 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.6_minsize=2_numl=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma4 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.6_minsize=2_numl=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 3 --stride 1 --num_levels 2 --sigma $sigma4 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=3_s=1_sigma=0.6_minsize=2_numl=3'
 
 
+python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 4 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=4_s=1_sigma=0.1_minsize=4_numl=2'
+python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 4 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=4_s=1_sigma=0.1_minsize=4_numl=2'
+
+python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 4 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=4_s=1_sigma=0.2_minsize=4_numl=2'
+python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 4 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=4_s=1_sigma=0.2_minsize=4_numl=2'
+
+python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.2_minsize=2_numl=2'
+python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma2 --min_size 2  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.2_minsize=2_numl=2'
+
+python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=4_numl=2'
+python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 4 --kernel 2 --stride 1 --num_levels 2 --sigma $sigma1 --min_size 4  --folder 'Saved_Models/Scale_Pyramid/k=2_s=1_sigma=0.1_minsize=4_numl=2'
 # 1) num_levels=2, sigma=0.1, min_size=4, kernel=[4,4], stride=[1,1] —- conv1x1 = 6
-# 2) num_levels=2, sigma=0.1, min_size=4, kernel=[4,4], stride=[1,1] —- conv1x1 = 6
+# 2) num_levels=2, sigma=0.2, min_size=4, kernel=[4,4], stride=[1,1] —- conv1x1 = 6
 # 3) num_levels=2, sigma=0.2, min_size=2, kernel=[2,2], stride=[1,1])  – conv1x1 = 6
 # 4) num_levels=2, sigma=0.1, min_size=4, kernel=[2,2], stride=[1,1]  —- conv1x1 = 6
 

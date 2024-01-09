@@ -107,7 +107,7 @@ def Parameters(args):
     #Set to True if more than one GPU was used 
     #False for UCMerced dataset only
     #True for EuroSAT and MSTAR dataset
-    Parallelize_model = True
+    Parallelize_model = False
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
     if feature_extraction:

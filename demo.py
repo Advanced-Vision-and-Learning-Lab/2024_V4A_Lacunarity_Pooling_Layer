@@ -68,9 +68,7 @@ def main(Params):
             # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
             model_ft = nn.DataParallel(model_ft)
         model_ft = model_ft.to(device)
-        
-        save_dir = 'activations'
-        os.makedirs(save_dir, exist_ok=True)
+
 
 
             
@@ -90,54 +88,8 @@ def main(Params):
         train_dict = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, device,
                                   num_epochs=Params['num_epochs'],
                                   scheduler=scheduler)
-
         test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
                                 device, model_weights = train_dict['best_model_wts'])
-        
-        # Plot some images
-        for idx, (inputs, labels, index) in enumerate((dataloaders_dict['train'])):
-            inputs = inputs.to(device)
-            inputs.requires_grad = True
-            labels = labels.to(device)
-            index = index.to(device)
-
-        img = inputs[10]
-
-       # Visualize feature maps
-        activation = {}
-        def get_activation(name):
-            def hook(model, input, output):
-                activation[name] = output.detach()
-            return hook
-
-        model_ft.pooling_layer.register_forward_hook(get_activation('pooling_layer'))
-        output = model_ft(inputs)
-        
-        act = activation['pooling_layer']
-
-        fig, axarr = plt.subplots(2, 3, figsize=(15, 8))
-
-        # First row: Display feature maps
-        for channel in range(0, 3):
-            min_value = inputs[channel].min().item()
-            max_value = inputs[channel].max().item()
-            im = axarr[0, channel].imshow(img.permute(2,1,0).detach().cpu().numpy()[:,:,channel], vmin=min_value, vmax=max_value)
-            plt.colorbar(im, fraction=0.046, pad=0.04, ax=axarr[0, channel])
-            axarr[0, channel].set_title('Input Channel {}'.format(channel + 1))
-
-        # Second row: Display activation maps
-        for channel in range(0, 3):
-            min_value = act[channel].min().item()
-            max_value = act[channel].max().item()
-            im = axarr[1, channel].imshow(act[10].permute(2, 1, 0).detach().cpu().numpy()[:,:,channel], vmin=min_value, vmax=max_value)
-            plt.colorbar(im, fraction=0.046, pad=0.04, ax=axarr[1, channel])
-            axarr[1, channel].set_title('Activation Channel {}'.format(channel + 1))
-
-        plt.tight_layout()
-        pooling_layer = Params["pooling_layer"]
-        # Save the combined figure
-        fig.savefig(os.path.join(save_dir, f'feature_maps_combined_{split}_{pooling_layer}.png'))
-        plt.close(fig)
 
 
         # Save results
@@ -165,22 +117,22 @@ def parse_args():
                         help='Input stride size')
     parser.add_argument('--padding', type=int, default=0,
                         help='Input padding size')
-    parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(1, 50)],
+    parser.add_argument('--scales', type=float, nargs='+', default=[i/10.0 for i in range(10, 50)],
                     help='Input scales')
-    parser.add_argument('--num_levels', type=float, default=2,
+    parser.add_argument('--num_levels', type=int, default=10,
                         help='Input number of levels')
-    parser.add_argument('--sigma', type=int, default=0.6,
+    parser.add_argument('--sigma', type=float, default=0.2,
                         help='Input sigma value')
-    parser.add_argument('--min_size', type=float, default=2,
+    parser.add_argument('--min_size', type=int, default=2,
                         help='Input min size')
-    parser.add_argument('--pooling_layer', type=int, default=3,
+    parser.add_argument('--pooling_layer', type=int, default=4,
                         help='pooling layer selection: 1:max, 2:avg, 3:Pixel_Lacunarity, 4:ScalePyramid_Lacunarity, 5:BuildPyramid, 6:DBC, 7:GDCB')
     parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                         help='enables bias in Pixel Lacunarity')
-    parser.add_argument('--agg_func', type=int, default=1,
+    parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
     parser.add_argument('--data_selection', type=int, default=2,
-                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST')
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
@@ -189,13 +141,13 @@ def parse_args():
                         help='enables xai interpretability')
     parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                         help='enables parallel functionality')
-    parser.add_argument('--train_batch_size', type=int, default=32,
+    parser.add_argument('--train_batch_size', type=int, default=128,
                         help='input batch size for training (default: 128)')
-    parser.add_argument('--val_batch_size', type=int, default=32,
+    parser.add_argument('--val_batch_size', type=int, default=128,
                         help='input batch size for validation (default: 512)')
-    parser.add_argument('--test_batch_size', type=int, default=32,
+    parser.add_argument('--test_batch_size', type=int, default=128,
                         help='input batch size for testing (default: 256)')
-    parser.add_argument('--num_epochs', type=int, default=80,
+    parser.add_argument('--num_epochs', type=int, default=200,
                         help='Number of epochs to train each model for (default: 50)')
     parser.add_argument('--resize_size', type=int, default=256,
                         help='Resize the image before center crop. (default: 256)')
@@ -214,4 +166,3 @@ if __name__ == "__main__":
     device = torch.device("cuda" if use_cuda else "cpu")
     params = Parameters(args)
     main(params)
-      

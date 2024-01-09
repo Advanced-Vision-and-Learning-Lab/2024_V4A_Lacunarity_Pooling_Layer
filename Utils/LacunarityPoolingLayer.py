@@ -8,11 +8,10 @@ import math
 import torch.nn.functional as F
 from kornia.geometry.transform import ScalePyramid, build_pyramid, resize
 import kornia.geometry.transform as T
-import csv
 
 
 class Pixel_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = True):
+    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
 
 
         # inherit nn.module
@@ -91,7 +90,8 @@ class Pixel_Lacunarity(nn.Module):
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
             lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param            
+            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
+
             lacunarity_values.append(y)
         result = torch.cat(lacunarity_values, dim=1)
         reduced_output = self.conv1x1(result)
@@ -115,7 +115,7 @@ class ScalePyramid_Lacunarity(nn.Module):
         self.sigma = sigma
         self.min_size = min_size
         self.normalize = nn.Tanh()
-        self.conv1x1 = nn.Conv2d(9, 3, kernel_size=1, groups = 3)
+        self.conv1x1 = nn.Conv2d(6, 3, kernel_size=1, groups = 3)
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
@@ -253,7 +253,7 @@ class BuildPyramid(nn.Module):
             L_denominator = (n_pts * self.gap_layer(scaled_x))**2
 
             #Lacunarity is L_numerator / L_denominator - 1
-            L_r = torch.div(L_numerator , (L_denominator + self.eps)) - 1
+            L_r = (L_numerator / (L_denominator + self.eps)) - 1
             lambda_param = 0.5 #boxcox transformation
             y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
 
@@ -268,39 +268,37 @@ class BuildPyramid(nn.Module):
         return reduced_output
 
 class DBC(nn.Module):
-    def __init__(self, r_values=None, window_size=3, eps = 10E-6):
+    def __init__(self, r=3, window_size=3, eps = 10E-6):
         super(DBC, self).__init__()
+        self.r = r
         self.window_size = window_size
         self.normalize = nn.Tanh()
-        self.r_values = r_values
+        self.r_values = [0.015, 0.0625, 0.5, 0.25, 0.125, 0.2, 0.4, 0.3, 0.75, 0.6, 0.9, 0.8, 1, 2]
         self.num_output_channels = 3
         self.eps = eps
         self.conv1x1 = nn.Conv2d(len(self.r_values) * 3, self.num_output_channels, kernel_size=1, groups = 3)
 
 
     def forward(self, image):
-        image = ((self.normalize(image) + 1)/2)* 255
+        image = ((self.normalize(x) + 1)/2)* 255
         L_r_all = []
 
         # Perform operations independently for each window in the current channel
         for r in self.r_values:
-            max_pool_output = F.max_pool2d(image, kernel_size=self.window_size, stride=1)
-            min_pool_output = -F.max_pool2d(-image, kernel_size=self.window_size, stride=1 )
+            max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1)
+            max_pool_output = max_pool(image)
+            min_pool_output = -max_pool(-image)
 
             nr = torch.ceil(max_pool_output / (r + self.eps)) - torch.ceil(min_pool_output / (r + self.eps)) - 1
             Mr = torch.sum(nr)
-            Q_mr = torch.div(nr , (self.window_size - r + 1))
+            Q_mr = nr / (self.window_size - r + 1)
             L_r = (Mr**2) * Q_mr / (Mr * Q_mr + self.eps)**2
-            L_r = torch.div(torch.mul(torch.square(Mr), Q_mr), torch.square(torch.add(torch.mul(Mr, Q_mr), self.eps)))
             L_r = L_r.squeeze(-1).squeeze(-1)
             L_r_all.append(L_r)
         channel_L_r = torch.cat(L_r_all, dim=1)
         reduced_output = self.conv1x1(channel_L_r)
 
         return reduced_output
-    
-
-
 
 class GDCB(nn.Module):
     def __init__(self, window_sizes, num_output_channels=3, eps=10E-6):
