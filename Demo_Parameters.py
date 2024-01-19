@@ -33,7 +33,8 @@ def Parameters(args):
                      2:'BloodMNIST',
                      3:'OrganMNISTCoronal',
                      4: 'FashionMNIST',
-                     5: 'PlantLeaf'}
+                     5: 'PlantLeaf',
+                     6: 'UCMerced'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -101,7 +102,7 @@ def Parameters(args):
     #Set to false to not generate TSNE visuals
     #Number of images to view for TSNE (defaults to all training imgs unless
     #value is less than total training images).
-    TSNE_visual = True
+    TSNE_visual = False
     Num_TSNE_images = 5000
     
     #Set to True if more than one GPU was used 
@@ -120,7 +121,8 @@ def Parameters(args):
                 'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
                 'BloodMNIST': 'Datasets/BloodMNIST',
                 'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal',
-                'PlantLeaf' : 'Datasets/PlantLeaf'}
+                'PlantLeaf' : 'Datasets/PlantLeaf',
+                'UCMerced': 'Datasets/UCMerced'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -132,21 +134,24 @@ def Parameters(args):
                 'PneumoniaMNIST': 1,
                 'BloodMNIST': 3,
                 'OrganMNISTCoronal': 1,
-                'PlantLeaf': 3}
+                'PlantLeaf': 3,
+                'UCMerced': 3}
     
     #Number of classes in each dataset
     num_classes = {'FashionMNIST': 10,
                 'PneumoniaMNIST': 2,
                 'BloodMNIST': 8,
                 'OrganMNISTCoronal': 11,
-                'PlantLeaf': 12}
+                'PlantLeaf': 12,
+                'UCMerced': 21}
     
     #Number of runs and/or splits for each dataset
     Splits = {'FashionMNIST': 3,
                 'PneumoniaMNIST': 3,
                 'BloodMNIST': 3,
                 'OrganMNISTCoronal': 3,
-                'PlantLeaf': 3}
+                'PlantLeaf': 3,
+                'UCMerced': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]

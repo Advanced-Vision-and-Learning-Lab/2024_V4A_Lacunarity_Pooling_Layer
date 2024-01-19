@@ -10,6 +10,7 @@ import numpy as np
 import pdb
 from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.model_selection import train_test_split
+from pytorch_metric_learning import samplers
 
 import ssl
 ## PyTorch dependencies
@@ -36,7 +37,7 @@ def collate_fn_test(data):
     index = torch.Tensor(index)
     return data["image"].float(), labels.float(), index
 
-def Prepare_DataLoaders(Network_parameters, split):
+def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results = True):
     ssl._create_default_https_context = ssl._create_unverified_context
     
     Dataset = Network_parameters['Dataset']
@@ -90,12 +91,48 @@ def Prepare_DataLoaders(Network_parameters, split):
         test_dataset = PlantLeaf(data_dir, split='test', transform = data_transforms['test'])
         val_dataset = PlantLeaf(data_dir, split='val', transform = data_transforms['test'])
 
+    elif Dataset == 'UCMerced': #See people also use .5, .5 for normalization
+        train_dataset = UCMerced_Index(root = data_dir,split='train', transform = data_transforms['train'], download=True)
+        test_dataset = UCMerced_Index(data_dir,split='test', transform = data_transforms['test'], download=True)
+        val_dataset = UCMerced_Index(data_dir,split='val', transform = data_transforms['test'], download=True)
+        
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
+    
+    if Dataset == "FashionMNIST" or Dataset == "UCMerced":
+        labels = test_dataset.targets
+        classes = test_dataset.classes
+        #m is the number of samples taken from each class
+        m = 10
+        #In our paper, batch_size for:
+            #UCMerced - 210
+            #EuroSAT - 100
+            #MSTAR - 40
+        batch_size = m*len(classes)
+        sampler = samplers.MPerClassSampler(labels, m, batch_size, length_before_new_iter=100000)
+        #retain sampler = None for 'train' and 'val' data splits
+        dataset_sampler = {'train': None, 'test': sampler, 'val': None}
+        Network_parameters["batch_size"]["test"] = batch_size
+
+    else:
+        dataset_sampler = {'train': None, 'test': None, 'val': None}
+
+    #Collate function is used only for EuroSAT and MSTAR
+    #Compatible input size for Kornia augmentation
+    if Dataset == "UCMerced":
+    # Create training and test dataloaders
+        image_datasets = {'train': train_dataset, 'val': val_dataset, 'test': test_dataset}
+        dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],
+                                                        batch_size=Network_parameters['batch_size'][x],
+                                                        num_workers=Network_parameters['num_workers'],
+                                                        pin_memory=Network_parameters['pin_memory'],
+                                                        sampler = dataset_sampler[x])
+                                                        for x in ['train', 'val','test']}
 
     # Create training and test dataloaders
-
-    if dataset_sampler is not None:
+    #for FashionMNIST dataset
+    elif Dataset == "FashionMNIST":
         image_datasets = {'train': train_dataset, 'val': train_dataset, 'test': test_dataset}
         # Create training and test dataloaders
         dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],

@@ -268,19 +268,18 @@ class BuildPyramid(nn.Module):
         return reduced_output
 
 class DBC(nn.Module):
-    def __init__(self, r=3, window_size=3, eps = 10E-6):
+    def __init__(self, r_values=3, window_size=3, eps = 10E-6):
         super(DBC, self).__init__()
-        self.r = r
         self.window_size = window_size
         self.normalize = nn.Tanh()
-        self.r_values = [0.015, 0.0625, 0.5, 0.25, 0.125, 0.2, 0.4, 0.3, 0.75, 0.6, 0.9, 0.8, 1, 2]
+        self.r_values = r_values
         self.num_output_channels = 3
         self.eps = eps
         self.conv1x1 = nn.Conv2d(len(self.r_values) * 3, self.num_output_channels, kernel_size=1, groups = 3)
 
 
     def forward(self, image):
-        image = ((self.normalize(x) + 1)/2)* 255
+        image = ((self.normalize(image) + 1)/2)* 255
         L_r_all = []
 
         # Perform operations independently for each window in the current channel

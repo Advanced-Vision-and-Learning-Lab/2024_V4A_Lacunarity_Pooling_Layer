@@ -224,7 +224,7 @@ def parse_args():
                         help='Save results of experiments(default: True)')
     parser.add_argument('--folder', type=str, default='Saved_Models/',
                         help='Location to save models')
-    parser.add_argument('--kernel', type=int, default=2,
+    parser.add_argument('--kernel', type=int, default=4,
                         help='Input kernel size')
     parser.add_argument('--stride', type=int, default=1,
                         help='Input stride size')
@@ -234,7 +234,7 @@ def parse_args():
                     help='Input scales')
     parser.add_argument('--num_levels', type=int, default=6,
                         help='Input number of levels')
-    parser.add_argument('--sigma', type=int, default=0.5,
+    parser.add_argument('--sigma', type=float, default=0.5,
                         help='Input sigma value')
     parser.add_argument('--min_size', type=int, default=2,
                         help='Input min size')
@@ -245,7 +245,7 @@ def parse_args():
     parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
     parser.add_argument('--data_selection', type=int, default=5,
-                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf')
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,

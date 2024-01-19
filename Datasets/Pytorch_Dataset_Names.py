@@ -29,6 +29,9 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == "PlantLeaf":
         dataset = PlantLeaf(data_dir, split = "train")
 
+    elif Dataset == "UCMerced":
+        dataset = UCMerced_Index(data_dir, split='train',download=True)
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 

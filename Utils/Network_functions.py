@@ -20,7 +20,7 @@ from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB
 from Utils.CustomNN import Net
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
@@ -239,6 +239,14 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     # variables is model specific.
     model_ft = None
     input_size = 0
+    kernel = Params["kernel"]
+    stride = Params["stride"]
+    padding = Params["conv_padding"]
+    scales = Params["scales"]
+    num_levels = Params["num_levels"]
+    sigma = Params["sigma"]
+    min_size = Params["min_size"]
+    bias = Params["bias"]
   
     #Select backbone architecture
     if model_name == "convnext":
@@ -276,12 +284,25 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     elif model_name == "resnet18_lacunarity":
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
-        model_ft.avgpool = Pixel_Lacunarity(kernel=[2,2], stride=[2,2])
+        if poolingLayer == "max":
+            model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+        elif poolingLayer == "avg":                                                                                                                                                                                                                            
+            model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+        elif poolingLayer == "Pixel_Lacunarity":
+            model_ft.avgpool = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+        elif poolingLayer == "ScalePyramid_Lacunarity":
+            model_ft.avgpool = ScalePyramid_Lacunarity(num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+        elif poolingLayer == "BuildPyramid":
+            model_ft.avgpool = BuildPyramid(num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+        elif poolingLayer == "DBC":
+            model_ft.avgpool = DBC(r_values = scales, window_size = kernel)
+        elif poolingLayer == "GDCB":
+            model_ft.avgpool = GDCB(3,5)
         
         # Modify the final fully connected layer for the desired number of classes
         num_ftrs = model_ft.fc.in_features
         
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        model_ft.fc = nn.Linear(8192, num_classes)
         input_size = 224
 
     elif model_name == "Net":

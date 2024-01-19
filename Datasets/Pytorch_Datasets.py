@@ -15,6 +15,9 @@ import medmnist
 from medmnist.evaluator import getAUC, getACC
 from medmnist.info import INFO
 import os
+import torchgeo.datasets as geodatasets
+import torch
+import kornia.augmentation as K
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -28,9 +31,28 @@ GTOS data loader
 import os
 from PIL import Image
 from torch.utils.data import Dataset
-import pdb
-import torch
 
+class UCMerced_Index(Dataset):
+    def __init__(self, root, split='train',transform=None, download=True):  
+        
+        self.transform = transform
+        self.split = split
+        self.images = geodatasets.UCMerced(root,split,transforms=transform,
+                                           download=download)
+        self.targets = self.images.targets        
+        self.classes = self.images.classes
+       
+    def __getitem__(self, index):
+        image, target = self.images._load_image(index)
+                
+        if self.transform is not None:
+            to_pil = T.ToPILImage()
+            image = to_pil(image)
+            image = self.transform(image)
+        return image, target, index
+
+    def __len__(self):
+        return len(self.images)
 
 class PlantLeaf(Dataset):
 
@@ -110,14 +132,12 @@ class PlantLeaf(Dataset):
 
         img_file = datafiles["img"]
         img = Image.open(img_file)
-
-        label_file = datafiles["label"]
-        label = torch.as_tensor(label_file)
+        img = Image.fromarray(np.uint8(img))
+        label = datafiles["label"]       
 
         if self.img_transform is not None:
             img = self.img_transform(img)
-
-        return img, label,index
+        return img, label, index
 
 
 class FashionMNIST_Index(Dataset):
@@ -193,7 +213,7 @@ class MedMNIST(Dataset):
 
         if self.target_transform is not None:
             target = self.target_transform(target)
-
+        #pdb.set_trace()
         return img, target, index
 
     def __len__(self):
