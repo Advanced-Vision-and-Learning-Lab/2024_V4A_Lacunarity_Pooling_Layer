@@ -20,7 +20,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Pixel_Lacunarity', 4:'ScalePyramid_Lacunarity', 5:'BuildPyramid', 6:'DBC', 7:'GDCB'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -34,7 +34,9 @@ def Parameters(args):
                      3:'OrganMNISTCoronal',
                      4: 'FashionMNIST',
                      5: 'PlantLeaf',
-                     6: 'UCMerced'}
+                     6: 'UCMerced',
+                     7: 'PRMI',
+                     8: 'Synthetic_Gray'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -102,7 +104,7 @@ def Parameters(args):
     #Set to false to not generate TSNE visuals
     #Number of images to view for TSNE (defaults to all training imgs unless
     #value is less than total training images).
-    TSNE_visual = False
+    TSNE_visual = True
     Num_TSNE_images = 5000
     
     #Set to True if more than one GPU was used 
@@ -122,7 +124,9 @@ def Parameters(args):
                 'BloodMNIST': 'Datasets/BloodMNIST',
                 'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal',
                 'PlantLeaf' : 'Datasets/PlantLeaf',
-                'UCMerced': 'Datasets/UCMerced'}
+                'UCMerced': 'Datasets/UCMerced',
+                'PRMI': 'Datasets/PRMI',
+                'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -135,7 +139,9 @@ def Parameters(args):
                 'BloodMNIST': 3,
                 'OrganMNISTCoronal': 1,
                 'PlantLeaf': 3,
-                'UCMerced': 3}
+                'UCMerced': 3,
+                'PRMI': 3,
+                'Synthetic_Gray': 3}
     
     #Number of classes in each dataset
     num_classes = {'FashionMNIST': 10,
@@ -143,7 +149,9 @@ def Parameters(args):
                 'BloodMNIST': 8,
                 'OrganMNISTCoronal': 11,
                 'PlantLeaf': 12,
-                'UCMerced': 21}
+                'UCMerced': 21,
+                'PRMI': 4,
+                'Synthetic_Gray': 9}
     
     #Number of runs and/or splits for each dataset
     Splits = {'FashionMNIST': 3,
@@ -151,7 +159,9 @@ def Parameters(args):
                 'BloodMNIST': 3,
                 'OrganMNISTCoronal': 3,
                 'PlantLeaf': 3,
-                'UCMerced': 3}
+                'UCMerced': 3,
+                'PRMI': 3,
+                'Synthetic_Gray': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]

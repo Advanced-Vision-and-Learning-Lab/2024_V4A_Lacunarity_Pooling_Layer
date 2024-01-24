@@ -32,6 +32,9 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == "UCMerced":
         dataset = UCMerced_Index(data_dir, split='train',download=True)
 
+    elif Dataset == "PRMI":
+        dataset = PRMIDataset(data_dir, subset='train')
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 

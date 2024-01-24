@@ -18,6 +18,9 @@ import os
 import torchgeo.datasets as geodatasets
 import torch
 import kornia.augmentation as K
+import json
+from sklearn import preprocessing
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -31,6 +34,89 @@ GTOS data loader
 import os
 from PIL import Image
 from torch.utils.data import Dataset
+
+
+
+class Toy_Dataset(Dataset):
+    def __init__(self,directory,transform=None):  
+        
+       
+        self.transform = transform
+        self.images = datasets.ImageFolder(directory,transform=transform)
+        
+        self.targets = self.images.targets
+        
+        self.classes = self.images.classes
+        
+    def __getitem__(self, index):
+        data, target = self.images[index]
+        
+        return data, target, index
+
+    def __len__(self):
+        return len(self.images)
+    
+
+
+
+
+class PRMIDataset(Dataset):
+    def __init__(self, root, subset, species=None, transform=None):   
+        assert subset in ['train', 'val', 'test'], \
+            "Subset can only be 'train','val' or 'test'."
+        self.root = root
+        self.subset = subset
+        self.transform = transform
+        self.files = []
+        self.img_lt = []
+        self.lab_lt = []
+        # default species: cotton, papaya, sunflower, switchgrass
+        if species == None:
+            self.species = ['Cotton_736x552_DPI150',
+                            'Papaya_736x552_DPI150',
+                            'Sunflower_640x480_DPI120',
+                            'Switchgrass_720x510_DPI300']
+        else:
+            self.species = species
+        self.classes = self.species
+        
+        # get the list of image file that contains root
+        for item in self.species:
+            lab_json = os.path.join(self.root, self.subset, 'labels_image_gt',
+                                    (item+'_'+self.subset+'.json'))
+            with open(lab_json) as f:
+              data = json.load(f)
+              for img in data:
+                  if img['has_root'] == 1:
+                      img_dir = os.path.join(self.root, self.subset, 'images',
+                                             item, img['image_name'])
+                      lab = img['crop']
+                      self.img_lt.append(img_dir)
+                      self.lab_lt.append(lab)
+          
+        # encode the species type into class label
+        label_encoder = preprocessing.LabelEncoder()
+        self.lab_lt = label_encoder.fit_transform(self.lab_lt)
+
+        for item in zip(self.img_lt, self.lab_lt):
+            self.files.append({
+                    "img": item[0],
+                    "label": item[1]
+                    })
+
+    def __len__(self):     
+        return len(self.files)
+    
+    def __getitem__(self, index):      
+        datafiles = self.files[index]
+        img_file = datafiles["img"]
+        img = Image.open(img_file).convert('RGB')
+        label = datafiles["label"]
+        if self.transform is not None:
+            img = self.transform(img)        
+        return img, label, index
+
+
 
 class UCMerced_Index(Dataset):
     def __init__(self, root, split='train',transform=None, download=True):  

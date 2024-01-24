@@ -13,4 +13,7 @@ Datasets/MedMNIST
 Datasets/PlantLeaf
 Datasets/UCMerced
 Datasets/OrganMNISTCoronal
+Datasets/PRMI
+Datasets/Synthetic_Gray_Sigma_0.1
+Datasets/Synthetic_RGB_Sigma_0.1
 Images

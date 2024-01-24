@@ -9,6 +9,92 @@ import torch.nn.functional as F
 from kornia.geometry.transform import ScalePyramid, build_pyramid, resize
 import kornia.geometry.transform as T
 
+class Base_Lacunarity(nn.Module):
+    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
+
+
+        # inherit nn.module
+        super(Pixel_Lacunarity, self).__init__()
+
+        self.bias = bias
+        # define layer properties
+        self.dim = dim
+        self.eps = eps
+        self.kernel = kernel
+        self.stride = stride
+        self.padding = padding
+        self.scales = scales
+        self.normalize = nn.Tanh()
+        
+        
+        if self.bias == False: #Non learnable parameters
+            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3, bias = False)
+            self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
+            self.conv1x1.weight.requires_grad = False #Don't update weights
+        else:
+            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3)
+
+
+        #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
+        # and 2) to learn bin width
+        # Time series/ signal Data
+        if self.kernel is None:
+            if self.dim == 1:
+                self.gap_layer = nn.AdaptiveAvgPool1d(1)
+            
+            # Image Data
+            elif self.dim == 2:
+                self.gap_layer = nn.AdaptiveAvgPool2d(1)
+            
+            # Spatial/Temporal or Volumetric Data
+            elif self.dim == 3:
+                self.gap_layer = nn.AdaptiveAvgPool3d(1)
+             
+            else:
+                raise RuntimeError('Invalid dimension for global lacunarity layer')
+        else:
+            if self.dim == 1:
+                self.gap_layer = nn.AvgPool1d((kernel[0]), stride=stride[0], padding=(0))
+            
+            # Image Data
+            elif self.dim == 2:
+                self.gap_layer = nn.AvgPool2d((kernel[0], kernel[1]), stride=(stride[0], stride[1]), padding=(0, 0))
+            
+            # Spatial/Temporal or Volumetric Data
+            elif self.dim == 3:
+                self.gap_layer = nn.AvgPool3d((kernel[0], kernel[1], kernel[2]), stride=(stride[0], stride[1], stride[2]), padding=(0, 0, 0))
+             
+            else:
+                raise RuntimeError('Invalid dimension for global lacunarity layer')
+
+        
+    def forward(self,x):
+        #Compute squared tensor
+        lacunarity_values = []
+        for scale in self.scales:
+            scaled_x = x * scale
+            squared_x_tensor = scaled_x ** 2
+
+            #Get number of samples
+            n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
+            if (self.kernel == None):
+                n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
+
+
+            #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
+            L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
+            L_denominator = (n_pts * self.gap_layer(scaled_x))**2
+
+            #Lacunarity is L_numerator / L_denominator - 1
+            L_r = (L_numerator / (L_denominator + self.eps)) - 1
+            lambda_param = 0.5 #boxcox transformation
+            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
+
+            lacunarity_values.append(y)
+        result = torch.cat(lacunarity_values, dim=1)
+        return result
+
+
 
 class Pixel_Lacunarity(nn.Module):
     def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
@@ -155,7 +241,8 @@ class ScalePyramid_Lacunarity(nn.Module):
         lacunarity_values = []
         x = ((self.normalize(x) + 1)/2)* 255
         pyr_images, x, y = ScalePyramid(n_levels = self.num_levels, init_sigma = self.sigma, min_size = self.min_size)(x)
-
+        pyramids = len(pyr_images)
+        
         for scaled_x in pyr_images:
             scaled_x = scaled_x[:, :, 0, :, :]
             squared_x_tensor = scaled_x ** 2

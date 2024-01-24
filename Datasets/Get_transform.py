@@ -74,6 +74,22 @@ def get_transform(Network_parameters, input_size=224):
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
     } 
+        
+
+        
+    elif Dataset == 'PRMI':
+        data_transforms = {
+            'train': transforms.Compose([
+                transforms.Resize(size=(32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize(size=(32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+            ]),
+        }
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     
