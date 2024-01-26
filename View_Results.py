@@ -245,7 +245,7 @@ def parse_args():
     parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
     parser.add_argument('--data_selection', type=int, default=7,
-                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray')
+                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray, 9:Synthetic_RGB')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,

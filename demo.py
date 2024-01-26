@@ -92,7 +92,7 @@ def main(Params):
 
 
        # Train and evaluate
-       train_dict = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, device,
+       train_dict = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, device, patience=Params['earlystoppping'],
                                  num_epochs=Params['num_epochs'],
                                  scheduler=scheduler)
        test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
@@ -142,8 +142,8 @@ def parse_args():
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=2,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=7,
-                       help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray')
+   parser.add_argument('--data_selection', type=int, default=8,
+                       help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray, 9:Synthetic_RGB')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
@@ -152,6 +152,8 @@ def parse_args():
                        help='enables xai interpretability')
    parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                        help='enables parallel functionality')
+   parser.add_argument('--earlystoppping', type=int, default=50,
+                       help='early stopping for training')
    parser.add_argument('--train_batch_size', type=int, default=128,
                        help='input batch size for training (default: 128)')
    parser.add_argument('--val_batch_size', type=int, default=128,

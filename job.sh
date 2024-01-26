@@ -8,7 +8,7 @@
 #SBATCH --nodes=1
 #SBATCH --output=/home/grads/a/akshatha.mohan/Documents/Thesis/Lacunarity_Pooling/logs/%j_log.out
 
-EPOCH=400
+EPOCH=50
 DATASET1=2
 DATASET2=4
 DATASET3=7
@@ -39,69 +39,69 @@ cd /home/grads/a/akshatha.mohan/Documents/Thesis/Lacunarity_Pooling
 
 #-------------MAX-------------------------#
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
 
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-
-
-# #-------------AVG-------------------------#
-
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-
-python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
 
 
+# # #-------------AVG-------------------------#
+
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+
+# python demo.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET1 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
 
 
-##########FASHIONMNIST#####################################################
-
-#-------------MAX-------------------------#
-
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
 
 
-# #-------------AVG-------------------------#
+# ##########FASHIONMNIST#####################################################
 
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# #-------------MAX-------------------------#
 
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
 
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
 
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
 
-python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 6 --stride 1 --folder 'Saved_Models/k=6'
-python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 6 --stride 1 --folder 'Saved_Models/k=6'
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 1 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+
+
+# # #-------------AVG-------------------------#
+
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 2 --stride 1 --folder 'Saved_Models/k=2'
+
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 4 --stride 1 --folder 'Saved_Models/k=4'
+
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 3 --stride 1 --folder 'Saved_Models/k=3'
+
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 5 --stride 1 --folder 'Saved_Models/k=5'
+
+# python demo.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 6 --stride 1 --folder 'Saved_Models/k=6'
+# python View_Results.py --data_selection $DATASET2 --num_epochs $EPOCH --pooling_layer 2 --kernel 6 --stride 1 --folder 'Saved_Models/k=6'
 
 
 ##########PRMI#####################################################

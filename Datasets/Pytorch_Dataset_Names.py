@@ -35,6 +35,10 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == "PRMI":
         dataset = PRMIDataset(data_dir, subset='train')
 
+
+    elif Dataset == "Synthetic_Gray" or Dataset == "Synthetic_RGB":
+        dataset = Toy_Dataset(data_dir)
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 

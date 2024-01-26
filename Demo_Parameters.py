@@ -15,6 +15,8 @@ def Parameters(args):
     #use xai interpretability
     xai = args.xai
     bias = args.bias
+
+    earlystoppping = args.earlystoppping
     
     #Location to store trained models
     #Always add slash (/) after folder name
@@ -36,7 +38,8 @@ def Parameters(args):
                      5: 'PlantLeaf',
                      6: 'UCMerced',
                      7: 'PRMI',
-                     8: 'Synthetic_Gray'}
+                     8: 'Synthetic_Gray',
+                     9: 'Synthetic_RGB'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -104,7 +107,7 @@ def Parameters(args):
     #Set to false to not generate TSNE visuals
     #Number of images to view for TSNE (defaults to all training imgs unless
     #value is less than total training images).
-    TSNE_visual = True
+    TSNE_visual = False
     Num_TSNE_images = 5000
     
     #Set to True if more than one GPU was used 
@@ -126,7 +129,8 @@ def Parameters(args):
                 'PlantLeaf' : 'Datasets/PlantLeaf',
                 'UCMerced': 'Datasets/UCMerced',
                 'PRMI': 'Datasets/PRMI',
-                'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1'}
+                'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1',
+                'Synthetic_RGB': 'Datasets/Synthetic_RGB_Sigma_0.1'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -141,7 +145,8 @@ def Parameters(args):
                 'PlantLeaf': 3,
                 'UCMerced': 3,
                 'PRMI': 3,
-                'Synthetic_Gray': 3}
+                'Synthetic_Gray': 3,
+                'Synthetic_RGB': 3}
     
     #Number of classes in each dataset
     num_classes = {'FashionMNIST': 10,
@@ -151,7 +156,8 @@ def Parameters(args):
                 'PlantLeaf': 12,
                 'UCMerced': 21,
                 'PRMI': 4,
-                'Synthetic_Gray': 9}
+                'Synthetic_Gray': 9,
+                'Synthetic_RGB': 9}
     
     #Number of runs and/or splits for each dataset
     Splits = {'FashionMNIST': 3,
@@ -161,7 +167,8 @@ def Parameters(args):
                 'PlantLeaf': 3,
                 'UCMerced': 3,
                 'PRMI': 3,
-                'Synthetic_Gray': 3}
+                'Synthetic_Gray': 3,
+                'Synthetic_RGB': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]
@@ -174,6 +181,7 @@ def Parameters(args):
             'kernel': args.kernel, 'stride': args.stride, 'conv_padding': args.padding,
             'scales': args.scales, 'num_levels': args.num_levels, 'sigma':args.sigma,
             'min_size': args.min_size,
+            'earlystoppping': args.earlystoppping,
             'lr': lr,'step_size': step_size,'gamma': gamma,
             'batch_size' : batch_size, 'num_epochs': num_epochs, 
             'resize_size': resize_size, 'center_size': center_size, 

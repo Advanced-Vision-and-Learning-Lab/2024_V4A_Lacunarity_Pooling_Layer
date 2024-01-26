@@ -26,7 +26,7 @@ from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
-def train_model(model, dataloaders, criterion, optimizer, device,
+def train_model(model, dataloaders, criterion, optimizer, device, patience,
                 num_epochs=25, scheduler=None):
     
     since = time.time()
@@ -36,7 +36,7 @@ def train_model(model, dataloaders, criterion, optimizer, device,
     train_error_history = []
     val_error_history = []
     
-    early_stopping = EarlyStopping(patience=50, verbose=True)
+    early_stopping = EarlyStopping(patience=patience, verbose=True)
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0

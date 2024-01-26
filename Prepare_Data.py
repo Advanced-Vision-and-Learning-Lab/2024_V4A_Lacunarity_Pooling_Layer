@@ -114,11 +114,12 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         test_dataset = PRMIDataset(data_dir, subset='test', transform=data_transforms['test'])
         val_dataset = PRMIDataset(data_dir, subset='val', transform=data_transforms['test'])
 
-    elif Dataset == 'Synthetic_Gray':
+    elif Dataset == 'Synthetic_Gray' or Dataset == "Synthetic_RGB":
         
         if 'Grayscale' in Dataset:
             data_transforms = {
                 'val': transforms.Compose([
+                    transforms.Resize(size=(200, 200)),
                     transforms.Grayscale(num_output_channels=3),
                     transforms.ToTensor(),
                 ]),
@@ -127,8 +128,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         else:
             data_transforms = {
                 'val': transforms.Compose([
-                    transforms.Resize(Network_parameters['resize_size']),
-                    transforms.CenterCrop(Network_parameters['center_size']),
+                    transforms.Resize(size=(200, 200)),
                     transforms.ToTensor(),
                 ]),
             }
@@ -151,14 +151,12 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         if 'Grayscale' in Dataset:
             data_transforms = {
                 'train': transforms.Compose([
-                    transforms.Resize(Network_parameters['resize_size']),
-                    transforms.RandomResizedCrop(Network_parameters['center_size'],scale=(.8,1.0)),
+                    transforms.Resize(size=(200, 200)),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std)
                 ]),
                 'val': transforms.Compose([
-                    # transforms.Resize(Network_parameters['resize_size']),
-                    # transforms.CenterCrop(Network_parameters['center_size']),
+                    transforms.Resize(size=(200, 200)),
                     transforms.Grayscale(num_output_channels=3),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std)
@@ -168,15 +166,12 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         else:
             data_transforms = {
                 'train': transforms.Compose([
-                    transforms.Resize(Network_parameters['resize_size']),
-                    transforms.RandomResizedCrop(Network_parameters['center_size'],scale=(.8,1.0)),
-                    transforms.RandomHorizontalFlip(),
+                    transforms.Resize(size=(200, 200)),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std)
                 ]),
                 'val': transforms.Compose([
-                    transforms.Resize(Network_parameters['resize_size']),
-                    transforms.CenterCrop(Network_parameters['center_size']),
+                    transforms.Resize(size=(200, 200)),
                     transforms.ToTensor(),
                     transforms.Normalize(mean, std)
                 ]),

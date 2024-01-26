@@ -14,7 +14,7 @@ class Base_Lacunarity(nn.Module):
 
 
         # inherit nn.module
-        super(Pixel_Lacunarity, self).__init__()
+        super(Base_Lacunarity, self).__init__()
 
         self.bias = bias
         # define layer properties
@@ -201,8 +201,8 @@ class ScalePyramid_Lacunarity(nn.Module):
         self.sigma = sigma
         self.min_size = min_size
         self.normalize = nn.Tanh()
-        self.conv1x1 = nn.Conv2d(6, 3, kernel_size=1, groups = 3)
-
+        self.conv1x1 = nn.Conv2d(9, 3, kernel_size=1, groups = 3)
+        self.scalePyramid = ScalePyramid(n_levels = self.num_levels, init_sigma = self.sigma, min_size = self.min_size)
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
         # Time series/ signal Data
@@ -234,15 +234,25 @@ class ScalePyramid_Lacunarity(nn.Module):
              
             else:
                 raise RuntimeError('Invalid dimension for global lacunarity layer')
-
+            
+    def create_conv1x1(self, x):
+        # Get the number of channels from the input
+        in_channels = x
+        # Create a new nn.Conv2d instance with the correct in_channels
+        conv1x1 = nn.Conv2d(in_channels*3, 3, kernel_size=1, groups=3)
+        return conv1x1
+    
         
     def forward(self,x):
         #Compute squared tensor
         lacunarity_values = []
         x = ((self.normalize(x) + 1)/2)* 255
-        pyr_images, x, y = ScalePyramid(n_levels = self.num_levels, init_sigma = self.sigma, min_size = self.min_size)(x)
-        pyramids = len(pyr_images)
-        
+        pyr_images, x, y = self.scalePyramid(x)
+        print(len(pyr_images))
+
+        if self.conv1x1.in_channels != len(pyr_images):
+            self.conv1x1 = self.create_conv1x1(len(pyr_images))
+
         for scaled_x in pyr_images:
             scaled_x = scaled_x[:, :, 0, :, :]
             squared_x_tensor = scaled_x ** 2
@@ -266,11 +276,11 @@ class ScalePyramid_Lacunarity(nn.Module):
             lacunarity_values.append(y)
             reference_size = lacunarity_values[0].shape[-2:]
             pyr_images_resized = [T.resize(img, size=reference_size, interpolation="bilinear") for img in lacunarity_values]
-
         result = torch.cat(pyr_images_resized, dim=1)
 
         reduced_output = self.conv1x1(result)
-        return reduced_output
+        return reduced_output, result, pyr_images_resized
+
 
 
 class BuildPyramid(nn.Module):
