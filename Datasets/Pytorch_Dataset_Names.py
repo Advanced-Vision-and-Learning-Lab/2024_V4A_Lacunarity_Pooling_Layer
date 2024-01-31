@@ -35,9 +35,14 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == "PRMI":
         dataset = PRMIDataset(data_dir, subset='train')
 
-
     elif Dataset == "Synthetic_Gray" or Dataset == "Synthetic_RGB":
         dataset = Toy_Dataset(data_dir)
+
+    elif Dataset == "Kth_Tips":               
+        dataset = KTH_TIPS_2b_data(data_dir,train=True)
+
+    elif Dataset == 'GTOS-mobile':
+        dataset = GTOS_mobile_single_data(path,train=False)
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 

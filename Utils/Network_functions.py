@@ -20,7 +20,7 @@ from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB
+from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB, Base_Lacunarity
 from Utils.CustomNN import Net
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
@@ -284,10 +284,13 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     elif model_name == "resnet18_lacunarity":
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
+
         if poolingLayer == "max":
             model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
         elif poolingLayer == "avg":                                                                                                                                                                                                                            
             model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+        elif poolingLayer == "Base_Lacunarity":
+            model_ft.avgpool = Base_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
         elif poolingLayer == "Pixel_Lacunarity":
             model_ft.avgpool = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
         elif poolingLayer == "ScalePyramid_Lacunarity":

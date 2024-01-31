@@ -12,6 +12,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.model_selection import train_test_split
 from pytorch_metric_learning import samplers
 from Datasets.Split_Data import DataSplit
+import itertools
 import ssl
 ## PyTorch dependencies
 import torch
@@ -187,7 +188,50 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         # Create training and validation dataloaders, using validation set as testing for segmentation experiments
         dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
 
+    elif Dataset == 'Kth_Tips': #Didn't use any data augmentation for initial experiments
+        samples = ['a', 'b', 'c', 'd']
+        # Set to 1 to train on 1, test 3; set to 2 to train on 2, test on 2;
+        # set to 3 to train on 3 and test 1
+        setting = 3
+        
+        sample_combos = list(itertools.combinations(samples, setting))
+        train_setting = []
+        test_setting = []
+        for ii in range(0, len(sample_combos)):
+            train_setting.append(list(sample_combos[ii]))
+            test_setting.append(list(sorted(set(samples) - set(sample_combos[ii]))))
+         
+        train_val_dataset = KTH_TIPS_2b_data(data_dir,train=True,
+                                         img_transform=data_transforms['train'],
+                                         train_setting=train_setting[split])
+        test_dataset = KTH_TIPS_2b_data(data_dir,train=False,
+                                         img_transform=data_transforms['test'],
+                                         test_setting=test_setting[split])
+        
+        indices = np.arange(len(train_val_dataset))
+        y = train_val_dataset.targets
+
+        # Use stratified split to balance training validation splits, set random state to be same for each encoding method
+        _, _, _, _, train_indices, val_indices = train_test_split(y, y, indices, stratify=y, test_size=.1,
+                                                                  random_state= 10)
+
+        # Creating PT data samplers and loaders:
+        train_sampler = SubsetRandomSampler(train_indices)
+        val_sampler = SubsetRandomSampler(val_indices)
+        dataset_sampler = {'train': train_sampler, 'val': val_sampler, 'test': None}
+
+    elif Dataset == 'GTOS-mobile': #Need to create separate validation dataset from training
+        # Create training and test datasets
+        train_dataset = GTOS_mobile_single_data(data_dir, train = True,
+                                           image_size=Network_parameters['resize_size'],
+                                           img_transform=data_transforms['train']) 
+        val_dataset = GTOS_mobile_single_data(data_dir, train = False,
+                                           img_transform=data_transforms['test'])
+        test_dataset = GTOS_mobile_single_data(data_dir, train = False,
+                                           img_transform=data_transforms['test'])
     
+    elif Dataset == "LeavesTex":
+        dataset = LeavesTex1200(data_dir, transform = data_transforms['train'])
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
@@ -221,6 +265,18 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                         pin_memory=Network_parameters['pin_memory'],
                                                         sampler = dataset_sampler[x])
                                                         for x in ['train', 'val','test']}
+        
+    elif Dataset == "Kth_Tips":
+        
+        image_datasets = {'train': train_val_dataset, 'val': train_val_dataset, 'test': test_dataset}
+        # Create training and test dataloaders
+        dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],
+                                                           batch_size=Network_parameters['batch_size'][x],
+                                                           sampler=dataset_sampler[x],
+                                                           num_workers=Network_parameters['num_workers'],
+                                                           pin_memory=Network_parameters['pin_memory'])
+                            for x in ['train', 'val', 'test']}
+
 
     # Create training and test dataloaders
     #for FashionMNIST dataset
@@ -236,6 +292,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
     
     elif Dataset == 'Synthetic_Gray':
             pass
+    
     else:
         image_datasets = {'train': train_dataset, 'val': val_dataset, 'test': test_dataset}
         dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x],

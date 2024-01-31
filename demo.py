@@ -136,14 +136,16 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=4,
-                       help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, 6:BuildPyramid, 7:DBC, 8:GDCB')
+   parser.add_argument('--pooling_layer', type=int, default=1,
+                       help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
+                        6:BuildPyramid, 7:DBC, 8:GDCB')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=2,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=8,
-                       help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray, 9:Synthetic_RGB')
+   parser.add_argument('--data_selection', type=int, default=11,
+                       help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, \
+                        8:Synthetic_Gray, 9:Synthetic_RGB, 10:Kth_Tips, 11: GTOS-mobile, 12:LeavesTex')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
@@ -154,11 +156,11 @@ def parse_args():
                        help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=50,
                        help='early stopping for training')
-   parser.add_argument('--train_batch_size', type=int, default=128,
+   parser.add_argument('--train_batch_size', type=int, default=64,
                        help='input batch size for training (default: 128)')
-   parser.add_argument('--val_batch_size', type=int, default=128,
+   parser.add_argument('--val_batch_size', type=int, default=64,
                        help='input batch size for validation (default: 512)')
-   parser.add_argument('--test_batch_size', type=int, default=128,
+   parser.add_argument('--test_batch_size', type=int, default=64,
                        help='input batch size for testing (default: 256)')
    parser.add_argument('--num_epochs', type=int, default=5,
                        help='Number of epochs to train each model for (default: 50)')
@@ -166,7 +168,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.001,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='Net',
+   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

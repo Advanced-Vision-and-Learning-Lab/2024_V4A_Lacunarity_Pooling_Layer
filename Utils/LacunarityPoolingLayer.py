@@ -235,9 +235,7 @@ class ScalePyramid_Lacunarity(nn.Module):
             else:
                 raise RuntimeError('Invalid dimension for global lacunarity layer')
             
-    def create_conv1x1(self, x):
-        # Get the number of channels from the input
-        in_channels = x
+    def create_conv1x1(self, in_channels):
         # Create a new nn.Conv2d instance with the correct in_channels
         conv1x1 = nn.Conv2d(in_channels*3, 3, kernel_size=1, groups=3)
         return conv1x1

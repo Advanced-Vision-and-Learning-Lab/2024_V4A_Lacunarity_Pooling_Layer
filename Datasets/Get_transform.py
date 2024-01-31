@@ -44,6 +44,22 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize(mean=[.5], std=[.5]),
             ]),
     }
+        
+    elif Dataset == 'PRMI':
+        data_transforms = {
+            'train': transforms.Compose([
+                transforms.Resize(size=(32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize(size=(32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+            ]),
+        }
+
+
     elif Dataset == "PlantLeaf":
         data_transforms = {
             'train': transforms.Compose([
@@ -75,21 +91,25 @@ def get_transform(Network_parameters, input_size=224):
         ]),
     } 
         
-
-        
-    elif Dataset == 'PRMI':
+    elif Dataset == "Kth_Tips" or Dataset == "GTOS-mobile" or Dataset == 'LeavesTex':  
         data_transforms = {
             'train': transforms.Compose([
-                transforms.Resize(size=(32, 32)),
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
+                transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
-                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
             ]),
             'test': transforms.Compose([
-                transforms.Resize(size=(32, 32)),
+                transforms.Resize(Network_parameters['center_size']),
+                transforms.CenterCrop(input_size),
+                transforms.RandomAffine(Network_parameters['degrees']),
                 transforms.ToTensor(),
-                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
             ]),
         }
+        
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     
