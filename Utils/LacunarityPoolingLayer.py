@@ -118,15 +118,16 @@ class Pixel_Lacunarity(nn.Module):
         self.stride = stride
         self.padding = padding
         self.scales = scales
+        self.model_name = model_name
         self.normalize = nn.Tanh()
         
 
         if self.bias == False: #Non learnable parameters
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, bias = False)
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, bias = False)
             self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
             self.conv1x1.weight.requires_grad = False #Don't update weights
         else:
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, groups = feature_maps[self.model_name])
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
 
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
@@ -208,7 +209,7 @@ class ScalePyramid_Lacunarity(nn.Module):
         self.min_size = min_size
         self.normalize = nn.Tanh()
         self.model_name = model_name
-        self.conv1x1 = nn.Conv2d(9, feature_maps[model_name], kernel_size=1)
+        self.conv1x1 = nn.Conv2d(9, feature_maps[self.model_name], kernel_size=1)
         self.scalePyramid = ScalePyramid(n_levels = self.num_levels, init_sigma = self.sigma, min_size = self.min_size)
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width

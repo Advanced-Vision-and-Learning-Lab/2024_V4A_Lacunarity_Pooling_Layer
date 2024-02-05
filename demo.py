@@ -136,12 +136,12 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=6,
+   parser.add_argument('--pooling_layer', type=int, default=1,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
                         6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
-   parser.add_argument('--agg_func', type=int, default=2,
+   parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
    parser.add_argument('--data_selection', type=int, default=12,
                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, \
@@ -168,7 +168,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.001,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='densenet121',
+   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

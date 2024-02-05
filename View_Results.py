@@ -254,6 +254,8 @@ def parse_args():
                         help='enables xai interpretability')
     parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                         help='enables parallel functionality')
+    parser.add_argument('--earlystoppping', type=int, default=50,
+                       help='early stopping for training')
     parser.add_argument('--train_batch_size', type=int, default=128,
                         help='input batch size for training (default: 128)')
     parser.add_argument('--val_batch_size', type=int, default=128,

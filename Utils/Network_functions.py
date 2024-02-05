@@ -285,33 +285,57 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     elif model_name == "resnet18_lacunarity":
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
-        if poolingLayer == "Baseline":
-            model_ft.avgpool = model_ft.avgpool
-        elif poolingLayer == "max":
-            model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-        elif poolingLayer == "avg":                                                                                                                                                                                                                            
-            model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-        elif poolingLayer == "Base_Lacunarity":
-            model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-        elif poolingLayer == "Pixel_Lacunarity":
-            model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-        elif poolingLayer == "ScalePyramid_Lacunarity":
-            model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
-        elif poolingLayer == "BuildPyramid":
-            model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
-        elif poolingLayer == "DBC":
-            model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
-        elif poolingLayer == "GDCB":
-            model_ft.avgpool = GDCB(3,5)
+        
+        if aggFunc == "local":
+            if poolingLayer == "max":
+                model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif poolingLayer == "avg":                                                                                                                                                                                                                            
+                model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif poolingLayer == "Base_Lacunarity":
+                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif poolingLayer == "Pixel_Lacunarity":
+                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif poolingLayer == "ScalePyramid_Lacunarity":
+                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+            elif poolingLayer == "BuildPyramid":
+                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+            elif poolingLayer == "DBC":
+                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            elif poolingLayer == "GDCB":
+                model_ft.avgpool = GDCB(3,5)
+        
+        elif aggFunc == "global":
+            if poolingLayer == "max":
+                model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
+            elif poolingLayer == "avg":                                                                                                                                                                                                                            
+                model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+            elif poolingLayer == "Base_Lacunarity":
+                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
+            elif poolingLayer == "Pixel_Lacunarity":
+                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
+            elif poolingLayer == "ScalePyramid_Lacunarity":
+                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
+            elif poolingLayer == "BuildPyramid":
+                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
+            elif poolingLayer == "DBC":
+                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            elif poolingLayer == "GDCB":
+                model_ft.avgpool = GDCB(3,5)
+
         
         # Modify the final fully connected layer for the desired number of classes
         if poolingLayer == "Baseline":
+            model_ft.avgpool = model_ft.avgpool
             num_ftrs = model_ft.fc.in_features
             model_ft.fc = nn.Linear(num_ftrs, num_classes)
         else:
             num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
             model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
+
+
+
+
 
     elif model_name == "densenet121":
         model_ft = models.densenet121(weights='DEFAULT',memory_efficient=True)

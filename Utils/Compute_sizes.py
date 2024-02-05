@@ -40,9 +40,12 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
                 num_ftrs = out_channels * pooling_output * pooling_output
     
     elif model_name == "resnet18_lacunarity":
-        feature_height = 7
-        out_channels = 512
-        pooling_output = math.floor((feature_height - kernel) / stride) + 1
-        num_ftrs = out_channels * pooling_output * pooling_output  
+        if agg_func == "local":
+            feature_height = 7
+            out_channels = 512
+            pooling_output = math.floor((feature_height - kernel) / stride) + 1
+            num_ftrs = out_channels * pooling_output * pooling_output
+        elif agg_func == "global":
+            num_ftrs = 512
 
     return num_ftrs
