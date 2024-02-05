@@ -42,7 +42,10 @@ def Get_Class_Names(Dataset,data_dir):
         dataset = KTH_TIPS_2b_data(data_dir,train=True)
 
     elif Dataset == 'GTOS-mobile':
-        dataset = GTOS_mobile_single_data(path,train=False)
+        dataset = GTOS_mobile_single_data(data_dir, train=False)
+
+    elif Dataset == 'LeavesTex':
+        dataset = LeavesTex1200(data_dir)
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 

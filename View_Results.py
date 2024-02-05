@@ -239,7 +239,7 @@ def parse_args():
     parser.add_argument('--min_size', type=int, default=2,
                         help='Input min size')
     parser.add_argument('--pooling_layer', type=int, default=1,
-                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, 6:BuildPyramid, 7:DBC, 8:GDCB')
+                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, 6:BuildPyramid, 7:DBC, 8:GDCB, , 9: Baseline')
     parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                         help='enables bias in Pixel Lacunarity')
     parser.add_argument('--agg_func', type=int, default=2,

@@ -22,7 +22,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB', 9: 'Baseline'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -42,7 +42,7 @@ def Parameters(args):
                      9: 'Synthetic_RGB',
                      10: 'Kth_Tips',
                      11: 'GTOS-mobile',
-                     11: 'LeavesTex'}
+                     12: 'LeavesTex'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -135,9 +135,8 @@ def Parameters(args):
                 'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1',
                 'Synthetic_RGB': 'Datasets/Synthetic_RGB_Sigma_0.1',
                 'Kth_Tips': 'Datasets/KTH-TIPS2-b',
-                'GTOS-mobile': 'Datasets/GTOS-mobile',
                 'LeavesTex': 'Datasets/LeavesTex1200',
-                'GTOS-mobile': 'Datasets/GTOS-mobile'}
+                'GTOS-mobile': 'Datasets/gtos-mobile'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -156,8 +155,7 @@ def Parameters(args):
                 'Synthetic_RGB': 3,
                 'Kth_Tips': 3,
                 'GTOS-mobile': 3,
-                'LeavesTex': 3,
-                'GTOS-mobile': 3}
+                'LeavesTex': 3}
     
     #Number of classes in each dataset
     num_classes = {'FashionMNIST': 10,
@@ -171,8 +169,7 @@ def Parameters(args):
                 'Synthetic_RGB': 9,
                 'Kth_Tips': 11,
                 'GTOS-mobile': 31,
-                'LeavesTex': 20,
-                'GTOS-mobile': 31}
+                'LeavesTex': 20}
     
     #Number of runs and/or splits for each dataset
     Splits = {'FashionMNIST': 3,

@@ -9,8 +9,16 @@ import torch.nn.functional as F
 from kornia.geometry.transform import ScalePyramid, build_pyramid, resize
 import kornia.geometry.transform as T
 
+
+global feature_maps
+feature_maps =  {'Net': 3,
+                "resnet18_lacunarity": 512,
+                "densenet_121": 3,
+                "convnext": 3}
+
+
 class Base_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
+    def __init__(self, model_name = 'Net', dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
 
 
         # inherit nn.module
@@ -28,98 +36,11 @@ class Base_Lacunarity(nn.Module):
         
         
         if self.bias == False: #Non learnable parameters
-            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3, bias = False)
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], 3, kernel_size=1, groups = feature_maps[self.model_name], bias = False)
             self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
             self.conv1x1.weight.requires_grad = False #Don't update weights
         else:
-            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3)
-
-
-        #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
-        # and 2) to learn bin width
-        # Time series/ signal Data
-        if self.kernel is None:
-            if self.dim == 1:
-                self.gap_layer = nn.AdaptiveAvgPool1d(1)
-            
-            # Image Data
-            elif self.dim == 2:
-                self.gap_layer = nn.AdaptiveAvgPool2d(1)
-            
-            # Spatial/Temporal or Volumetric Data
-            elif self.dim == 3:
-                self.gap_layer = nn.AdaptiveAvgPool3d(1)
-             
-            else:
-                raise RuntimeError('Invalid dimension for global lacunarity layer')
-        else:
-            if self.dim == 1:
-                self.gap_layer = nn.AvgPool1d((kernel[0]), stride=stride[0], padding=(0))
-            
-            # Image Data
-            elif self.dim == 2:
-                self.gap_layer = nn.AvgPool2d((kernel[0], kernel[1]), stride=(stride[0], stride[1]), padding=(0, 0))
-            
-            # Spatial/Temporal or Volumetric Data
-            elif self.dim == 3:
-                self.gap_layer = nn.AvgPool3d((kernel[0], kernel[1], kernel[2]), stride=(stride[0], stride[1], stride[2]), padding=(0, 0, 0))
-             
-            else:
-                raise RuntimeError('Invalid dimension for global lacunarity layer')
-
-        
-    def forward(self,x):
-        #Compute squared tensor
-        lacunarity_values = []
-        for scale in self.scales:
-            scaled_x = x * scale
-            squared_x_tensor = scaled_x ** 2
-
-            #Get number of samples
-            n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
-            if (self.kernel == None):
-                n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
-
-
-            #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
-            L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
-            L_denominator = (n_pts * self.gap_layer(scaled_x))**2
-
-            #Lacunarity is L_numerator / L_denominator - 1
-            L_r = (L_numerator / (L_denominator + self.eps)) - 1
-            lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
-
-            lacunarity_values.append(y)
-        result = torch.cat(lacunarity_values, dim=1)
-        return result
-
-
-
-class Pixel_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, scales = None, kernel = None, stride = None, padding = None, bias = False):
-
-
-        # inherit nn.module
-        super(Pixel_Lacunarity, self).__init__()
-
-        self.bias = bias
-        # define layer properties
-        self.dim = dim
-        self.eps = eps
-        self.kernel = kernel
-        self.stride = stride
-        self.padding = padding
-        self.scales = scales
-        self.normalize = nn.Tanh()
-        
-        
-        if self.bias == False: #Non learnable parameters
-            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3, bias = False)
-            self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
-            self.conv1x1.weight.requires_grad = False #Don't update weights
-        else:
-            self.conv1x1 = nn.Conv2d(len(self.scales) * 3, 3, kernel_size=1, groups = 3)
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, groups = feature_maps[model_name])
 
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
@@ -168,6 +89,91 @@ class Pixel_Lacunarity(nn.Module):
             if (self.kernel == None):
                 n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
 
+            #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
+            L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
+            L_denominator = (n_pts * self.gap_layer(scaled_x))**2
+
+            #Lacunarity is L_numerator / L_denominator - 1
+            L_r = (L_numerator / (L_denominator + self.eps)) - 1
+            lambda_param = 0.5 #boxcox transformation
+            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
+
+            lacunarity_values.append(y)
+        result = torch.cat(lacunarity_values, dim=1)
+        return result
+
+
+
+class Pixel_Lacunarity(nn.Module):
+    def __init__(self, dim=2, eps = 10E-6, model_name=None, scales = None, kernel = None, stride = None, padding = None, bias = False):
+
+        # inherit nn.module
+        super(Pixel_Lacunarity, self).__init__()
+
+        self.bias = bias
+        # define layer properties
+        self.dim = dim
+        self.eps = eps
+        self.kernel = kernel
+        self.stride = stride
+        self.padding = padding
+        self.scales = scales
+        self.normalize = nn.Tanh()
+        
+
+        if self.bias == False: #Non learnable parameters
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, bias = False)
+            self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
+            self.conv1x1.weight.requires_grad = False #Don't update weights
+        else:
+            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, groups = feature_maps[self.model_name])
+
+
+        #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
+        # and 2) to learn bin width
+        # Time series/ signal Data
+        if self.kernel is None:
+            if self.dim == 1:
+                self.gap_layer = nn.AdaptiveAvgPool1d(1)
+            
+            # Image Data
+            elif self.dim == 2:
+                self.gap_layer = nn.AdaptiveAvgPool2d(1)
+            
+            # Spatial/Temporal or Volumetric Data
+            elif self.dim == 3:
+                self.gap_layer = nn.AdaptiveAvgPool3d(1)
+             
+            else:
+                raise RuntimeError('Invalid dimension for global lacunarity layer')
+        else:
+            if self.dim == 1:
+                self.gap_layer = nn.AvgPool1d((kernel[0]), stride=stride[0], padding=(0))
+            
+            # Image Data
+            elif self.dim == 2:
+                self.gap_layer = nn.AvgPool2d((kernel[0], kernel[1]), stride=(stride[0], stride[1]), padding=(0, 0))
+            
+            # Spatial/Temporal or Volumetric Data
+            elif self.dim == 3:
+                self.gap_layer = nn.AvgPool3d((kernel[0], kernel[1], kernel[2]), stride=(stride[0], stride[1], stride[2]), padding=(0, 0, 0))
+             
+            else:
+                raise RuntimeError('Invalid dimension for global lacunarity layer')
+
+        
+    def forward(self,x):
+        #Compute squared tensor
+        lacunarity_values = []
+        x = ((self.normalize(x) + 1)/2)* 255
+        for scale in self.scales:
+            scaled_x = x * scale
+            squared_x_tensor = scaled_x ** 2
+
+            #Get number of samples
+            n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
+            if (self.kernel == None):
+                n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
 
             #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
             L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
@@ -185,7 +191,7 @@ class Pixel_Lacunarity(nn.Module):
 
 
 class ScalePyramid_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, num_levels = None, sigma = None, min_size = None, kernel = None, stride = None, padding = None):
+    def __init__(self, dim=2, eps = 10E-6, model_name = "Net", num_levels = None, sigma = None, min_size = None, kernel = None, stride = None, padding = None):
 
 
         # inherit nn.module
@@ -201,7 +207,8 @@ class ScalePyramid_Lacunarity(nn.Module):
         self.sigma = sigma
         self.min_size = min_size
         self.normalize = nn.Tanh()
-        self.conv1x1 = nn.Conv2d(9, 3, kernel_size=1, groups = 3)
+        self.model_name = model_name
+        self.conv1x1 = nn.Conv2d(9, feature_maps[model_name], kernel_size=1)
         self.scalePyramid = ScalePyramid(n_levels = self.num_levels, init_sigma = self.sigma, min_size = self.min_size)
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
@@ -236,8 +243,9 @@ class ScalePyramid_Lacunarity(nn.Module):
                 raise RuntimeError('Invalid dimension for global lacunarity layer')
             
     def create_conv1x1(self, in_channels):
+        # Get the number of channels from the input
         # Create a new nn.Conv2d instance with the correct in_channels
-        conv1x1 = nn.Conv2d(in_channels*3, 3, kernel_size=1, groups=3)
+        conv1x1 = nn.Conv2d(in_channels*feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
         return conv1x1
     
         
@@ -277,18 +285,19 @@ class ScalePyramid_Lacunarity(nn.Module):
         result = torch.cat(pyr_images_resized, dim=1)
 
         reduced_output = self.conv1x1(result)
-        return reduced_output, result, pyr_images_resized
+        return reduced_output
 
 
 
 class BuildPyramid(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, num_levels = None, kernel = None, stride = None, padding = None):
+    def __init__(self, dim=2, eps = 10E-6, model_name='Net', num_levels = None, kernel = None, stride = None, padding = None):
 
 
         # inherit nn.module
         super(BuildPyramid, self).__init__()
 
         # define layer properties
+        self.model_name = model_name
         self.dim = dim
         self.eps = eps
         self.kernel = kernel
@@ -296,7 +305,7 @@ class BuildPyramid(nn.Module):
         self.padding = padding
         self.num_levels = num_levels
         self.normalize = nn.Tanh()
-        self.conv1x1 = nn.Conv2d(3*self.num_levels, 3, kernel_size=1, groups = 3)
+        self.conv1x1 = nn.Conv2d(feature_maps[self.model_name]*self.num_levels, feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
@@ -330,12 +339,20 @@ class BuildPyramid(nn.Module):
             else:
                 raise RuntimeError('Invalid dimension for global lacunarity layer')
 
-        
+    def create_conv1x1(self, in_channels):
+        # Create a new nn.Conv2d instance with the correct in_channels
+        conv1x1 = nn.Conv2d(in_channels*feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups=feature_maps[self.model_name])
+        return conv1x1
+    
     def forward(self,x):
         #Compute squared tensor
         lacunarity_values = []
         x = ((self.normalize(x) + 1)/2)* 255
         pyr_images = build_pyramid(x, max_level=self.num_levels)
+
+        if self.conv1x1.in_channels != len(pyr_images):
+            self.conv1x1 = self.create_conv1x1(len(pyr_images))
+
 
         for scaled_x in pyr_images:
             squared_x_tensor = scaled_x ** 2
@@ -363,7 +380,7 @@ class BuildPyramid(nn.Module):
         return reduced_output
 
 class DBC(nn.Module):
-    def __init__(self, r_values=3, window_size=3, eps = 10E-6):
+    def __init__(self, r_values=3, model_name='Net', window_size=3, eps = 10E-6):
         super(DBC, self).__init__()
         self.window_size = window_size
         self.normalize = nn.Tanh()

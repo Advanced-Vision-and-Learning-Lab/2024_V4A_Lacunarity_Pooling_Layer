@@ -122,7 +122,7 @@ def parse_args():
                        help='Save results of experiments(default: True)')
    parser.add_argument('--folder', type=str, default='Saved_Models/k=4',
                        help='Location to save models')
-   parser.add_argument('--kernel', type=int, default=4,
+   parser.add_argument('--kernel', type=int, default=3,
                        help='Input kernel size')
    parser.add_argument('--stride', type=int, default=1,
                        help='Input stride size')
@@ -136,14 +136,14 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=1,
+   parser.add_argument('--pooling_layer', type=int, default=6,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
-                        6:BuildPyramid, 7:DBC, 8:GDCB')
+                        6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=2,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=11,
+   parser.add_argument('--data_selection', type=int, default=12,
                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, \
                         8:Synthetic_Gray, 9:Synthetic_RGB, 10:Kth_Tips, 11: GTOS-mobile, 12:LeavesTex')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
@@ -168,7 +168,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.001,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
+   parser.add_argument('--model', type=str, default='densenet121',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

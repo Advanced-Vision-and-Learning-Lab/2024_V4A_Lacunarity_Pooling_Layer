@@ -117,23 +117,6 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
 
     elif Dataset == 'Synthetic_Gray' or Dataset == "Synthetic_RGB":
         
-        if 'Grayscale' in Dataset:
-            data_transforms = {
-                'val': transforms.Compose([
-                    transforms.Resize(size=(200, 200)),
-                    transforms.Grayscale(num_output_channels=3),
-                    transforms.ToTensor(),
-                ]),
-            }
-        
-        else:
-            data_transforms = {
-                'val': transforms.Compose([
-                    transforms.Resize(size=(200, 200)),
-                    transforms.ToTensor(),
-                ]),
-            }
-        
         # Create training, validation, and test datasets (no data augmentation for now)
         dataset = Toy_Dataset(data_dir,transform=data_transforms['val'])
     
@@ -231,10 +214,25 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                            img_transform=data_transforms['test'])
     
     elif Dataset == "LeavesTex":
-        dataset = LeavesTex1200(data_dir, transform = data_transforms['train'])
+        dataset = LeavesTex1200(data_dir,transform=data_transforms['train'])
+    
+         #Create train/val/test loader based on mean and std
+        split = DataSplit(dataset, shuffle=False,random_seed=split)
+        train_loader, val_loader , test_loader = split.get_split(batch_size=Network_parameters['batch_size']['train'], 
+                                                                num_workers=Network_parameters['num_workers'],
+                                                                show_sample=False,
+                                                                val_batch_size=Network_parameters['batch_size']['val'],
+                                                                test_batch_size=Network_parameters['batch_size']['test'])
+        # Create training and validation dataloaders, using validation set as testing for segmentation experiments
+        dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
+
+
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
+    
+
+
     
     if Dataset == "UCMerced":
         labels = test_dataset.targets
@@ -290,7 +288,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                            pin_memory=Network_parameters['pin_memory'], shuffle=False,)
         for x in ['train', 'val', 'test']}
     
-    elif Dataset == 'Synthetic_Gray':
+    elif Dataset == 'Synthetic_Gray' or Dataset=='LeavesTex':
             pass
     
     else:

@@ -25,6 +25,7 @@ class Net(nn.Module):
 
         super(Net, self).__init__()
 
+        model_name = Params['Model_name']
         kernel = Params["kernel"]
         stride = Params["stride"]
         padding = Params["conv_padding"]
@@ -48,15 +49,15 @@ class Net(nn.Module):
             elif pooling_layer == "avg":                                                                                                                                                                                                                           
                 self.pooling_layer = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
             elif pooling_layer == "Base_Lacunarity":
-                self.pooling_layer = Base_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+                self.pooling_layer = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
             elif pooling_layer == "Pixel_Lacunarity":
-                self.pooling_layer = Pixel_Lacunarity(scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+                self.pooling_layer = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
             elif pooling_layer == "ScalePyramid_Lacunarity":
-                self.pooling_layer = ScalePyramid_Lacunarity(num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+                self.pooling_layer = ScalePyramid_Lacunarity(model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
             elif pooling_layer == "BuildPyramid":
-                self.pooling_layer = BuildPyramid(num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+                self.pooling_layer = BuildPyramid(model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
             elif pooling_layer == "DBC":
-                self.pooling_layer = DBC(r_values = scales, window_size = kernel)
+                self.pooling_layer = DBC(model_name, r_values = scales, window_size = kernel)
             elif pooling_layer == "GDCB":
                 self.pooling_layer = GDCB(3,5)
 

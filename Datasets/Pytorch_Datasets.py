@@ -72,15 +72,17 @@ class LeavesTex1200(Dataset):
         self.load_all=load_all
         self.data = []
         self.targets = []
-        self.classes = ['C01, C02, C03, C04, C05, C06, C07, C08, C09, \
-                        C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20']
+        self.classes = ['C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09',
+                'C10', 'C11', 'C12', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19', 'C20']
+
+
         if self.load_all:
             for img_name in self._image_files:
                 if self.grayscale:
                     self.data.append(Image.open(img_name).convert('L').convert('RGB'))
                 else:
                     self.data.append(Image.open(img_name).convert('RGB'))  
-                self.targets.append(int(ntpath.basename(img_name).split('_')[0][1:]))
+                self.targets.append(int(ntpath.basename(img_name).split('_')[0][1:]) - 1)
 
     def __len__(self):
         return len(self.data)
