@@ -31,6 +31,7 @@ from Prepare_Data import Prepare_DataLoaders
 from Utils.Confusion_mats import plot_confusion_matrix, plot_avg_confusion_matrix
 from Utils.Generate_Learning_Curves import Plot_Learning_Curves
 from Datasets.Pytorch_Dataset_Names import Get_Class_Names
+from XAI_methods.xai_methods import *
 
 
 plt.ioff()
@@ -114,7 +115,11 @@ def main(Params):
                              train_dict['val_error_track'],
                              train_dict['best_epoch'],
                              sub_dir)
-    
+        
+        if (Params['xai']):
+            xai_methods, x_batch, y_batch, s_batch = get_attributions(dataloaders_dict['test'], Dataset, model, device, 
+                                                     sub_dir, Params, Params['Parallelize'])
+
         # If parallelized, need to set change model
         if Params['Parallelize']:
             model = nn.DataParallel(model)
@@ -244,13 +249,13 @@ def parse_args():
                         help='enables bias in Pixel Lacunarity')
     parser.add_argument('--agg_func', type=int, default=2,
                         help='agg func: 1:global, 2:local')
-    parser.add_argument('--data_selection', type=int, default=7,
+    parser.add_argument('--data_selection', type=int, default=2,
                         help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, 8:Synthetic_Gray, 9:Synthetic_RGB, 10:Kth_Tips, 11: GTOS-mobile, 12:LeavesTex')
     parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
-    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
+    parser.add_argument('--xai', default=True, action=argparse.BooleanOptionalAction,
                         help='enables xai interpretability')
     parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                         help='enables parallel functionality')

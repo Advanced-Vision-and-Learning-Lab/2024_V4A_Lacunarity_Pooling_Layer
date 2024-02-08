@@ -119,9 +119,8 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
             ]),
             'test': transforms.Compose([
-                transforms.Resize(Network_parameters['center_size']),
+                transforms.Resize(Network_parameters['resize_size']),
                 transforms.CenterCrop(input_size),
-                transforms.RandomAffine(Network_parameters['degrees']),
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
             ]),
@@ -137,9 +136,8 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize([0.3544, 0.4080, 0.1334], [0.0312, 0.0344, 0.0638])
             ]),
             'test': transforms.Compose([
-                transforms.Resize(Network_parameters['center_size']),
+                transforms.Resize(Network_parameters['resize_size']),
                 transforms.CenterCrop(input_size),
-                transforms.RandomAffine(Network_parameters['degrees']),
                 transforms.ToTensor(),
                 transforms.Normalize([0.3544, 0.4080, 0.1334], [0.0312, 0.0344, 0.0638])
             ]),

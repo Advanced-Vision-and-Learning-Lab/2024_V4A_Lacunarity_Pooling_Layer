@@ -118,6 +118,8 @@ class KTH_TIPS_2b_data(Dataset):
         self.test_setting = test_setting
         self.files = []
         self.targets = []
+        self.classes = []
+        #self.classes = ['aluminium_foil','brown_bread', 'corduroy', 'cork', 'cotton', 'cracker', 'lettuce_leaf', 'linen', 'white_bread', 'wood', 'wool']
 
         imgset_dir = os.path.join(self.data_dir, 'Images')
         # indexing variable for label
@@ -126,6 +128,7 @@ class KTH_TIPS_2b_data(Dataset):
             if not file.startswith('.'):
                 # Set class label
                 label_name = file
+                self.classes.append(label_name)
                 # Look inside each folder and grab samples
                 texture_dir = os.path.join(imgset_dir, label_name)
                 # pdb.set_trace()
@@ -190,6 +193,7 @@ class GTOS_mobile_single_data(Dataset):
             #Get training file
             sample_dir = os.path.join(imgset_dir,'train')
             class_names = sorted(os.listdir(sample_dir))
+            self.classes = class_names
             label = 0
             #Loop through data frame and get each image
             for img_folder in class_names:
@@ -213,6 +217,7 @@ class GTOS_mobile_single_data(Dataset):
         else:  # test
             sample_dir = os.path.join(imgset_dir,'test')
             class_names = sorted(os.listdir(sample_dir))
+            self.classes = class_names
             label = 0
             #Loop through data frame and get each image
             for img_folder in class_names:

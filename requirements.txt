@@ -38,7 +38,7 @@ filelock==3.9.0
 Fiona==1.8.22
 fonttools==4.25.0
 fsspec==2023.4.0
-GDAL==3.0.2
+
 gmpy2==2.1.2
 grad-cam==1.4.6
 h11==0.12.0

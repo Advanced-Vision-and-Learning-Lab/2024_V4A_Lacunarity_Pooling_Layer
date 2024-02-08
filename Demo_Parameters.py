@@ -181,8 +181,8 @@ def Parameters(args):
                 'PRMI': 3,
                 'Synthetic_Gray': 3,
                 'Synthetic_RGB': 3,
-                'Kth_Tips': 3,
-                'GTOS-mobile': 3,
+                'Kth_Tips': 4,
+                'GTOS-mobile': 5,
                 'LeavesTex': 3}
     
     Dataset = Dataset_names[data_selection]
