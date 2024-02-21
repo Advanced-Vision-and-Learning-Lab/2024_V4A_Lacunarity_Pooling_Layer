@@ -77,7 +77,7 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                         labels=labels.squeeze().long()
                         # labels = labels.clone().detach()
                         loss = criterion(outputs, labels).mean()
-                        #pdb.set_trace()
+                       
                      
                         _, preds = torch.max(outputs, 1)
         

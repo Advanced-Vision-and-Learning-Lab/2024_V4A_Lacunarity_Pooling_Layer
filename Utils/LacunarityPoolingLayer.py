@@ -86,8 +86,6 @@ class Base_Lacunarity(nn.Module):
 
             #Get number of samples
             n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
-            if (self.kernel == None):
-                n_pts = np.prod(np.asarray(scaled_x.shape[-2:]))
 
             #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
             L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
@@ -257,9 +255,6 @@ class ScalePyramid_Lacunarity(nn.Module):
         pyr_images, x, y = self.scalePyramid(x)
         print(len(pyr_images))
 
-        if self.conv1x1.in_channels != len(pyr_images):
-            self.conv1x1 = self.create_conv1x1(len(pyr_images))
-
         for scaled_x in pyr_images:
             scaled_x = scaled_x[:, :, 0, :, :]
             squared_x_tensor = scaled_x ** 2
@@ -350,10 +345,6 @@ class BuildPyramid(nn.Module):
         lacunarity_values = []
         x = ((self.normalize(x) + 1)/2)* 255
         pyr_images = build_pyramid(x, max_level=self.num_levels)
-
-        if self.conv1x1.in_channels != len(pyr_images):
-            self.conv1x1 = self.create_conv1x1(len(pyr_images))
-
 
         for scaled_x in pyr_images:
             squared_x_tensor = scaled_x ** 2

@@ -43,6 +43,8 @@ class Net(nn.Module):
                 self.pooling_layer = nn.AdaptiveAvgPool2d(1)
             elif pooling_layer == "Pixel_Lacunarity":
                 self.pooling_layer = Pixel_Lacunarity(scales=scales, bias = bias)
+            elif pooling_layer == "Base_Lacunarity":
+                self.pooling_layer = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
         elif agg_func == "local":
             if pooling_layer == "max":
                 self.pooling_layer = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))

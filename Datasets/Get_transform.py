@@ -80,16 +80,19 @@ def get_transform(Network_parameters, input_size=224):
         std = [0.229, 0.224, 0.225]
         data_transforms = {
         'train': transforms.Compose([
-            transforms.Resize(size = (150, 150)),
+            transforms.Resize(Network_parameters['resize_size']),
+            transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean = mean, std = std)
         ]),
         'test': transforms.Compose([
-            transforms.Resize(size = (150, 150)),
+            transforms.Resize(Network_parameters['center_size']),
+            transforms.CenterCrop(input_size),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
-    } 
+    }
     
     elif Dataset == "Synthetic_Gray" or Dataset == "Synthetic_RGB":
         if 'Grayscale' in Dataset:

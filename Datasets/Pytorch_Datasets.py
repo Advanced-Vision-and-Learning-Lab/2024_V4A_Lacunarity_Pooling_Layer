@@ -494,6 +494,8 @@ class MedMNIST(Dataset):
         self.split = split
         self.transform = transform
         self.target_transform = target_transform
+        if self.flag == "bloodmnist":
+            self.classes = ['basophil', 'eosinophil', 'erythroblast', 'immature granulocytes', 'lymphocyte', 'monocyte', 'neutrophil', 'platelet']
         self.classes = list(self.info["label"].values())
 
         if self.split == 'train':

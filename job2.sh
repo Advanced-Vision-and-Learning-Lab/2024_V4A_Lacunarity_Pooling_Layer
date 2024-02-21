@@ -25,10 +25,10 @@ module load Anaconda3/2022.10;
 source activate myenv;
 
 EPOCH=50
-EPOCH2=400
-DATASET1=10
-DATASET2=11
-DATASET3=12
+EPOCH2=1
+DATASET1=6
+DATASET2=12
+DATASET3=10
 scales0to1="0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0"
 scales1to2="1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0"
 scales0to2="0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0"
@@ -46,24 +46,35 @@ sigma4="0.6"
 
 ################BASELINE###############################################
 
-python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
-python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
+# python demo.py --data_selection $DATASET1 --model convnext --agg_func 1 --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
+# python View_Results.py --data_selection $DATASET1 --model convnext --agg_func 1 --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
 
-python demo.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
-python View_Results.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
-
-python demo.py --data_selection $DATASET3 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
-python View_Results.py --data_selection $DATASET3 --model convnext --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
+# python demo.py --data_selection $DATASET1 --model convnext --agg_func 2 --kernel 3 --stride 2 --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
+# python View_Results.py --data_selection $DATASET1 --model convnext --agg_func 2 --kernel 3 --stride 2 --num_epochs $EPOCH2 --pooling_layer 9  --folder 'Saved_Models/Baseline_global/'
 
 
-################Lacunarity layers########################################
+# ################Lacunarity layers########################################
 
 
-python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
-python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
+# python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 4  --folder 'Saved_Models/Global_lacunarity_pixel_lacunarity'
+# python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 4  --folder 'Saved_Models/Global_lacunarity_pixel_lacunarity'
 
-python demo.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
-python View_Results.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
+# python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 3  --folder 'Saved_Models/Global_lacunarity_base_lacunarity'
+# python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 3  --folder 'Saved_Models/Global_lacunarity_base_lacunarity'
 
-python demo.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
-python View_Results.py --data_selection $DATASET2 --model convnext --num_epochs $EPOCH2 --pooling_layer 4  --folder 'Saved_Models/Learnable_Lacunarity_Global'
+# python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 3 --stride 2 --pooling_layer 3  --folder 'Saved_Models/Learnable_Lacunarity_local'
+# python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 3 --stride 2 --pooling_layer 3  --folder 'Saved_Models/Learnable_Lacunarity_local'
+
+# python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 3 --stride 1 --pooling_layer 3  --folder 'Saved_Models/Learnable_Lacunarity_local'
+# python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 4 --stride 2 --pooling_layer 3  --folder 'Saved_Models/Learnable_Lacunarity_local'
+
+# python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 6  --folder 'Saved_Models/Learnable_Lacunarity_buildPyramid'
+# python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 1 --pooling_layer 6  --folder 'Saved_Models/Learnable_Lacunarity_buildPyramid'
+
+python demo.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 3 --stride 2 --pooling_layer 6  --folder 'Saved_Models/Learnable_Lacunarity_buildPyramid'
+python View_Results.py --data_selection $DATASET1 --model convnext --num_epochs $EPOCH2 --agg_func 2 --kernel 3 --stride 2 --pooling_layer 6  --folder 'Saved_Models/Learnable_Lacunarity_buildPyramid'
+
+
+
+
+

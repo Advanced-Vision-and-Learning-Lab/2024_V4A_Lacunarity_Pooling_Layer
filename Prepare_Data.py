@@ -183,7 +183,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         for ii in range(0, len(sample_combos)):
             train_setting.append(list(sample_combos[ii]))
             test_setting.append(list(sorted(set(samples) - set(sample_combos[ii]))))
-         
+
         train_val_dataset = KTH_TIPS_2b_data(data_dir,train=True,
                                          img_transform=data_transforms['train'],
                                          train_setting=train_setting[split])
@@ -234,23 +234,23 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
 
 
     
-    if Dataset == "UCMerced":
-        labels = test_dataset.targets
-        classes = test_dataset.classes
-        #m is the number of samples taken from each class
-        m = 10
-        #In our paper, batch_size for:
-            #UCMerced - 210
-            #EuroSAT - 100
-            #MSTAR - 40
-        batch_size = m*len(classes)
-        sampler = samplers.MPerClassSampler(labels, m, batch_size, length_before_new_iter=100000)
-        #retain sampler = None for 'train' and 'val' data splits
-        dataset_sampler = {'train': None, 'test': sampler, 'val': None}
-        Network_parameters["batch_size"]["test"] = batch_size
+    # if Dataset == "UCMerced":
+    #     labels = test_dataset.targets
+    #     classes = test_dataset.classes
+    #     #m is the number of samples taken from each class
+    #     m = 10
+    #     #In our paper, batch_size for:
+    #         #UCMerced - 210
+    #         #EuroSAT - 100
+    #         #MSTAR - 40
+    #     batch_size = m*len(classes)
+    #     sampler = samplers.MPerClassSampler(labels, m, batch_size, length_before_new_iter=100000)
+    #     #retain sampler = None for 'train' and 'val' data splits
+    #     dataset_sampler = {'train': None, 'test': sampler, 'val': None}
+    #     Network_parameters["batch_size"]["test"] = batch_size
 
-    else:
-        dataset_sampler = {'train': None, 'test': None, 'val': None}
+    # else:
+    #     dataset_sampler = {'train': None, 'test': None, 'val': None}
 
     #Collate function is used only for EuroSAT and MSTAR
     #Compatible input size for Kornia augmentation
@@ -261,7 +261,8 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                         batch_size=Network_parameters['batch_size'][x],
                                                         num_workers=Network_parameters['num_workers'],
                                                         pin_memory=Network_parameters['pin_memory'],
-                                                        sampler = dataset_sampler[x])
+                                                        # sampler = dataset_sampler[x]
+                                                        )
                                                         for x in ['train', 'val','test']}
         
     elif Dataset == "Kth_Tips":
