@@ -115,10 +115,7 @@ def main(Params):
                              train_dict['val_error_track'],
                              train_dict['best_epoch'],
                              sub_dir)
-        
-        if (Params['xai']):
-            xai_methods, x_batch, y_batch, s_batch = get_attributions(dataloaders_dict['test'], Dataset, model, device, 
-                                                     sub_dir, Params, Params['Parallelize'])
+
 
         # If parallelized, need to set change model
         if Params['Parallelize']:
@@ -227,9 +224,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
     parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                         help='Save results of experiments(default: True)')
-    parser.add_argument('--folder', type=str, default='Saved_Models/k=4',
+    parser.add_argument('--folder', type=str, default='Saved_Models/fusiontask',
                         help='Location to save models')
-    parser.add_argument('--kernel', type=int, default=4,
+    parser.add_argument('--kernel', type=int, default=5,
                         help='Input kernel size')
     parser.add_argument('--stride', type=int, default=1,
                         help='Input stride size')
@@ -243,7 +240,7 @@ def parse_args():
                         help='Input sigma value')
     parser.add_argument('--min_size', type=int, default=2,
                         help='Input min size')
-    parser.add_argument('--pooling_layer', type=int, default=1,
+    parser.add_argument('--pooling_layer', type=int, default=4,
                         help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, 6:BuildPyramid, 7:DBC, 8:GDCB, , 9: Baseline')
     parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                         help='enables bias in Pixel Lacunarity')
@@ -255,7 +252,7 @@ def parse_args():
                         help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
     parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                         help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
-    parser.add_argument('--xai', default=True, action=argparse.BooleanOptionalAction,
+    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                         help='enables xai interpretability')
     parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                         help='enables parallel functionality')

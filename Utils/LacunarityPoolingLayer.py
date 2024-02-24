@@ -14,7 +14,8 @@ global feature_maps
 feature_maps =  {'Net': 3,
                 "resnet18_lacunarity": 512,
                 "densenet_121": 3,
-                "convnext": 768}
+                "convnext": 768,
+                "fusionmodel": 768}
 
 
 class Base_Lacunarity(nn.Module):

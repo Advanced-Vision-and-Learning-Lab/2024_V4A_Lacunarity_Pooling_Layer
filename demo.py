@@ -120,7 +120,7 @@ def parse_args():
    parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
    parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                        help='Save results of experiments(default: True)')
-   parser.add_argument('--folder', type=str, default='Saved_Models/k=4',
+   parser.add_argument('--folder', type=str, default='Saved_Models/fusiontask/k=2',
                        help='Location to save models')
    parser.add_argument('--kernel', type=int, default=None,
                        help='Input kernel size')
@@ -136,7 +136,7 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=3,
+   parser.add_argument('--pooling_layer', type=int, default=4,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
                         6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
@@ -168,7 +168,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='Net',
+   parser.add_argument('--model', type=str, default='convnext',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

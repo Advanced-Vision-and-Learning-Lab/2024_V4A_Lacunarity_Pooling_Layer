@@ -23,15 +23,20 @@ def get_transform(Network_parameters, input_size=224):
     
     if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST' or Dataset == 'OrganMNISTCoronal':
         data_transforms = {
-        'train': transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[.5], std=[.5]),
-        ]),
-        'test':  transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[.5], std=[.5]),
-        ]),
-    }
+            'train': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.CenterCrop(input_size),
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            ]),
+        }
         
     elif Dataset == 'FashionMNIST':
         data_transforms = {

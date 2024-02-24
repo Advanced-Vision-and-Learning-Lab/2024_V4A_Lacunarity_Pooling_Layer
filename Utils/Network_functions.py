@@ -22,6 +22,7 @@ import os
 import torch.nn.functional as F
 from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB, Base_Lacunarity
 from Utils.CustomNN import Net
+from Utils.fusion_model import fusion_model
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
 
@@ -238,6 +239,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     
     # Initialize these variables which will be set in this if statement. Each of these
     # variables is model specific.
+    fusion = True
     model_ft = None
     input_size = 0
     kernel = Params["kernel"]
@@ -375,9 +377,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         input_size = 224
 
 
-
-
-
     elif model_name == "densenet121":
         model_ft = models.densenet121(weights='DEFAULT',memory_efficient=True)
         set_parameter_requires_grad(model_ft, feature_extract)
@@ -394,8 +393,16 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
             model_ft.conv1 = nn.Conv2d(channels, out_channels=3, kernel_size=3, stride=2)
         input_size = 224
 
-        
+    
     else:
         raise RuntimeError('{} not implemented'.format(model_name))
+    
+    if fusion == True:
+        
+        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
+        model_ft = fusion_model(backbone = model_ft, num_classes=num_classes, Params=Params)      
+        model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
     return model_ft, input_size
 

@@ -79,7 +79,10 @@ class Net(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         x = self.relu1(x)
-        x = self.pooling_layer(x)
+        x_pool = self.pooling_layer(x)
+        _, _, h, w = x_pool.shape
+        x_avg = nn.functional.adaptive_avg_pool2d(x, (h,w))
+        x = x_pool * x_avg
         x = torch.flatten(x, 1)
         x = self.fc(x)
         return x
