@@ -9,32 +9,128 @@ import pdb
 
 import torch
 import torchvision.transforms as T
-
-from PIL import Image
 import medmnist
 from medmnist.evaluator import getAUC, getACC
 from medmnist.info import INFO
-import os
+
 import torchgeo.datasets as geodatasets
-import torch
+
 import kornia.augmentation as K
 import json
 from sklearn import preprocessing
 import ntpath
-
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon July 01 16:01:36 2019
-GTOS data loader
-@author: jpeeples
-"""
-
+import pandas as pd
+from pathlib import Path
+from typing import Any, Callable, List, Optional, Tuple
+from torchvision.datasets.folder import default_loader
+import cv2
+import PIL
+import numpy as np
+from torchvision.datasets import VisionDataset
 import os
 from PIL import Image
 from torch.utils.data import Dataset
+import agml
+from agml.utils.io import nested_file_list
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+
+class PlantVillage(Dataset):
+    def __init__(self, root, split='train', transform=None, download=True):  
+        self.transform = transform
+        self.split = split
+        self.images = agml.data.AgMLDataLoader('plant_village_classification', dataset_path="Datasets/PlantVillage", overwrite=False)
+        self._root_path = self.images.dataset_root
+        self._image_files = sorted(nested_file_list(self._root_path))
+        self.classes = self.images.classes
+
+        # Map class names to their corresponding integer values
+        self.class_to_num = self.images.class_to_num
+
+        # Extract class names from file paths and map them to integer labels
+        self.targets = [self.class_to_num[os.path.basename(os.path.dirname(file_path))] for file_path in self._image_files]
+
+    def __getitem__(self, index):
+        image_path = self._image_files[index]
+        image = Image.open(image_path).convert('RGB')
+        
+        target = self.targets[index]
+
+        if self.transform is not None:
+            image = self.transform(image)
+
+        return image, target, index  # Modified to also return index
+
+    def __len__(self):
+        return len(self._image_files)
+
+
+
+
+
+class DeepWeeds(Dataset):
+    def __init__(self, root, split='train', transform=None, download=True):
+        self.transform = transform
+        self.split = split
+        self.images = agml.data.AgMLDataLoader('rangeland_weeds_australia', dataset_path="Datasets/DeepWeeds", overwrite=False)
+        self._root_path = self.images.dataset_root
+        self._image_files = sorted(nested_file_list(self._root_path))
+        self.classes = self.images.classes
+
+        # Map class names to their corresponding integer values
+        self.class_to_num = self.images.class_to_num
+
+        # Extract class names from file paths and map them to integer labels
+        # self.targets = [self.class_to_num[os.path.basename(os.path.dirname(file_path))] for file_path in self._image_files]
+
+    def __getitem__(self, index):
+        image_path = self._image_files[index]
+        image = Image.open(image_path).convert('RGB')
+        
+        target = self.targets[index]
+
+        if self.transform is not None:
+            image = self.transform(image)
+
+        return image, target, index  # Modified to also return index
+
+    def __len__(self):
+        return len(self._image_files)
+    
+
+class Cassava(Dataset):
+    def __init__(self, data_path, transform=None, mode='train'):
+        self.data_path = data_path
+        self.mode = mode
+        self.transform = transform
+        if self.mode == 'train':
+            self.train_image_list = os.listdir(self.data_path + '/train')
+            self.train_label = pd.read_csv(self.data_path + '/train.csv')
+        elif self.mode == 'test':
+            self.test_image_list = os.listdir(self.data_path + '/test')
+            
+    def __len__(self):
+        return len(self.train_image_list)
+    
+    def __getitem__(self,idx):
+        if self.mode == 'train':
+            image_name = self.train_image_list[idx]
+            image_path = self.data_path + '/train/' + image_name
+            label = self.train_label.iloc[idx,1]
+        elif self.mode == 'test':
+            image_name = self.test_image_list[idx]
+            image_path = self.data_path + '/test/' + image_name
+            label = None
+        else:
+            raise Exception('mode must be train or test')
+        image = Image.open(image_path)
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image,label,idx
+    
 
 
 #this is for getting all images in a directory (including subdirs)

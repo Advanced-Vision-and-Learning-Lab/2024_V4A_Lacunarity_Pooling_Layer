@@ -150,7 +150,40 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize([0.3544, 0.4080, 0.1334], [0.0312, 0.0344, 0.0638])
             ]),
         }
+                
+    elif Dataset == 'PlantVillage':
+                data_transforms = {
+            'train': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize([0.467, 0.489, 0.412], [0.177, 0.152, 0.194])
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.CenterCrop(input_size),
+                transforms.ToTensor(),
+                transforms.Normalize([0.467, 0.489, 0.412], [0.177, 0.152, 0.194])
+            ]),
+        }
         
+    elif Dataset == 'DeepWeeds':
+                data_transforms = {
+            'train': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize([0.379, 0.39, 0.38], [0.224, 0.225, 0.223])
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize(Network_parameters['resize_size']),
+                transforms.CenterCrop(input_size),
+                transforms.ToTensor(),
+                transforms.Normalize([0.379, 0.39, 0.38], [0.224, 0.225, 0.223])
+            ]),
+        }
 
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset))

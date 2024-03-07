@@ -59,12 +59,12 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                 running_corrects = 0
     
                 # Iterate over data.
-                for idx, (inputs, labels, index) in enumerate(Bar(dataloaders[phase])):
+                for idx, (inputs, labels) in enumerate(Bar(dataloaders[phase])):
 
                     inputs = inputs.to(device)
                     inputs.requires_grad = True
                     labels = labels.to(device)
-                    index = index.to(device)
+                    #index = index.to(device)
   
                     # zero the parameter gradients
                     optimizer.zero_grad()
@@ -189,10 +189,10 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     # Iterate over data
     print('Testing Model...')
     with torch.no_grad():
-        for idx, (inputs, labels, index) in enumerate(Bar(dataloader)):
+        for idx, (inputs, labels) in enumerate(Bar(dataloader)):
             inputs = inputs.to(device)
             labels = labels.to(device)
-            index = index.to(device)
+            #index = index.to(device)
     
             #Run data through best model
             #pdb.set_trace()

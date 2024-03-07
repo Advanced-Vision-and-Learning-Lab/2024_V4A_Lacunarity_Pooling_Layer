@@ -76,6 +76,7 @@ def main(Params):
            print("Using", torch.cuda.device_count(), "GPUs!")
            # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
            model_ft = nn.DataParallel(model_ft)
+       
        model_ft = model_ft.to(device)
 
       # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
@@ -143,7 +144,7 @@ def parse_args():
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=2,
+   parser.add_argument('--data_selection', type=int, default=14,
                        help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, 5:PlantLeaf, 6:UCMerced, 7:PRMI, \
                         8:Synthetic_Gray, 9:Synthetic_RGB, 10:Kth_Tips, 11: GTOS-mobile, 12:LeavesTex')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
