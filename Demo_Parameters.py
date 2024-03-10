@@ -13,6 +13,7 @@ def Parameters(args):
     save_results = args.save_results
 
     #use xai interpretability
+    fusion = args.fusion
     xai = args.xai
     bias = args.bias
 
@@ -218,7 +219,7 @@ def Parameters(args):
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
-            'xai': xai, 'bias':bias,
+            'xai': xai, 'bias':bias, 'fusion': fusion,
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,

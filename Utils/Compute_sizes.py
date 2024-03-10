@@ -48,7 +48,7 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
         elif agg_func == "global":
             num_ftrs = 512
     
-    elif model_name == "convnext" or model_name == "fusionmodel":
+    elif model_name == "convnext_lacunarity" or model_name == "fusionmodel":
         if agg_func == "local":
             feature_height = 7
             out_channels = 768
@@ -56,6 +56,15 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
             num_ftrs = out_channels * pooling_output * pooling_output
         elif agg_func == "global":
             num_ftrs = 768
+
+    elif model_name == "densenet161_lacunarity":
+        if agg_func == "local":
+            feature_height = 7
+            out_channels = 2208
+            pooling_output = math.floor((feature_height - kernel) / stride) + 1
+            num_ftrs = out_channels * pooling_output * pooling_output
+        elif agg_func == "global":
+            num_ftrs = 2208
 
 
     return num_ftrs

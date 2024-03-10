@@ -13,7 +13,7 @@ import copy
 import torch
 import torch.nn as nn
 from torchvision import models
-
+import timm
 ## Local external libraries
 from barbar import Bar
 from Utils.pytorchtools import EarlyStopping
@@ -22,7 +22,7 @@ import os
 import torch.nn.functional as F
 from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB, Base_Lacunarity
 from Utils.CustomNN import Net
-from Utils.fusion_model import fusion_model
+from Utils.fusion_model import fusion_model, fractal_model
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
 
@@ -210,7 +210,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
             #If test, accumulate labels for confusion matrix
             GT = np.concatenate((GT,labels.detach().cpu().numpy()),axis=None)
             Predictions = np.concatenate((Predictions,preds.detach().cpu().numpy()),axis=None)
-            Index = np.concatenate((Index,index.detach().cpu().numpy()),axis=None)
+            #Index = np.concatenate((Index,index.detach().cpu().numpy()),axis=None)
             
             #Keep track of correct predictions
             #pdb.set_trace()
@@ -227,7 +227,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     
     print('Test Accuracy: {:4f}'.format(test_acc))
     
-    test_dict = {'GT': GT[1:], 'Predictions': Predictions[1:], 'Index':Index[1:],
+    test_dict = {'GT': GT[1:], 'Predictions': Predictions[1:], #'Index':Index[1:],
                  'test_acc': np.round(test_acc.cpu().numpy()*100,2),
                  'test_loss': test_loss}
     
@@ -239,7 +239,8 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     
     # Initialize these variables which will be set in this if statement. Each of these
     # variables is model specific.
-    fusion = True
+    
+    fractal_pool = False
     model_ft = None
     input_size = 0
     kernel = Params["kernel"]
@@ -252,7 +253,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     bias = Params["bias"]
   
     #Select backbone architecture
-    if model_name == "convnext":
+    if model_name == "convnext_lacunarity":
         model_ft = models.convnext_tiny(pretrained=use_pretrained,
                                         weights='ConvNeXt_Tiny_Weights.IMAGENET1K_V1')
         set_parameter_requires_grad(model_ft, feature_extract)
@@ -377,13 +378,47 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         input_size = 224
 
 
-    elif model_name == "densenet121":
-        model_ft = models.densenet121(weights='DEFAULT',memory_efficient=True)
+    elif model_name == "densenet161_lacunarity":
+        model_ft = timm.create_model('densenet161', pretrained=True, num_classes=0, global_pool='')
+        if aggFunc == "local":
+            if poolingLayer == "max":
+                model_ft.global_pool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif poolingLayer == "avg":                                                                                                                                                                                                                            
+                model_ft.global_pool = nn.AdaptiveAvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif poolingLayer == "Base_Lacunarity":
+                model_ft.global_pool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif poolingLayer == "Pixel_Lacunarity":
+                model_ft.global_pool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif poolingLayer == "ScalePyramid_Lacunarity":
+                model_ft.global_pool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+            elif poolingLayer == "BuildPyramid":
+                model_ft.global_pool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+            elif poolingLayer == "DBC":
+                model_ft.global_pool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            elif poolingLayer == "GDCB":
+                model_ft.global_pool = GDCB(3,5)
+        
+        elif aggFunc == "global":
+            if poolingLayer == "max":
+                model_ft.global_pool = nn.AdaptiveMaxPool2d((1,1))
+            elif poolingLayer == "avg":                                                                                                                                                                                                                           
+                model_ft.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+            elif poolingLayer == "Base_Lacunarity":
+                model_ft.global_pool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
+            elif poolingLayer == "Pixel_Lacunarity":
+                model_ft.global_pool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
+            elif poolingLayer == "ScalePyramid_Lacunarity":
+                model_ft.global_pool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
+            elif poolingLayer == "BuildPyramid":
+                model_ft.global_pool = BuildPyramid(model_name=model_name, num_levels=num_levels)
+            elif poolingLayer == "DBC":
+                model_ft.global_pool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            elif poolingLayer == "GDCB":
+                model_ft.global_pool = GDCB(3,5)
+
         set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.classifier.in_features
-        model_ft.classifier = nn.Sequential()
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        pdb.set_trace()
+        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
+        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
     elif model_name == "Net":
@@ -397,10 +432,35 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     else:
         raise RuntimeError('{} not implemented'.format(model_name))
     
-    if fusion == True:
-        
+    if Params['fusion'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = fusion_model(backbone = model_ft, num_classes=num_classes, Params=Params)      
+        model_ft = fusion_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)      
+        model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+
+
+    elif fractal_pool == True:
+        if model_name == "densenet161_lacunarity":
+            dense_feature_dim = 2208
+        elif model_name == "convnext_lacunarity":
+            dense_feature_dim = 768        
+        elif model_name == "resnet18_lacunarity":
+            dense_feature_dim = 512
+        dropout_ratio = 0.6
+        model_ft.conv1= nn.Sequential(nn.Conv2d(in_channels=dense_feature_dim,
+                                        out_channels=dense_feature_dim,
+                                          kernel_size=1,
+                                        stride=1,
+                                        padding=0),
+                            nn.Dropout2d(p=dropout_ratio),
+                              nn.BatchNorm2d(dense_feature_dim))
+        model_ft.sigmoid=nn.Sigmoid()
+        model_ft.relu1 = nn.Sigmoid()
+        pdb.set_trace()
+        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
+
+        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)      
         model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
         input_size = 224
 

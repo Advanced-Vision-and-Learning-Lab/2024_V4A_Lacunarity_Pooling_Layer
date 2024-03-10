@@ -60,7 +60,7 @@ class PlantVillage(Dataset):
         if self.transform is not None:
             image = self.transform(image)
 
-        return image, target, index  # Modified to also return index
+        return image, target
 
     def __len__(self):
         return len(self._image_files)
@@ -93,7 +93,7 @@ class DeepWeeds(Dataset):
         if self.transform is not None:
             image = self.transform(image)
 
-        return image, target, index  # Modified to also return index
+        return image, target
 
     def __len__(self):
         return len(self._image_files)
@@ -129,7 +129,7 @@ class Cassava(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        return image,label,idx
+        return image,label
     
 
 
@@ -615,7 +615,7 @@ class MedMNIST(Dataset):
         if self.target_transform is not None:
             target = self.target_transform(target)
         #pdb.set_trace()
-        return img, target, index
+        return img, target
 
     def __len__(self):
         return self.img.shape[0]

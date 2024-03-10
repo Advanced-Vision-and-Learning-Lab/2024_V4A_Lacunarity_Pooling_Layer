@@ -20,21 +20,69 @@ from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB, Base_Lacunarity
 from Utils.CustomNN import Net
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
+import timm
 
+import torch
+import torch.nn as nn
+import torch.optim as optimxxc
+import numpy as np
+import os
+from torchvision import models, transforms
+import math
 
+class GDCB(nn.Module):
+    def __init__(self,mfs_dim=25,nlv_bcd=6):
+        super(GDCB,self).__init__()
+        self.mfs_dim=mfs_dim
+        self.nlv_bcd=nlv_bcd
+        self.pool=nn.ModuleList()
+        
+        for i in range(self.nlv_bcd-1):
+            self.pool.add_module(str(i),nn.MaxPool2d(kernel_size=i+2,stride=(i+2)//2))
+        self.ReLU = nn.ReLU()
+        
+    def forward(self,input):
+        tmp=[]
+        for i in range(self.nlv_bcd-1):
+            output_item=self.pool[i](input)
+            tmp.append(torch.sum(torch.sum(output_item,dim=2,keepdim=True),dim=3,keepdim=True))
+        output=torch.cat(tuple(tmp),2)
+        output=torch.log2(self.ReLU(output)+1)
+        X=[-math.log(i+2,2) for i in range(self.nlv_bcd-1)]
+        X = torch.tensor(X).to(output.device)
+        X=X.view([1,1,X.shape[0],1])
+        meanX = torch.mean(X,2,True)
+        meanY = torch.mean(output,2,True)
+        Fracdim = torch.div(torch.sum((output-meanY)*(X-meanX),2,True),torch.sum((X-meanX)**2,2,True))
+        return Fracdim
+    
 class fusion_model(nn.Module):
-    def __init__ (self, backbone, num_classes, Params):
+    def __init__ (self, model_name, backbone, num_classes, Params):
 
         super(fusion_model, self).__init__()
+        self.model_name = model_name
         
-        self.features=nn.Sequential(*list(backbone.features.children())[:8])
         self.avgpool = nn.AdaptiveAvgPool2d(1)
-        self.pooling_layer = backbone.avgpool
-        self.classifier = backbone.classifier[2]
+        #lacunarity layer is added in backbone
+        
+
+        if self.model_name == 'convnext':
+            self.features=nn.Sequential(*list(backbone.features.children())[:8])
+            self.classifier = backbone.classifier[2]
+            self.pooling_layer = backbone.avgpool
+
+        elif self.model_name == 'resnet18_lacunarity':
+            self.features=nn.Sequential(*list(backbone.children())[:-2])
+            self.classifier = backbone.fc
+            self.pooling_layer = backbone.avgpool
+
+        elif self.model_name == 'densenet161_lacunarity':
+            self.features=nn.Sequential(*list(backbone.features.children())[:-1])  
+            self.classifier = backbone.classifier
+            self.pooling_layer = backbone.global_pool
  
         
     def forward(self,x):
@@ -48,3 +96,36 @@ class fusion_model(nn.Module):
         return x      
 
         
+class fractal_model(nn.Module):
+    def __init__ (self, model_name, backbone, num_classes, Params):
+
+        super(fractal_model, self).__init__()
+        
+        self.avgpool = nn.AdaptiveAvgPool2d(1)
+        
+        if model_name == 'convnext_lacunarity':
+            self.features=nn.Sequential(*list(backbone.features.children())[:8])
+            self.classifier = backbone.classifier[2]
+            self.pooling_layer = backbone.avgpool
+
+        elif model_name == 'resnet18_lacunarity':
+            self.features=nn.Sequential(*list(backbone.children())[:-2])
+            self.classifier = backbone.classifer
+
+        elif model_name == 'densetnet161_lacunarity':
+            self.features=nn.Sequential(*list(backbone.features.children())[:-1])  
+            self.classifier = backbone.classifier  
+        
+    def forward(self,x):
+        out = self.features(x)
+        identity=out
+        identity = self.sigmoid(identity)                
+        out = self.conv1(out)
+        out = self.relu1(out)
+        out = out-identity # Residual module          
+        out1 = nn.functional.adaptive_avg_pool2d(out,(1,1)).view(out.size(0), -1) 
+        box_count = nn.Sequential(GDCB())
+        out2 = box_count(out).view(out.size(0), -1) # Fractal pooling
+        out3 = out1*out2
+        x=self.classifier(out3)
+        return x

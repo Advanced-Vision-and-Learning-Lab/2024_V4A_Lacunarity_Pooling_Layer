@@ -13,8 +13,8 @@ import kornia.geometry.transform as T
 global feature_maps
 feature_maps =  {'Net': 3,
                 "resnet18_lacunarity": 512,
-                "densenet_121": 3,
-                "convnext": 768,
+                "densenet161_lacunarity": 2208,
+                "convnext_lacunarity": 768,
                 "fusionmodel": 768}
 
 
