@@ -137,22 +137,22 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=4,
+   parser.add_argument('--pooling_layer', type=int, default=10,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
-                        6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline')
+                        6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline, 10: L2')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
    parser.add_argument('--data_selection', type=int, default=2,
-                       help='Dataset selection: 1:PneumoniaMNIST, 2:BloodMNIST, 3:OrganMNISTCoronal, 4:FashionMNIST, \
-                        5:PlantLeaf, 6:UCMerced, 7:PRMI, \
-                        8:Synthetic_Gray, 9:Synthetic_RGB, 10:Kth_Tips, 11: GTOS-mobile, 12:LeavesTex')
+                       help='Dataset selection: See Demo Parameters for details')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
-   parser.add_argument('--fusion', default=True, action=argparse.BooleanOptionalAction,
+   parser.add_argument('--fusion', default=False, action=argparse.BooleanOptionalAction,
+                       help='enables fusion model')
+   parser.add_argument('--fractal', default=False, action=argparse.BooleanOptionalAction,
                        help='enables fusion model')
    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                        help='enables xai interpretability')

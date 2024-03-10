@@ -100,8 +100,25 @@ class fractal_model(nn.Module):
     def __init__ (self, model_name, backbone, num_classes, Params):
 
         super(fractal_model, self).__init__()
+        self.model_name = model_name
+        if self.model_name == "densenet161_lacunarity":
+            dense_feature_dim = 2208
+        elif self.model_name == "convnext_lacunarity":
+            dense_feature_dim = 768        
+        elif self.model_name == "resnet18_lacunarity":
+            dense_feature_dim = 512
+        dropout_ratio = 0.6
         
         self.avgpool = nn.AdaptiveAvgPool2d(1)
+        self.conv1= nn.Sequential(nn.Conv2d(in_channels=dense_feature_dim,
+                                        out_channels=dense_feature_dim,
+                                          kernel_size=1,
+                                        stride=1,
+                                        padding=0),
+                            nn.Dropout2d(p=dropout_ratio),
+                              nn.BatchNorm2d(dense_feature_dim))
+        self.sigmoid=nn.Sigmoid()
+        self.relu1 = nn.Sigmoid()
         
         if model_name == 'convnext_lacunarity':
             self.features=nn.Sequential(*list(backbone.features.children())[:8])
@@ -110,7 +127,7 @@ class fractal_model(nn.Module):
 
         elif model_name == 'resnet18_lacunarity':
             self.features=nn.Sequential(*list(backbone.children())[:-2])
-            self.classifier = backbone.classifer
+            self.classifier = backbone.fc
 
         elif model_name == 'densetnet161_lacunarity':
             self.features=nn.Sequential(*list(backbone.features.children())[:-1])  

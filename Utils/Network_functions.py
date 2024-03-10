@@ -240,7 +240,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     # Initialize these variables which will be set in this if statement. Each of these
     # variables is model specific.
     
-    fractal_pool = False
+    fractal_pool = True
     model_ft = None
     input_size = 0
     kernel = Params["kernel"]
@@ -283,6 +283,8 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
                 model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
             elif poolingLayer == "avg":                                                                                                                                                                                                                            
                 model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+            elif poolingLayer == "L2":                                                                                                                                                                                                                           
+                model_ft.global_pool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
             elif poolingLayer == "Base_Lacunarity":
                 model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
             elif poolingLayer == "Pixel_Lacunarity":
@@ -353,6 +355,8 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
                 model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
             elif poolingLayer == "avg":                                                                                                                                                                                                                            
                 model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+            elif poolingLayer == "L2":                                                                                                                                                                                                                           
+                model_ft.global_pool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
             elif poolingLayer == "Base_Lacunarity":
                 model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
             elif poolingLayer == "Pixel_Lacunarity":
@@ -403,6 +407,8 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
                 model_ft.global_pool = nn.AdaptiveMaxPool2d((1,1))
             elif poolingLayer == "avg":                                                                                                                                                                                                                           
                 model_ft.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+            elif poolingLayer == "L2":                                                                                                                                                                                                                           
+                model_ft.global_pool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
             elif poolingLayer == "Base_Lacunarity":
                 model_ft.global_pool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
             elif poolingLayer == "Pixel_Lacunarity":
@@ -440,26 +446,8 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
 
 
 
-    elif fractal_pool == True:
-        if model_name == "densenet161_lacunarity":
-            dense_feature_dim = 2208
-        elif model_name == "convnext_lacunarity":
-            dense_feature_dim = 768        
-        elif model_name == "resnet18_lacunarity":
-            dense_feature_dim = 512
-        dropout_ratio = 0.6
-        model_ft.conv1= nn.Sequential(nn.Conv2d(in_channels=dense_feature_dim,
-                                        out_channels=dense_feature_dim,
-                                          kernel_size=1,
-                                        stride=1,
-                                        padding=0),
-                            nn.Dropout2d(p=dropout_ratio),
-                              nn.BatchNorm2d(dense_feature_dim))
-        model_ft.sigmoid=nn.Sigmoid()
-        model_ft.relu1 = nn.Sigmoid()
-        pdb.set_trace()
+    elif Params['fractal'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-
         model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)      
         model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
         input_size = 224

@@ -13,6 +13,7 @@ def Parameters(args):
     save_results = args.save_results
 
     #use xai interpretability
+    fractal = args.fractal
     fusion = args.fusion
     xai = args.xai
     bias = args.bias
@@ -23,7 +24,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB', 9: 'Baseline'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB', 9: 'Baseline', 10: 'L2'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -219,7 +220,7 @@ def Parameters(args):
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
-            'xai': xai, 'bias':bias, 'fusion': fusion,
+            'xai': xai, 'bias':bias, 'fusion': fusion, 'fractal': fractal,
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,
