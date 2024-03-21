@@ -15,7 +15,8 @@ feature_maps =  {'Net': 3,
                 "resnet18_lacunarity": 512,
                 "densenet161_lacunarity": 2208,
                 "convnext_lacunarity": 768,
-                "fusionmodel": 768}
+                "fusionmodel": 768,
+                "efficientnet_lacunarity": 1280}
 
 
 class Base_Lacunarity(nn.Module):
@@ -97,7 +98,7 @@ class Base_Lacunarity(nn.Module):
             lambda_param = 0.5 #boxcox transformation
             y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
 
-            lacunarity_values.append(y)
+            lacunarity_values.append(L_r)
         result = torch.cat(lacunarity_values, dim=1)
         return result
 
@@ -184,10 +185,10 @@ class Pixel_Lacunarity(nn.Module):
             lambda_param = 0.5 #boxcox transformation
             y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
 
-            lacunarity_values.append(y)
+            lacunarity_values.append(L_r)
         result = torch.cat(lacunarity_values, dim=1)
-        reduced_output = self.conv1x1(result)
-        return reduced_output
+        #reduced_output = self.conv1x1(result)
+        return result
 
 
 class ScalePyramid_Lacunarity(nn.Module):
@@ -363,7 +364,7 @@ class BuildPyramid(nn.Module):
             y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
 
 
-            lacunarity_values.append(y)
+            lacunarity_values.append(L_r)
             reference_size = lacunarity_values[0].shape[-2:]
             pyr_images_resized = [T.resize(img, size=reference_size, interpolation="bilinear") for img in lacunarity_values]
 
@@ -380,7 +381,9 @@ class DBC(nn.Module):
         self.r_values = r_values
         self.num_output_channels = 3
         self.eps = eps
-        self.conv1x1 = nn.Conv2d(len(self.r_values) * 3, self.num_output_channels, kernel_size=1, groups = 3)
+        self.model_name = model_name
+        self.conv1x1 =  nn.Conv2d(feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
+
 
 
     def forward(self, image):
@@ -389,7 +392,7 @@ class DBC(nn.Module):
 
         # Perform operations independently for each window in the current channel
         for r in self.r_values:
-            max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1)
+            max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1) #feature map is 7 for classifiers
             max_pool_output = max_pool(image)
             min_pool_output = -max_pool(-image)
 
@@ -397,12 +400,11 @@ class DBC(nn.Module):
             Mr = torch.sum(nr)
             Q_mr = nr / (self.window_size - r + 1)
             L_r = (Mr**2) * Q_mr / (Mr * Q_mr + self.eps)**2
-            L_r = L_r.squeeze(-1).squeeze(-1)
             L_r_all.append(L_r)
         channel_L_r = torch.cat(L_r_all, dim=1)
         reduced_output = self.conv1x1(channel_L_r)
 
-        return reduced_output
+        return channel_L_r
 
 class GDCB(nn.Module):
     def __init__(self, window_sizes, num_output_channels=3, eps=10E-6):

@@ -64,28 +64,40 @@ class fusion_model(nn.Module):
 
         super(fusion_model, self).__init__()
         self.model_name = model_name
-        
+        poolingLayer = Params['pooling_layer']
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         #lacunarity layer is added in backbone
         
+        if poolingLayer == "Baseline":
+            if self.model_name == 'efficientnet_lacunarity':
+                self.features=nn.Sequential(*list(backbone.children())[:-2])
+                self.classifier = backbone.classifier
+                self.pooling_layer = backbone.avgpool
+        
+        else: 
+            if self.model_name == 'convnext_lacunarity':
+                self.features=nn.Sequential(*list(backbone.features.children())[:8])
+                self.classifier = backbone.classifier[2]
+                self.pooling_layer = backbone.avgpool
 
-        if self.model_name == 'convnext':
-            self.features=nn.Sequential(*list(backbone.features.children())[:8])
-            self.classifier = backbone.classifier[2]
-            self.pooling_layer = backbone.avgpool
+            elif self.model_name == 'resnet18_lacunarity':
+                self.features=nn.Sequential(*list(backbone.children())[:-2])
+                self.classifier = backbone.fc
+                self.pooling_layer = backbone.avgpool
 
-        elif self.model_name == 'resnet18_lacunarity':
-            self.features=nn.Sequential(*list(backbone.children())[:-2])
-            self.classifier = backbone.fc
-            self.pooling_layer = backbone.avgpool
+            elif self.model_name == 'densenet161_lacunarity':
+                self.features=backbone.features 
+                self.classifier = backbone.classifier
+                self.pooling_layer = backbone.avgpool
 
-        elif self.model_name == 'densenet161_lacunarity':
-            self.features=nn.Sequential(*list(backbone.features.children())[:-1])  
-            self.classifier = backbone.classifier
-            self.pooling_layer = backbone.global_pool
+            
+            elif self.model_name == 'efficientnet_lacunarity':
+                self.features=nn.Sequential(*list(backbone.children())[:-3])
+                self.classifier = backbone.classifier
+                self.pooling_layer = backbone.avgpool
  
         
-    def forward(self,x):
+    def forward(self, x):
         x = self.features(x)
         x_pool = self.pooling_layer(x)
         x_avg = self.avgpool(x)
@@ -100,6 +112,7 @@ class fractal_model(nn.Module):
     def __init__ (self, model_name, backbone, num_classes, Params):
 
         super(fractal_model, self).__init__()
+        self.backbone = backbone
         self.model_name = model_name
         if self.model_name == "densenet161_lacunarity":
             dense_feature_dim = 2208
@@ -107,8 +120,11 @@ class fractal_model(nn.Module):
             dense_feature_dim = 768        
         elif self.model_name == "resnet18_lacunarity":
             dense_feature_dim = 512
+        elif self.model_name == "efficientnet_lacunarity":
+            dense_feature_dim = 1280
         dropout_ratio = 0.6
-        
+        self.poolingLayer = Params['pooling_layer']
+
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         self.conv1= nn.Sequential(nn.Conv2d(in_channels=dense_feature_dim,
                                         out_channels=dense_feature_dim,
@@ -119,19 +135,36 @@ class fractal_model(nn.Module):
                               nn.BatchNorm2d(dense_feature_dim))
         self.sigmoid=nn.Sigmoid()
         self.relu1 = nn.Sigmoid()
+
+        if self.poolingLayer == "Baseline":
+            if self.model_name == 'efficientnet_lacunarity':
+                self.features=nn.Sequential(*list(self.backbone.children())[:-2])
+                self.classifier = self.backbone.classifier
+                self.pooling_layer = self.backbone.avgpool
+            
         
-        if model_name == 'convnext_lacunarity':
-            self.features=nn.Sequential(*list(backbone.features.children())[:8])
-            self.classifier = backbone.classifier[2]
-            self.pooling_layer = backbone.avgpool
+        else: 
+            if self.model_name == 'efficientnet_lacunarity':
+                self.features=nn.Sequential(*list(self.backbone.children())[:-3])
+                self.classifier = self.backbone.classifier
+                self.pooling_layer = self.backbone.avgpool
 
-        elif model_name == 'resnet18_lacunarity':
-            self.features=nn.Sequential(*list(backbone.children())[:-2])
-            self.classifier = backbone.fc
 
-        elif model_name == 'densetnet161_lacunarity':
-            self.features=nn.Sequential(*list(backbone.features.children())[:-1])  
-            self.classifier = backbone.classifier  
+        if self.model_name == 'convnext_lacunarity':
+            self.features=nn.Sequential(*list(self.backbone.features.children())[:8])
+            self.classifier = self.backbone.classifier
+            self.pooling_layer = self.backbone.avgpool
+
+        elif self.model_name == 'resnet18_lacunarity':
+            self.features=nn.Sequential(*list(self.backbone.children())[:-2])
+            self.classifier = self.backbone.fc
+            self.pooling_layer = self.backbone.avgpool
+
+        elif self.model_name == 'densenet161_lacunarity':
+            self.features=self.backbone.features
+            self.classifier = self.backbone.classifier
+            self.pooling_layer = self.backbone.avgpool
+
         
     def forward(self,x):
         out = self.features(x)

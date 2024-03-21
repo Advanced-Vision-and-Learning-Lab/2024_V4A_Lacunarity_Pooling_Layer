@@ -46,16 +46,23 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
             pooling_output = math.floor((feature_height - kernel) / stride) + 1
             num_ftrs = out_channels * pooling_output * pooling_output
         elif agg_func == "global":
-            num_ftrs = 512
+            if pooling_layer == "DBC":
+                num_ftrs = 512
+            else:
+                num_ftrs = 512
     
-    elif model_name == "convnext_lacunarity" or model_name == "fusionmodel":
+    elif model_name == "convnext_lacunarity":
+        
         if agg_func == "local":
             feature_height = 7
             out_channels = 768
             pooling_output = math.floor((feature_height - kernel) / stride) + 1
             num_ftrs = out_channels * pooling_output * pooling_output
         elif agg_func == "global":
-            num_ftrs = 768
+            if pooling_layer == "DBC":
+                num_ftrs = 768
+            else:
+                num_ftrs = 768
 
     elif model_name == "densenet161_lacunarity":
         if agg_func == "local":
@@ -64,7 +71,19 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
             pooling_output = math.floor((feature_height - kernel) / stride) + 1
             num_ftrs = out_channels * pooling_output * pooling_output
         elif agg_func == "global":
-            num_ftrs = 2208
+            if pooling_layer == "DBC":
+                num_ftrs = 2208
+            else:
+                num_ftrs = 2208
+
+    elif model_name == "efficientnet_lacunarity":
+        if agg_func == "local":
+            feature_height = 7
+            out_channels = 1280
+            pooling_output = math.floor((feature_height - kernel) / stride) + 1
+            num_ftrs = out_channels * pooling_output * pooling_output
+        elif agg_func == "global":
+            num_ftrs = 1280
 
 
     return num_ftrs

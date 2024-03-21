@@ -226,6 +226,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                                 test_batch_size=Network_parameters['batch_size']['test'])
         # Create training and validation dataloaders, using validation set as testing for segmentation experiments
 
+
         dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
 
     elif Dataset == "Cassava":
@@ -353,6 +354,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                         shuffle=False,
                                                         )
                                                         for x in ['train', 'val','test']}
-    
+                                                        
+
 
     return dataloaders_dict

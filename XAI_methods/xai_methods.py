@@ -1,12 +1,10 @@
 
 import numpy as np
 import pandas as pd
-from XAI_methods.get_spyderplot import *
-from XAI_methods.get_attributes import get_attributions
+
 import matplotlib.pyplot as plt
 import pdb
-from captum.attr import *
-from captum.attr import visualization as viz
+
 from pytorch_grad_cam.utils.image import show_cam_on_image
 import random
 import warnings
@@ -30,7 +28,7 @@ def get_attributions(dataloaders, dataset, model, device, Params, parallel=False
     target_layers = [model.avgpool]
     images, labels, index = iter(dataloaders).__next__()
     input = images
-    cam = GradCAM(model=model, target_layers=target_layers)
+    cam = EigenCAM(model=model, target_layers=target_layers)
     grayscale_cam = cam(input_tensor=input)
     grayscale_cam = grayscale_cam[0, :]
     visualization = show_cam_on_image(input, grayscale_cam, use_rgb=True)

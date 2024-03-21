@@ -47,6 +47,12 @@ def Get_Class_Names(Dataset,data_dir):
     elif Dataset == 'LeavesTex':
         dataset = LeavesTex1200(data_dir)
 
+    elif Dataset == 'PlantVillage':
+        dataset = PlantVillage(data_dir)
+    
+    elif Dataset == 'DeepWeeds':
+        dataset = DeepWeeds(data_dir)
+
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 

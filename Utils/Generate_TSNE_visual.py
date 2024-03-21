@@ -13,6 +13,7 @@ import torch
 from matplotlib import offsetbox
 from Utils.Compute_FDR import Compute_Fisher_Score
 import pdb
+from sklearn.metrics import silhouette_score
 
 def pass_image(x):
     return x
@@ -62,23 +63,22 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
 
         # Turn interactive plotting off, don't show plots
         plt.ioff()
+        count=0
         
       #TSNE visual of (all) data
         #Get labels and outputs
-        for phase in ['train', 'val', 'test']:
+        for phase in ['test']:
             GT_val = np.array(0)
             indices_train = np.array(0)
             model.eval()
             model.to(device)
             features_extracted = []
             saved_imgs = []
-            for idx, (inputs, classes,index)  in enumerate(dataloaders_dict[phase]):
+            for idx, (inputs, classes)  in enumerate(dataloaders_dict[phase]):
                 images = inputs.to(device)
                 labels = classes.to(device, torch.long)
-                indices  = index.to(device).cpu().numpy()
                 
                 GT_val = np.concatenate((GT_val, labels.cpu().numpy()),axis = None)
-                indices_train = np.concatenate((indices_train,indices),axis = None)
                 # if images.shape[1] == 1:
                 #     images = np.repeat(images, 3, axis=1)
                 features = model(images)
@@ -89,6 +89,10 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
                 
                 features_extracted.append(features)
                 saved_imgs.append(images.cpu().permute(0,2,3,1).numpy())
+                count+=images.shape[0]
+                
+                if count > 5000:
+                    break
         
       
             features_extracted = np.concatenate(features_extracted,axis=0)
@@ -96,8 +100,9 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
             
             #Compute FDR scores
             GT_val = GT_val[1:]
-            indices_train = indices_train[1:]
-            FDR_scores, log_FDR_scores = Compute_Fisher_Score(features_extracted,GT_val)
+            FDR_scores = silhouette_score(features_extracted,GT_val,metric="cosine")
+            log_FDR_scores = np.atleast_2d(np.array(0))
+            FDR_scores = np.atleast_2d(FDR_scores)
             np.savetxt((sub_dir+'{}_FDR.txt'.format(phase)),FDR_scores,fmt='%.2E')
             np.savetxt((sub_dir+'{}_log_FDR.txt'.format(phase)),log_FDR_scores,fmt='%.2f')
             features_embedded = TSNE(n_components=2,verbose=1,init='random',

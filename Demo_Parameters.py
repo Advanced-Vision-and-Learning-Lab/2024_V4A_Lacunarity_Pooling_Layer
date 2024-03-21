@@ -115,13 +115,13 @@ def Parameters(args):
     #Set to false to not generate TSNE visuals
     #Number of images to view for TSNE (defaults to all training imgs unless
     #value is less than total training images).
-    TSNE_visual = False
+    TSNE_visual = True
     Num_TSNE_images = 5000
     
     #Set to True if more than one GPU was used 
     #False for UCMerced dataset only
     #True for EuroSAT and MSTAR dataset
-    Parallelize_model = False
+    Parallelize_model = True
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
     if feature_extraction:
@@ -140,7 +140,7 @@ def Parameters(args):
                 'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1',
                 'Synthetic_RGB': 'Datasets/Synthetic_RGB_Sigma_0.1',
                 'Kth_Tips': 'Datasets/KTH-TIPS2-b',
-                'LeavesTex': 'Datasets/LeavesTex1200',
+                'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
                 'GTOS-mobile': 'Datasets/gtos-mobile',
                 'PlantVillage': 'Datasets/PlantVillage/plant_village_classification',
                 "DeepWeeds": 'Datasets/DeepWeeds/rangeland_weeds_australia',

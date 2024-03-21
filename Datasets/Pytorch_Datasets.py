@@ -200,7 +200,7 @@ class LeavesTex1200(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        return image, target, idx
+        return image, target
 
 
 class KTH_TIPS_2b_data(Dataset):

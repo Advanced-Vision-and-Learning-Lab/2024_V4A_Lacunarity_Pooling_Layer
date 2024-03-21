@@ -1,0 +1,319 @@
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+> /scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py(123)main()
+-> model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+(Pdb) 
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 123, in main
+    model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 123, in main
+    model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/bdb.py", line 88, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/bdb.py", line 113, in dispatch_line
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 10260
+Epoch 0/0
+----------
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [====>...........................] - ETA 319.2s 384/1200: [=========>......................] - ETA 266.0s 512/1200: [=============>..................] - ETA 212.8s 640/1200: [==================>.............] - ETA 159.6s 768/1200: [======================>.........] - ETA 106.4s 896/1200: [===========================>....] - ETA 53.2s
+train Loss: 3.0552 Acc: 0.3506
+ 128/1200: [>...............................] - ETA 0.0s
+val Loss: 2.2777 Acc: 0.3778
+Validation loss decreased (inf --> 2.277698).
+Training complete in 0m 57s
+Best Val Acc: 0.377778
+
+Testing Model...
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [==========>.....................] - ETA 0.9s 384/1200: [=====================>..........] - ETA 0.5sTest Accuracy: 0.413333
+**********Run 1resnet18_lacunarity Finished**********
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 10260
+Epoch 0/0
+----------
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [====>...........................] - ETA 3.2s 384/1200: [=========>......................] - ETA 2.7s 512/1200: [=============>..................] - ETA 2.1s 640/1200: [==================>.............] - ETA 1.6s 768/1200: [======================>.........] - ETA 1.1s 896/1200: [===========================>....] - ETA 0.5s
+train Loss: 2.9504 Acc: 0.3815
+ 128/1200: [>...............................] - ETA 0.0s
+val Loss: 2.5217 Acc: 0.3889
+Validation loss decreased (inf --> 2.521659).
+Training complete in 0m 2s
+Best Val Acc: 0.388889
+
+Testing Model...
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [==========>.....................] - ETA 0.9s 384/1200: [=====================>..........] - ETA 0.5sTest Accuracy: 0.416667
+**********Run 2resnet18_lacunarity Finished**********
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 10260
+Epoch 0/0
+----------
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [====>...........................] - ETA 3.1s 384/1200: [=========>......................] - ETA 2.6s 512/1200: [=============>..................] - ETA 2.1s 640/1200: [==================>.............] - ETA 1.5s 768/1200: [======================>.........] - ETA 1.0s 896/1200: [===========================>....] - ETA 0.5s
+train Loss: 2.8356 Acc: 0.3914
+ 128/1200: [>...............................] - ETA 0.0s
+val Loss: 2.5720 Acc: 0.3333
+Validation loss decreased (inf --> 2.571983).
+Training complete in 0m 2s
+Best Val Acc: 0.333333
+
+Testing Model...
+ 128/1200: [>...............................] - ETA 0.0s 256/1200: [==========>.....................] - ETA 0.9s 384/1200: [=====================>..........] - ETA 0.5sTest Accuracy: 0.406667
+**********Run 3resnet18_lacunarity Finished**********
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+> /scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py(123)main()
+-> model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+(Pdb) 
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 123, in main
+    model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 123, in main
+    model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/bdb.py", line 88, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/bdb.py", line 113, in dispatch_line
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 15380
+Epoch 0/0
+----------
+ 128/1200: [>...............................] - ETA 0.0sSaved interrupt
+Testing Model...
+ 128/1200: [>...............................] - ETA 0.0sTraceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 188, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 99, in main
+    test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/Network_functions.py", line 198, in test_model
+    outputs = model(inputs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 171, in forward
+    outputs = self.parallel_apply(replicas, inputs, kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 181, in parallel_apply
+    return parallel_apply(replicas, inputs, kwargs, self.device_ids[:len(replicas)])
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 89, in parallel_apply
+    output.reraise()
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+AttributeError: Caught AttributeError in replica 0 on device 0.
+Original Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 64, in _worker
+    output = module(*input, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/fusion_model.py", line 93, in forward
+    x = self.features(x)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1614, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'fusion_model' object has no attribute 'features'
+
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 87, in main
+    train_pkl_file = open(sub_dir + 'train_dict.pkl', 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Saved_Models/L2/L2/global/Feature_Extraction/LeavesTex/convnext_lacunarity/Run_1/train_dict.pkl'
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=DenseNet161_Weights.IMAGENET1K_V1`. You can also use `weights=DenseNet161_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 188, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 66, in main
+    model_ft, input_size = initialize_model(model_name, num_classes, dataloaders_dict, Params,
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/Network_functions.py", line 464, in initialize_model
+    model_ft = fusion_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)      
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/fusion_model.py", line 85, in __init__
+    self.pooling_layer = backbone.avgpool
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1614, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'densenet161_lacunarity' object has no attribute 'avgpool'
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 87, in main
+    train_pkl_file = open(sub_dir + 'train_dict.pkl', 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Saved_Models/L2/L2/global/Feature_Extraction/LeavesTex/densenet161_lacunarity/Run_1/train_dict.pkl'
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=EfficientNet_B0_Weights.IMAGENET1K_V1`. You can also use `weights=EfficientNet_B0_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 49959
+Epoch 0/0
+----------
+  128/38813: [>...............................] - ETA 0.0sSaved interrupt
+Testing Model...
+  128/11090: [>...............................] - ETA 0.0sTraceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 188, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 99, in main
+    test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/Network_functions.py", line 198, in test_model
+    outputs = model(inputs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 171, in forward
+    outputs = self.parallel_apply(replicas, inputs, kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 181, in parallel_apply
+    return parallel_apply(replicas, inputs, kwargs, self.device_ids[:len(replicas)])
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 89, in parallel_apply
+    output.reraise()
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in replica 0 on device 0.
+Original Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 64, in _worker
+    output = module(*input, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/fusion_model.py", line 94, in forward
+    x_pool = self.pooling_layer(x)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/pooling.py", line 986, in forward
+    return F.lp_pool2d(input, float(self.norm_type), self.kernel_size,
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/functional.py", line 1035, in lp_pool2d
+    out = avg_pool2d(input.pow(norm_type), kernel_size, padding=0, ceil_mode=ceil_mode)
+RuntimeError: Given input size: (1280x1x1). Calculated output size: (1280x0x0). Output size is too small
+
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 87, in main
+    train_pkl_file = open(sub_dir + 'train_dict.pkl', 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Saved_Models/L2/L2/global/Feature_Extraction/PlantVillage/efficientnet_lacunarity/Run_1/train_dict.pkl'
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=EfficientNet_B0_Weights.IMAGENET1K_V1`. You can also use `weights=EfficientNet_B0_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 12810
+Epoch 0/0
+----------
+  128/12256: [>...............................] - ETA 0.0sSaved interrupt
+Testing Model...
+ 128/3502: [>...............................] - ETA 0.0sTraceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 188, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 99, in main
+    test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/Network_functions.py", line 198, in test_model
+    outputs = model(inputs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 171, in forward
+    outputs = self.parallel_apply(replicas, inputs, kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 181, in parallel_apply
+    return parallel_apply(replicas, inputs, kwargs, self.device_ids[:len(replicas)])
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 89, in parallel_apply
+    output.reraise()
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in replica 0 on device 0.
+Original Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 64, in _worker
+    output = module(*input, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/fusion_model.py", line 94, in forward
+    x_pool = self.pooling_layer(x)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/pooling.py", line 986, in forward
+    return F.lp_pool2d(input, float(self.norm_type), self.kernel_size,
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/functional.py", line 1035, in lp_pool2d
+    out = avg_pool2d(input.pow(norm_type), kernel_size, padding=0, ceil_mode=ceil_mode)
+RuntimeError: Given input size: (1280x1x1). Calculated output size: (1280x0x0). Output size is too small
+
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 87, in main
+    train_pkl_file = open(sub_dir + 'train_dict.pkl', 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Saved_Models/L2/L2/global/Feature_Extraction/DeepWeeds/efficientnet_lacunarity/Run_1/train_dict.pkl'
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=EfficientNet_B0_Weights.IMAGENET1K_V1`. You can also use `weights=EfficientNet_B0_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Experiments...
+Initializing Datasets and Dataloaders...
+Using 2 GPUs!
+Number of parameters: 25620
+Epoch 0/0
+----------
+ 128/1200: [>...............................] - ETA 0.0sSaved interrupt
+Testing Model...
+ 128/1200: [>...............................] - ETA 0.0sTraceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 188, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/demo.py", line 99, in main
+    test_dict = test_model(dataloaders_dict['test'], model_ft, criterion,
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/Network_functions.py", line 198, in test_model
+    outputs = model(inputs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 171, in forward
+    outputs = self.parallel_apply(replicas, inputs, kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 181, in parallel_apply
+    return parallel_apply(replicas, inputs, kwargs, self.device_ids[:len(replicas)])
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 89, in parallel_apply
+    output.reraise()
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/_utils.py", line 644, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in replica 0 on device 0.
+Original Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/parallel/parallel_apply.py", line 64, in _worker
+    output = module(*input, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/Utils/fusion_model.py", line 94, in forward
+    x_pool = self.pooling_layer(x)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/modules/pooling.py", line 986, in forward
+    return F.lp_pool2d(input, float(self.norm_type), self.kernel_size,
+  File "/scratch/user/akshatha.mohan/.conda/envs/myenv/lib/python3.9/site-packages/torch/nn/functional.py", line 1035, in lp_pool2d
+    out = avg_pool2d(input.pow(norm_type), kernel_size, padding=0, ceil_mode=ceil_mode)
+RuntimeError: Given input size: (1280x1x1). Calculated output size: (1280x0x0). Output size is too small
+
+Traceback (most recent call last):
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 288, in <module>
+    main(params)
+  File "/scratch/user/akshatha.mohan/research/Lacunarity_Pooling/View_Results.py", line 87, in main
+    train_pkl_file = open(sub_dir + 'train_dict.pkl', 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Saved_Models/L2/L2/global/Feature_Extraction/LeavesTex/efficientnet_lacunarity/Run_1/train_dict.pkl'

@@ -14,6 +14,7 @@ import torch
 import torch.nn as nn
 
 ## Local external libraries
+from torchvision import models
 import pdb
 import os
 import torch.nn.functional as F
@@ -84,3 +85,74 @@ class Net(nn.Module):
         x = torch.flatten(x, 1)
         x = self.fc(x)
         return x
+    
+
+
+class densenet161_lacunarity(nn.Module):
+    def __init__(self, num_ftrs, num_classes, Params, pooling_layer="lacunarity", agg_func="global"):
+
+        super(densenet161_lacunarity, self).__init__()
+        model_dense=models.densenet161(pretrained=True)
+        self.features=model_dense.features
+        self.classifier = model_dense.classifier
+
+        model_name = Params['Model_name']
+        kernel = Params["kernel"]
+        stride = Params["stride"]
+        padding = Params["conv_padding"]
+        scales = Params["scales"]
+        num_levels = Params["num_levels"]
+        sigma = Params["sigma"]
+        min_size = Params["min_size"]
+        bias = Params["bias"]
+        
+        if pooling_layer == "Baseline":
+            self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+
+        self.agg_func = agg_func
+        if self.agg_func == "local":
+            if pooling_layer == "max":
+                self.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif pooling_layer == "avg":                                                                                                                                                                                                                            
+                self.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            elif pooling_layer == "Base_Lacunarity":
+                self.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif pooling_layer == "Pixel_Lacunarity":
+                self.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            elif pooling_layer == "ScalePyramid_Lacunarity":
+                self.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
+            elif pooling_layer == "BuildPyramid":
+                self.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+            elif pooling_layer == "DBC":
+                self.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            elif pooling_layer == "GDCB":
+                self.avgpool = GDCB(3,5)
+        
+        elif self.agg_func == "global":
+            if pooling_layer == "max":
+                self.avgpool = nn.AdaptiveMaxPool2d((1,1))
+            elif pooling_layer == "avg":                                                                                                                                                                                                                            
+                self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+            elif pooling_layer == "L2":                                                                                                                                                                                                                           
+                self.avgpool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
+            elif pooling_layer == "Base_Lacunarity":
+                self.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
+            elif pooling_layer == "Pixel_Lacunarity":
+                self.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
+            elif pooling_layer == "ScalePyramid_Lacunarity":
+                self.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
+            elif pooling_layer == "BuildPyramid":
+                self.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
+            elif pooling_layer == "DBC":
+                self.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 8)
+            elif pooling_layer == "GDCB":
+                self.avgpool = GDCB(3,5)
+
+
+    def forward(self,x):
+        features = self.features(x)
+        out = F.relu(features, inplace=True)
+        out = self.avgpool(out)
+        out = torch.flatten(out, 1)
+        out = self.classifier(out)
+        return out
