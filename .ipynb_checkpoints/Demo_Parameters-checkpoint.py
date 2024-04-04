@@ -108,8 +108,8 @@ def Parameters(args):
 
     #Visualization of results parameters
     #Visualization parameters for figures
-    fig_size = 12
-    font_size = 16
+    fig_size = 32
+    font_size = 12
     
     #Flag for TSNE visuals, set to True to create TSNE visual of features
     #Set to false to not generate TSNE visuals

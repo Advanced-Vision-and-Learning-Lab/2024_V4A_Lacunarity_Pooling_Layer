@@ -108,14 +108,14 @@ def Parameters(args):
 
     #Visualization of results parameters
     #Visualization parameters for figures
-    fig_size = 12
-    font_size = 16
+    fig_size = 32
+    font_size = 14
     
     #Flag for TSNE visuals, set to True to create TSNE visual of features
     #Set to false to not generate TSNE visuals
     #Number of images to view for TSNE (defaults to all training imgs unless
     #value is less than total training images).
-    TSNE_visual = True
+    TSNE_visual = False
     Num_TSNE_images = 5000
     
     #Set to True if more than one GPU was used 
