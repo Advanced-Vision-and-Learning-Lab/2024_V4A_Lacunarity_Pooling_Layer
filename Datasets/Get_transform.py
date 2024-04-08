@@ -13,128 +13,16 @@ import torch
 from torchvision import transforms
 import torch.nn as nn
 
-
-## Local external libraries
-from Datasets import preprocess
+# Data augmentation and normalization for training
+# Just normalization and resize for test
+# Data transformations as described in:
+# http://openaccess.thecvf.com/content_cvpr_2018/papers/Xue_Deep_Texture_Manifold_CVPR_2018_paper.pdf
 
 def get_transform(Network_parameters, input_size=224):
     Dataset = Network_parameters['Dataset']
     data_dir = Network_parameters['data_dir']
     
-    if Dataset == 'BloodMNIST' or Dataset == 'PneumoniaMNIST' or Dataset == 'OrganMNISTCoronal':
-        data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ]),
-            'test': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.CenterCrop(input_size),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ]),
-        }
-        
-    elif Dataset == 'FashionMNIST':
-        data_transforms = {
-            'train': transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[.5], std=[.5]),
-            ]),
-            'test':  transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[.5], std=[.5]),
-            ]),
-    }
-        
-    elif Dataset == 'PRMI':
-        data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(size=(32, 32)),
-                transforms.ToTensor(),
-                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
-            ]),
-            'test': transforms.Compose([
-                transforms.Resize(size=(32, 32)),
-                transforms.ToTensor(),
-                transforms.Normalize([0.4077349007129669, 0.3747502267360687, 0.34903043508529663], [0.4077349007129669, 0.3747502267360687, 0.34903043508529663])
-            ]),
-        }
-
-
-    elif Dataset == "PlantLeaf":
-        data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(size = (200, 200)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[.5], std=[.5]),
-
-            ]),
-            'test':  transforms.Compose([
-                transforms.Resize(size = (200, 200)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[.5], std=[.5]),
-            ]),
-    } 
-
-    elif Dataset == 'UCMerced':
-        mean = [0.485, 0.456, 0.406]
-        std = [0.229, 0.224, 0.225]
-        data_transforms = {
-        'train': transforms.Compose([
-            transforms.Resize(Network_parameters['resize_size']),
-            transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(mean = mean, std = std)
-        ]),
-        'test': transforms.Compose([
-            transforms.Resize(Network_parameters['center_size']),
-            transforms.CenterCrop(input_size),
-            transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        ]),
-    }
-    
-    elif Dataset == "Synthetic_Gray" or Dataset == "Synthetic_RGB":
-        if 'Grayscale' in Dataset:
-            data_transforms = {
-                'val': transforms.Compose([
-                    transforms.Resize(size=(200, 200)),
-                    transforms.Grayscale(num_output_channels=3),
-                    transforms.ToTensor(),
-                ]),
-            }
-        
-        else:
-            data_transforms = {
-                'val': transforms.Compose([
-                    transforms.Resize(size=(200, 200)),
-                    transforms.ToTensor(),
-                ]),
-            }
-        
-    elif Dataset == "Kth_Tips" or Dataset == "GTOS-mobile":  
-        data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ]),
-            'test': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.CenterCrop(input_size),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ]),
-        }
-    
-    elif Dataset == 'LeavesTex':
+    if Dataset == 'LeavesTex':
                 data_transforms = {
             'train': transforms.Compose([
                 transforms.Resize(Network_parameters['resize_size']),

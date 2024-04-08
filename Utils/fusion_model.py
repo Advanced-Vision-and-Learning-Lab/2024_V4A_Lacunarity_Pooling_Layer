@@ -5,32 +5,14 @@ Functions to train/test model
 ## Python standard libraries
 from __future__ import print_function
 from __future__ import division
-import numpy as np
-import time
-import copy
-
 ## PyTorch dependencies
 import torch
 import torch.nn as nn
-from torchvision import models
 
 ## Local external libraries
-from barbar import Bar
-from Utils.pytorchtools import EarlyStopping
-import pdb
-import os
-import torch.nn.functional as F
-from Utils.CustomNN import Net
-from Utils.Compute_sizes import get_feat_size
-import matplotlib.pyplot as plt
-import timm
-
 import torch
 import torch.nn as nn
-import torch.optim as optimxxc
-import numpy as np
 import os
-from torchvision import models, transforms
 import math
 
 class GDCB(nn.Module):

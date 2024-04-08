@@ -3,17 +3,11 @@
 Main script for XAI experiments
 """
 import argparse
-
-
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-import pdb
-import torchgeo
-
-
 from Demo_Parameters import Parameters
 from Utils.Save_Results import save_results
 from Prepare_Data import Prepare_DataLoaders
@@ -22,8 +16,6 @@ import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #Turn off plotting
 plt.ioff()
-
-
 
 
 def main(Params):
@@ -143,10 +135,11 @@ def parse_args():
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=14,
-                       help='Dataset selection: See Demo Parameters for details')
+   parser.add_argument('--data_selection', type=int, default=1,
+                       help='Dataset selection: 1:LeavesTex1200, 2:PlantVillage, 3:DeepWeeds')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
-                       help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
+                       help='Flag for feature extraction. False, train whole model. True, only update \
+                        fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
    parser.add_argument('--fusion', default=False, action=argparse.BooleanOptionalAction,

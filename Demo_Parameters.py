@@ -33,21 +33,9 @@ def Parameters(args):
     
     #Select dataset
     data_selection = args.data_selection
-    Dataset_names = {1:'PneumoniaMNIST',
-                     2:'BloodMNIST',
-                     3:'OrganMNISTCoronal',
-                     4: 'FashionMNIST',
-                     5: 'PlantLeaf',
-                     6: 'UCMerced',
-                     7: 'PRMI',
-                     8: 'Synthetic_Gray',
-                     9: 'Synthetic_RGB',
-                     10: 'Kth_Tips',
-                     11: 'GTOS-mobile',
-                     12: 'LeavesTex',
-                     13: 'PlantVillage',
-                     14: 'DeepWeeds',
-                     15: 'Cassava'}
+    Dataset_names = {1: 'LeavesTex',
+                     2: 'PlantVillage',
+                     3: 'DeepWeeds'}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -130,21 +118,9 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'FashionMNIST':'Datasets/FashionMNIST',
-                'PneumoniaMNIST': 'Datasets/PneumoniaMNIST',
-                'BloodMNIST': 'Datasets/BloodMNIST',
-                'OrganMNISTCoronal': 'Datasets/OrganMNISTCoronal',
-                'PlantLeaf' : 'Datasets/PlantLeaf',
-                'UCMerced': 'Datasets/UCMerced',
-                'PRMI': 'Datasets/PRMI',
-                'Synthetic_Gray': 'Datasets/Synthetic_Gray_Sigma_0.1',
-                'Synthetic_RGB': 'Datasets/Synthetic_RGB_Sigma_0.1',
-                'Kth_Tips': 'Datasets/KTH-TIPS2-b',
-                'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
-                'GTOS-mobile': 'Datasets/gtos-mobile',
+    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
                 'PlantVillage': 'Datasets/PlantVillage/plant_village_classification',
-                "DeepWeeds": 'Datasets/DeepWeeds/rangeland_weeds_australia',
-                "Cassava": 'Datasets/Cassava'}
+                'DeepWeeds': 'Datasets/DeepWeeds/rangeland_weeds_australia'}
     
     #Backbone architecture
     #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
@@ -152,55 +128,19 @@ def Parameters(args):
     Model_name = args.model
     
     #channels in each dataset
-    channels = {'FashionMNIST': 1,
-                'PneumoniaMNIST': 1,
-                'BloodMNIST': 3,
-                'OrganMNISTCoronal': 1,
-                'PlantLeaf': 3,
-                'UCMerced': 3,
-                'PRMI': 3,
-                'Synthetic_Gray': 3,
-                'Synthetic_RGB': 3,
-                'Kth_Tips': 3,
-                'GTOS-mobile': 3,
-                'LeavesTex': 3,
+    channels = {'LeavesTex': 3,
                 'PlantVillage': 3,
-                'DeepWeeds': 3,
-                'Cassava': 3}
+                'DeepWeeds': 3}
     
     #Number of classes in each dataset
-    num_classes = {'FashionMNIST': 10,
-                'PneumoniaMNIST': 2,
-                'BloodMNIST': 8,
-                'OrganMNISTCoronal': 11,
-                'PlantLeaf': 12,
-                'UCMerced': 21,
-                'PRMI': 4,
-                'Synthetic_Gray': 9,
-                'Synthetic_RGB': 9,
-                'Kth_Tips': 11,
-                'GTOS-mobile': 31,
-                'LeavesTex': 20,
+    num_classes = {'LeavesTex': 20,
                 'PlantVillage': 39,
-                'DeepWeeds': 10,
-                'Cassava': 5}
+                'DeepWeeds': 10}
     
     #Number of runs and/or splits for each dataset
-    Splits = {'FashionMNIST': 3,
-                'PneumoniaMNIST': 3,
-                'BloodMNIST': 3,
-                'OrganMNISTCoronal': 3,
-                'PlantLeaf': 3,
-                'UCMerced': 3,
-                'PRMI': 3,
-                'Synthetic_Gray': 3,
-                'Synthetic_RGB': 3,
-                'Kth_Tips': 4,
-                'GTOS-mobile': 5,
-                'LeavesTex': 3,
+    Splits = {'LeavesTex': 3,
                 'PlantVillage': 3,
-                'DeepWeeds': 3,
-                'Cassava': 3}
+                'DeepWeeds': 3}
     
     Dataset = Dataset_names[data_selection]
     data_dir = Data_dirs[Dataset]

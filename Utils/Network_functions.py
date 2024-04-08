@@ -13,7 +13,6 @@ import copy
 import torch
 import torch.nn as nn
 from torchvision import models
-import timm
 ## Local external libraries
 from barbar import Bar
 from Utils.pytorchtools import EarlyStopping
@@ -65,7 +64,6 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                     inputs = inputs.to(device)
                     inputs.requires_grad = True
                     labels = labels.to(device)
-                    #index = index.to(device)
   
                     # zero the parameter gradients
                     optimizer.zero_grad()
@@ -77,7 +75,6 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                         # Get model outputs and calculate loss
                         outputs = model(inputs)
                         labels=labels.squeeze().long()
-                        # labels = labels.clone().detach()
                         loss = criterion(outputs, labels).mean()
                        
                      
@@ -193,10 +190,8 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
         for idx, (inputs, labels) in enumerate(Bar(dataloader)):
             inputs = inputs.to(device)
             labels = labels.to(device)
-            #index = index.to(device)
     
             #Run data through best model
-            #pdb.set_trace()
             outputs = model(inputs)
          
             #Make model predictions
@@ -204,17 +199,14 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
             
             #Compute loss
             labels=labels.squeeze().long()
-            # labels = labels.clone().detach()
 
             loss = criterion(outputs, labels).mean()
             
             #If test, accumulate labels for confusion matrix
             GT = np.concatenate((GT,labels.detach().cpu().numpy()),axis=None)
             Predictions = np.concatenate((Predictions,preds.detach().cpu().numpy()),axis=None)
-            #Index = np.concatenate((Index,index.detach().cpu().numpy()),axis=None)
             
             #Keep track of correct predictions
-            #pdb.set_trace()
             running_corrects += torch.sum(preds == labels.data)
             
             # statistics
@@ -228,7 +220,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     
     print('Test Accuracy: {:4f}'.format(test_acc))
     
-    test_dict = {'GT': GT[1:], 'Predictions': Predictions[1:], #'Index':Index[1:],
+    test_dict = {'GT': GT[1:], 'Predictions': Predictions[1:],
                  'test_acc': np.round(test_acc.cpu().numpy()*100,2),
                  'test_loss': test_loss}
     
@@ -241,7 +233,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     # Initialize these variables which will be set in this if statement. Each of these
     # variables is model specific.
     
-    fractal_pool = True
     model_ft = None
     input_size = 0
     kernel = Params["kernel"]
@@ -308,26 +299,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
 
         input_size = 224
 
-    elif model_name == "resnet18":
-        """ Resnet18
-        """
-        model_ft = models.resnet18(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        if not(channels == 3):
-            model_ft.conv1 = nn.Conv2d(channels, 64, kernel_size=(7,7),stride=(2,2), padding=(3,3), bias=False) 
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-    elif model_name == "vit":
-        model_ft = models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        if not(channels == 3):
-             model_ft.conv_proj = nn.Conv2d(channels, 768, kernel_size=(16,16),stride=(16,16)) 
-        num_ftrs = model_ft.heads.head.in_features
-        model_ft.heads.head = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
 
     elif model_name == "resnet18_lacunarity":
         model_ft = models.resnet18(pretrained=use_pretrained)
@@ -389,70 +360,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = 224
-
-    elif model_name == "Net":
-        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = Net(num_ftrs, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        if not(channels == 3):
-            model_ft.conv1 = nn.Conv2d(channels, out_channels=3, kernel_size=3, stride=2)
-        input_size = 224
-
-
-
-
-    elif model_name == "efficientnet_lacunarity":
-        model_ft = models.efficientnet_b0(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        
-        if aggFunc == "local":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                     
-                model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-        
-        elif aggFunc == "global":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                       
-                model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-            elif poolingLayer == "L2":                                                                                                                                                                                                                           
-                model_ft.avgpool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-
-        
-        # Modify the final fully connected layer for the desired number of classes
-        if poolingLayer == "Baseline":
-            model_ft.avgpool = model_ft.avgpool
-            model_ft.classifier = nn.Linear(1280, num_classes)
-        else:
-            num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-            model_ft.classifier = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-
 
     else:
         raise RuntimeError('{} not implemented'.format(model_name))
