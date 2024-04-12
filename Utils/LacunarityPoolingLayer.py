@@ -92,9 +92,6 @@ class Base_Lacunarity(nn.Module):
 
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
-            lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
-
             lacunarity_values.append(L_r)
         result = torch.cat(lacunarity_values, dim=1)
         return result

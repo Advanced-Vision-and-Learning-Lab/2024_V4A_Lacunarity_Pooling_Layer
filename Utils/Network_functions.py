@@ -69,12 +69,14 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                     optimizer.zero_grad()
                   
                     # forward
+                    # pdb.set_trace()
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
                         
                         # Get model outputs and calculate loss
                         outputs = model(inputs)
                         labels=labels.squeeze().long()
+                        # pdb.set_trace()
                         loss = criterion(outputs, labels).mean()
                        
                      
@@ -375,8 +377,13 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
 
     elif Params['fractal'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params) 
+        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)
+
+        trainable_conv1 = model_ft.conv1
         set_parameter_requires_grad(model_ft, feature_extract)
+        if feature_extract:
+            #Set conv layer to learn
+            model_ft.conv1 = trainable_conv1
         model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
