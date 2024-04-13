@@ -6,87 +6,98 @@ to ensure the code works. If any of these datasets are used,
 please cite the appropiate sources (papers, repositories, etc.) as mentioned
 on the webpages and provided here.
 
-## UCMerced dataset [[`BibTeX`](https://github.com/Peeples-Lab/XAI_Analysis/tree/main/Datasets#citing-ucmerced)]
-To download the UCMerced dataset, initialize a new UC Merced dataset instance in which download is set to True.
-The structure of the `UCMerced` folder is as follows:
+## LeavesTex1200 dataset [[`BibTeX`]()]
+To download the LeavesTex1200 dataset. Download the <a href="http://scg-turing.ifsc.usp.br/data/bases/LeavesTex1200.zip">download.zip</a>.
+The structure of the `LeavesTex1200` folder is as follows:
 ```
 └── root dir
-    ├── UCMerced_LandUse //Contains folders of images for each class.
-    ├── uc_merced-train
-    ├── uc_merced-test  
-    ├── uc_merced-val
+    ├── LeavesTex1200 //Contains folders of images for each class.
+    	├── Images
 ``` 
 
-## <a name="CitingUCMerced"></a>Citing UCMerced
+## <a name="CitingLeavesTex1200"></a>Citing LeavesTex1200
 If you use this dataset in your research, please cite the following paper:
+<a href="https://doi.org/10.1002/ima.20201"> Plant leaf identification using Gabor wavelets </a>
 
-https://dl.acm.org/doi/10.1145/1869790.1869829
 
 **BibTex:**
 ```
-@inproceedings{yang2010bag,
-  title={Bag-of-visual-words and spatial extensions for land-use classification},
-  author={Yang, Yi and Newsam, Shawn},
-  booktitle={Proceedings of the 18th SIGSPATIAL international conference on advances in geographic information systems},
-  pages={270--279},
-  year={2010}
+@article{casanova2009plant,
+  title={Plant leaf identification using Gabor wavelets},
+  author={Casanova, Dalcimar and de Mesquita S{\'a} Junior, Jarbas Joaci and Bruno, Odemir Martinez},
+  journal={International Journal of Imaging Systems and Technology},
+  volume={19},
+  number={3},
+  pages={236--243},
+  year={2009},
+  publisher={Wiley Online Library}
 }
 ```
 
-## EuroSAT dataset [[`BibTeX`](https://github.com/Peeples-Lab/XAI_Analysis/tree/main/Datasets#citing-eurosat)]
-To download the EuroSAT dataset, initialize a new EuroSAT dataset instance in which download is set to True.
-The structure of the `EuroSAT` folder is as follows:
+## PlantVillage dataset [[`BibTeX`]()]
+To download the PlantVillage dataset. Download the <a href="">download.zip</a>.
+The structure of the `PlantVillage` folder is as follows:
 ```
 └── root dir
-    ├── ds //Contains folders of images for each class.
-    ├── eurosat-train
-    ├── eurosat-test
-    ├── eurosat-val
+    ├── PlantVillage
+    ├── plant_village_classification
+    	├── Classes
 ``` 
 
-## <a name="CitingEuroSAT"></a>Citing EuroSAT
+## <a name="CitingPlantVillage"></a>Citing PlantVillage
 If you use this dataset in your research, please cite the following paper:
-https://ieeexplore.ieee.org/document/8736785
+<a href="https://doi.org/10.48550/arXiv.1511.08060"> An open access repository of images on plant health to enable the development of mobile disease diagnostics </a>
 
 **BibTex:**
 ```
-@article{helber2019eurosat,
-  title={Eurosat: A novel dataset and deep learning benchmark for land use and land cover classification},
-  author={Helber, Patrick and Bischke, Benjamin and Dengel, Andreas and Borth, Damian},
-  journal={IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},
-  volume={12},
-  number={7},
-  pages={2217--2226},
-  year={2019},
-  publisher={IEEE}
+@article{hughes2015open,
+  title={An open access repository of images on plant health to enable the development of mobile disease diagnostics},
+  author={Hughes, David and Salath{\'e}, Marcel and others},
+  journal={arXiv preprint arXiv:1511.08060},
+  year={2015}
 }
 ```
 
-## MSTAR dataset [[`BibTeX`](https://github.com/Peeples-Lab/XAI_Analysis/tree/main/Datasets#citing-mstar)]
-To download the MSTAR dataset. Download the <a href="https://github.com/jangsoopark/AConvNet-pytorch/releases/download/v2.2.0/dataset.zip">download.zip</a>.
-Extract the eoc-1-t72-a64 folder from it.
-The structure of the `MSTAR` folder is as follows:
+## DeepWeeds dataset [[`BibTeX`]()]
+To download the DeepWeeds dataset. Download the <a href="https://github.com/jangsoopark/AConvNet-pytorch/releases/download/v2.2.0/dataset.zip">download.zip</a>.
+The structure of the `DeepWeeds` folder is as follows:
 ```
 └── root dir
-    └── eoc-1-t72-a64 //Contains folders of images for each class.
-	├── train
-	├── test
+    └── DeepWeeds //Contains folders of images for each class.
+	├── rangeland_weeds_australia
+		├── Classes
 ``` 
 
-## <a name="CitingMSTAR"></a>Citing MSTAR
+## <a name="CitingDeepWeeds"></a>Citing DeepWeeds
 If you use this dataset in your research, please cite the following paper:
-<a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/2757/0000/MSTAR-extended-operating-conditions-a-tutorial/10.1117/12.242059.full?SSO=1">MSTAR extended operating conditions: a tutorial </a>
+<a href="https://doi.org/10.1038/s41598-018-38343-3"> DeepWeeds: A Multiclass Weed Species Image Dataset for Deep Learning </a>
 
 
 **BibTex:**
 ```
-@article{keydel1996mstar,
-  title={MSTAR extended operating conditions: A tutorial},
-  author={Keydel, Eric R and Lee, Shung Wu and Moore, John T},
-  journal={Algorithms for Synthetic Aperture Radar Imagery III},
-  volume={2757},
-  pages={228--242},
-  year={1996},
-  publisher={SPIE}
+@article{DeepWeeds2019,
+  author = {Alex Olsen and
+    Dmitry A. Konovalov and
+    Bronson Philippa and
+    Peter Ridd and
+    Jake C. Wood and
+    Jamie Johns and
+    Wesley Banks and
+    Benjamin Girgenti and
+    Owen Kenny and 
+    James Whinney and
+    Brendan Calvert and
+    Mostafa {Rahimi Azghadi} and
+    Ronald D. White},
+  title = {{DeepWeeds: A Multiclass Weed Species Image Dataset for Deep Learning}},
+  journal = {Scientific Reports},
+  year = 2019,
+  number = 2058,
+  month = 2,
+  volume = 9,
+  issue = 1,
+  day = 14,
+  url = "https://doi.org/10.1038/s41598-018-38343-3",
+  doi = "10.1038/s41598-018-38343-3"
 }
 ```
