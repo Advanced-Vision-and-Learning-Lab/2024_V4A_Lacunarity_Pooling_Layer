@@ -1,5 +1,5 @@
-# Lacunarity Pooling Layers for Plant Image Texture Analysis:
-**Lacunarity Pooling Layers for Plant Image Texture Analysis**
+# Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis:
+**Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis**
 
 _Akshatha Mohan and Joshua Peeples_
 
@@ -19,7 +19,7 @@ In this repository, we provide the paper and code for the "Quantitative Analysis
 
 ## Installation Prerequisites
 
-This code uses python, pytorch, quantus, and captum. 
+This code uses python and necessary packages in pytorch
 Please use [`Pytorch's website`](https://pytorch.org/get-started/locally/) to download necessary packages.
 
 ## Demo
@@ -28,7 +28,7 @@ Run `demo.py` in Python IDE (e.g., Spyder) or command line.
 
 ## Main Functions
 
-The XAI Analyis runs using the following functions. 
+The Lacunarity Pooling layer runs using the following functions. 
 
 1. Intialize model  
 
@@ -96,7 +96,7 @@ reference using the following entry.
 
 **Plain Text:**
 
-A. Mohan and J. Peeples, "Quantitative Analysis of Primary Attribution Explainable Artificial Intelligence Methods for Remote Sensing Image Classification,"  in 2023 IEEE International Geoscience and Remote Sensing Symposium IGARSS, pp. 950-953. IEEE, 2023
+TBD
 
 **BibTex:**
 ```
