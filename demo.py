@@ -71,8 +71,15 @@ def main(Params):
     #    fwd_flops = lightning.measure_flops(model, model_fwd)
     #    print(fwd_flops)
 
-    #    model_loss = lambda y: y.sum()
-    #    fwd_and_bwd_flops = lightning.measure_flops(model, model_fwd, model_loss)
+
+    #    model_features = model_ft.features.to(torch.device("meta"))
+    #    x = torch.randn(1,3,224,224).to(torch.device("meta"))
+
+    #    model_fwd_features = lambda: model_features(x)
+    #    fwd_flops_features = lightning.measure_flops(model_features, model_fwd_features)
+
+    #    print(fwd_flops - fwd_flops_features)
+
 
 
        # Send the model to GPU if available, use multiple if available
@@ -83,6 +90,7 @@ def main(Params):
        
        model_ft = model_ft.to(device)
       # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
+
        num_params = sum(p.numel() for p in model_ft.parameters() if p.requires_grad)
        num_params_classifier = sum(p.numel() for p in model_ft.classifier.parameters() if p.requires_grad)
        num_params_backbone = sum(p.numel() for p in model_ft.features.parameters() if p.requires_grad)
@@ -144,7 +152,7 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=9,
+   parser.add_argument('--pooling_layer', type=int, default=1,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
                         6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline, 10: L2')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
@@ -180,7 +188,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='densenet161_lacunarity',
+   parser.add_argument('--model', type=str, default='convnext_lacunarity',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

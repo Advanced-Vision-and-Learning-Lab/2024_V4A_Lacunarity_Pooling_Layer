@@ -32,15 +32,7 @@ class Base_Lacunarity(nn.Module):
         self.padding = padding
         self.scales = scales
         self.normalize = nn.Tanh()
-        
-        
-        if self.bias == False: #Non learnable parameters
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], 3, kernel_size=1, groups = feature_maps[self.model_name], bias = False)
-            self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
-            self.conv1x1.weight.requires_grad = False #Don't update weights
-        else:
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[model_name], feature_maps[model_name], kernel_size=1, groups = feature_maps[model_name])
-
+ 
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
@@ -89,7 +81,6 @@ class Base_Lacunarity(nn.Module):
             #Compute numerator (n * sum of squared pixels) and denominator (squared sum of pixels)
             L_numerator = ((n_pts)**2) * (self.gap_layer(squared_x_tensor))
             L_denominator = (n_pts * self.gap_layer(scaled_x))**2
-
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
             lacunarity_values.append(L_r)
@@ -115,14 +106,6 @@ class Pixel_Lacunarity(nn.Module):
         self.model_name = model_name
         self.normalize = nn.Tanh()
         
-
-        if self.bias == False: #Non learnable parameters
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, bias = False)
-            self.conv1x1.weight.data = torch.ones(self.conv1x1.weight.shape)*1/len(self.scales)
-            self.conv1x1.weight.requires_grad = False #Don't update weights
-        else:
-            self.conv1x1 = nn.Conv2d(len(self.scales) * feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
-
 
         #For each data type, apply two 1x1 convolutions, 1) to learn bin center (bias)
         # and 2) to learn bin width
@@ -176,12 +159,8 @@ class Pixel_Lacunarity(nn.Module):
 
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
-            lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
-
             lacunarity_values.append(L_r)
         result = torch.cat(lacunarity_values, dim=1)
-        #reduced_output = self.conv1x1(result)
         return result
 
 
@@ -331,10 +310,6 @@ class BuildPyramid(nn.Module):
             else:
                 raise RuntimeError('Invalid dimension for global lacunarity layer')
 
-    def create_conv1x1(self, in_channels):
-        # Create a new nn.Conv2d instance with the correct in_channels
-        conv1x1 = nn.Conv2d(in_channels*feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups=feature_maps[self.model_name])
-        return conv1x1
     
     def forward(self,x):
         #Compute squared tensor
@@ -361,9 +336,7 @@ class BuildPyramid(nn.Module):
             lacunarity_values.append(L_r)
             reference_size = lacunarity_values[0].shape[-2:]
             pyr_images_resized = [T.resize(img, size=reference_size, interpolation="bilinear") for img in lacunarity_values]
-
         result = torch.cat(pyr_images_resized, dim=1)
-
         reduced_output = self.conv1x1(result)
         return reduced_output
 
@@ -376,19 +349,16 @@ class DBC(nn.Module):
         self.num_output_channels = 3
         self.eps = eps
         self.model_name = model_name
-        self.conv1x1 =  nn.Conv2d(feature_maps[self.model_name], feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
-
-
-
+        self.max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1) #feature map is 7 for classifiers
+        
     def forward(self, image):
         image = ((self.normalize(image) + 1)/2)* 255
         L_r_all = []
 
         # Perform operations independently for each window in the current channel
-        for r in self.r_values:
-            max_pool = nn.MaxPool2d(kernel_size=self.window_size, stride=1) #feature map is 7 for classifiers
-            max_pool_output = max_pool(image)
-            min_pool_output = -max_pool(-image)
+        for r in self.r_values:   
+            max_pool_output = self.max_pool(image)
+            min_pool_output = -self.max_pool(-image)
 
             nr = torch.ceil(max_pool_output / (r + self.eps)) - torch.ceil(min_pool_output / (r + self.eps)) - 1
             Mr = torch.sum(nr)
@@ -396,8 +366,6 @@ class DBC(nn.Module):
             L_r = (Mr**2) * Q_mr / (Mr * Q_mr + self.eps)**2
             L_r_all.append(L_r)
         channel_L_r = torch.cat(L_r_all, dim=1)
-        reduced_output = self.conv1x1(channel_L_r)
-
         return channel_L_r
 
 class GDCB(nn.Module):

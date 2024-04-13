@@ -95,6 +95,7 @@ class densenet161_lacunarity(nn.Module):
         model_dense=models.densenet161(pretrained=True)
         self.features=model_dense.features
         self.classifier = model_dense.classifier
+        self.feature_extraction = Params["feature_extraction"]
 
         model_name = Params['Model_name']
         kernel = Params["kernel"]
@@ -105,6 +106,7 @@ class densenet161_lacunarity(nn.Module):
         sigma = Params["sigma"]
         min_size = Params["min_size"]
         bias = Params["bias"]
+        self.set_parameter_requires_grad()
         
         if pooling_layer == "Baseline":
             self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
@@ -156,3 +158,8 @@ class densenet161_lacunarity(nn.Module):
         out = torch.flatten(out, 1)
         out = self.classifier(out)
         return out
+    
+    def set_parameter_requires_grad(self):
+        if self.feature_extraction:
+            for param in self.features.parameters():
+                param.requires_grad = False

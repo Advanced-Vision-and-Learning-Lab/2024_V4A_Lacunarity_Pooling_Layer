@@ -288,7 +288,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
             elif poolingLayer == "BuildPyramid":
                 model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
             elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 8)
+                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 7)
             elif poolingLayer == "GDCB":
                 model_ft.avgpool = GDCB(3,5)
         
@@ -340,7 +340,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
             elif poolingLayer == "BuildPyramid":
                 model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
             elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 8)
+                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 7)
             elif poolingLayer == "GDCB":
                 model_ft.avgpool = GDCB(3,5)
 
@@ -358,7 +358,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
 
     elif model_name == "densenet161_lacunarity":
         model_ft = densenet161_lacunarity(2208, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = 224
@@ -369,7 +368,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     if Params['fusion'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
         model_ft = fusion_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)
-        set_parameter_requires_grad(model_ft, feature_extract)
         model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
@@ -377,13 +375,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
 
     elif Params['fractal'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)
-
-        trainable_conv1 = model_ft.conv1
-        set_parameter_requires_grad(model_ft, feature_extract)
-        if feature_extract:
-            #Set conv layer to learn
-            model_ft.conv1 = trainable_conv1
+        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)        
         model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
         input_size = 224
 

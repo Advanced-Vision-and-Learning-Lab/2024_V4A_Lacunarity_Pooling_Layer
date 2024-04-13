@@ -47,6 +47,7 @@ class fusion_model(nn.Module):
         super(fusion_model, self).__init__()
         self.model_name = model_name
         poolingLayer = Params['pooling_layer']
+        self.feature_extraction = Params['feature_extraction']
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         #lacunarity layer is added in backbone
         
@@ -77,6 +78,9 @@ class fusion_model(nn.Module):
                 self.features=nn.Sequential(*list(backbone.children())[:-3])
                 self.classifier = backbone.classifier
                 self.pooling_layer = backbone.avgpool
+
+           #Freeze backbone
+        # self.set_parameter_requires_grad()
  
         
     def forward(self, x):
@@ -87,7 +91,7 @@ class fusion_model(nn.Module):
         x = torch.flatten(x, 1)
         x = self.classifier(x)
     
-        return x      
+        return x  
 
         
 class fractal_model(nn.Module):
@@ -104,7 +108,8 @@ class fractal_model(nn.Module):
             dense_feature_dim = 512
         elif self.model_name == "efficientnet_lacunarity":
             dense_feature_dim = 1280
-        dropout_ratio = 0.6
+        self.dropout_ratio = 0.6
+        self.dense_feature_dim = dense_feature_dim
         self.poolingLayer = Params['pooling_layer']
 
         self.avgpool = nn.AdaptiveAvgPool2d(1)
@@ -113,7 +118,7 @@ class fractal_model(nn.Module):
                                           kernel_size=1,
                                         stride=1,
                                         padding=0),
-                            nn.Dropout2d(p=dropout_ratio),
+                            nn.Dropout2d(p=self.dropout_ratio),
                               nn.BatchNorm2d(dense_feature_dim))
         self.sigmoid=nn.Sigmoid()
         self.relu1 = nn.Sigmoid()

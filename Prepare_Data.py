@@ -49,7 +49,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
     
     global data_transforms
     data_transforms = get_transform(Network_parameters, input_size=224)
-    dataset_sampler = None
+
 
     if Dataset == "LeavesTex":
         train_dataset = LeavesTex1200(data_dir,transform=data_transforms["train"])
@@ -111,7 +111,7 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
 
 
 
-    if Dataset=='LeavesTex':
+    if Dataset=='LeavesTex' or Dataset=='DeepWeeds':
             pass
     
     else:
