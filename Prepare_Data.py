@@ -52,10 +52,12 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
     dataset_sampler = None
 
     if Dataset == "LeavesTex":
-        dataset = LeavesTex1200(data_dir,transform=data_transforms['train'])
+        train_dataset = LeavesTex1200(data_dir,transform=data_transforms["train"])
+        val_dataset = LeavesTex1200(data_dir,transform=data_transforms["test"])
+        test_dataset = LeavesTex1200(data_dir,transform=data_transforms["test"])
     
          #Create train/val/test loader based on mean and std
-        split = DataSplit(dataset, shuffle=False,random_seed=split)
+        split = DataSplit(train_dataset,val_dataset,test_dataset, shuffle=False,random_seed=split)
         train_loader, val_loader , test_loader = split.get_split(batch_size=Network_parameters['batch_size']['train'], 
                                                                 num_workers=Network_parameters['num_workers'],
                                                                 show_sample=False,
@@ -86,22 +88,21 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         val_dataset.transform = data_transforms['test']
 
     elif Dataset == "DeepWeeds":
-        loading = DeepWeeds(root = data_dir)
-        loader = loading.images
+        train_dataset = DeepWeeds(data_dir,transform=data_transforms["train"])
+        val_dataset = DeepWeeds(data_dir,transform=data_transforms["test"])
+        test_dataset = DeepWeeds(data_dir,transform=data_transforms["test"])
+    
+         #Create train/val/test loader based on mean and std
+        split = DataSplit(train_dataset,val_dataset,test_dataset, shuffle=False,random_seed=split)
+        train_loader, val_loader , test_loader = split.get_split(batch_size=Network_parameters['batch_size']['train'], 
+                                                                num_workers=Network_parameters['num_workers'],
+                                                                show_sample=False,
+                                                                val_batch_size=Network_parameters['batch_size']['val'],
+                                                                test_batch_size=Network_parameters['batch_size']['test'])
+        # Create training and validation dataloaders, using validation set as testing for segmentation experiments
 
-        #Split data
-        loader.split(train = 0.7, val = 0.1, test = 0.2)
-        train_dataset = loader.train_data
-        train_dataset.as_torch_dataset()
-        train_dataset.transform = data_transforms['train']
 
-        test_dataset = loader.test_data
-        test_dataset.as_torch_dataset()
-        test_dataset.transform = data_transforms['test']
-
-        val_dataset = loader.val_data
-        val_dataset.as_torch_dataset()
-        val_dataset.transform = data_transforms['test']
+        dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
 
 
     else:

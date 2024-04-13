@@ -225,7 +225,7 @@ def parse_args():
    parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
    parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                        help='Save results of experiments(default: True)')
-   parser.add_argument('--folder', type=str, default='Saved_Models/fusiontask/k=2',
+   parser.add_argument('--folder', type=str, default='Saved_Models/CM_TEST/',
                        help='Location to save models')
    parser.add_argument('--kernel', type=int, default=None,
                        help='Input kernel size')
@@ -241,7 +241,7 @@ def parse_args():
                        help='Input sigma value')
    parser.add_argument('--min_size', type=int, default=2,
                        help='Input min size')
-   parser.add_argument('--pooling_layer', type=int, default=1,
+   parser.add_argument('--pooling_layer', type=int, default=9,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
                         6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline, 10: L2')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
@@ -249,9 +249,10 @@ def parse_args():
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
    parser.add_argument('--data_selection', type=int, default=3,
-                       help='Dataset selection: See Demo Parameters for details')
+                       help='Dataset selection: 1:LeavesTex1200, 2:PlantVillage, 3:DeepWeeds')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
-                       help='Flag for feature extraction. False, train whole model. True, only update fully connected/encoder parameters (default: True)')
+                       help='Flag for feature extraction. False, train whole model. True, only update \
+                        fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
    parser.add_argument('--fusion', default=False, action=argparse.BooleanOptionalAction,
@@ -264,19 +265,19 @@ def parse_args():
                        help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
-   parser.add_argument('--train_batch_size', type=int, default=128,
+   parser.add_argument('--train_batch_size', type=int, default=64,
                        help='input batch size for training (default: 128)')
    parser.add_argument('--val_batch_size', type=int, default=128,
                        help='input batch size for validation (default: 512)')
    parser.add_argument('--test_batch_size', type=int, default=128,
                        help='input batch size for testing (default: 256)')
-   parser.add_argument('--num_epochs', type=int, default=50,
+   parser.add_argument('--num_epochs', type=int, default=1,
                        help='Number of epochs to train each model for (default: 50)')
    parser.add_argument('--resize_size', type=int, default=256,
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='convnext_lacunarity',
+   parser.add_argument('--model', type=str, default='densenet161_lacunarity',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

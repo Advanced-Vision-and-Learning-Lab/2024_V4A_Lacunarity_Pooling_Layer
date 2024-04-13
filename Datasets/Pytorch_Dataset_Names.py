@@ -9,6 +9,7 @@ from torch.utils.data import Dataset
 from torchvision.datasets import CIFAR100
 from torchvision import datasets
 from Datasets.Pytorch_Datasets import *
+import pdb
 
 
 
@@ -22,13 +23,11 @@ def Get_Class_Names(Dataset,data_dir):
     
     elif Dataset == 'DeepWeeds':
         dataset = DeepWeeds(data_dir)
-
     else:
         raise RuntimeError('{} Dataset not implemented'.format(Dataset)) 
 
-     
+
     #Return class names
-    if dataset:
-        class_names = dataset.classes
+    class_names = dataset.classes
     
     return class_names

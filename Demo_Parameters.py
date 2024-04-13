@@ -109,7 +109,7 @@ def Parameters(args):
     #Set to True if more than one GPU was used 
     #False for UCMerced dataset only
     #True for EuroSAT and MSTAR dataset
-    Parallelize_model = True
+    Parallelize_model = False
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
     if feature_extraction:
@@ -118,7 +118,7 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
+    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/',
                 'PlantVillage': 'Datasets/PlantVillage/plant_village_classification',
                 'DeepWeeds': 'Datasets/DeepWeeds/rangeland_weeds_australia'}
     
@@ -135,7 +135,7 @@ def Parameters(args):
     #Number of classes in each dataset
     num_classes = {'LeavesTex': 20,
                 'PlantVillage': 39,
-                'DeepWeeds': 10}
+                'DeepWeeds': 9}
     
     #Number of runs and/or splits for each dataset
     Splits = {'LeavesTex': 3,

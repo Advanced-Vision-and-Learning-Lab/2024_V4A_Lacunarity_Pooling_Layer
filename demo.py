@@ -128,7 +128,7 @@ def parse_args():
    parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
    parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                        help='Save results of experiments(default: True)')
-   parser.add_argument('--folder', type=str, default='Saved_Models/',
+   parser.add_argument('--folder', type=str, default='Saved_Models/CM_TEST/',
                        help='Location to save models')
    parser.add_argument('--kernel', type=int, default=None,
                        help='Input kernel size')
@@ -160,7 +160,7 @@ def parse_args():
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
    parser.add_argument('--fusion', default=False, action=argparse.BooleanOptionalAction,
                        help='enables fusion model')
-   parser.add_argument('--fractal', default=True, action=argparse.BooleanOptionalAction,
+   parser.add_argument('--fractal', default=False, action=argparse.BooleanOptionalAction,
                        help='enables fusion model')
    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                        help='enables xai interpretability')
@@ -168,7 +168,7 @@ def parse_args():
                        help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
-   parser.add_argument('--train_batch_size', type=int, default=64,
+   parser.add_argument('--train_batch_size', type=int, default=4,
                        help='input batch size for training (default: 128)')
    parser.add_argument('--val_batch_size', type=int, default=128,
                        help='input batch size for validation (default: 512)')

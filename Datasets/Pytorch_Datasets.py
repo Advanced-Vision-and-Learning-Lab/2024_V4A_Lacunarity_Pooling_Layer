@@ -10,6 +10,7 @@ import numpy as np
 import os
 from PIL import Image
 from torch.utils.data import Dataset
+from torchvision.datasets import ImageFolder
 import agml
 from agml.utils.io import nested_file_list
 
@@ -49,29 +50,41 @@ class PlantVillage(Dataset):
 
 class DeepWeeds(Dataset):
     def __init__(self, root, split='train', transform=None, download=True):
+
         self.transform = transform
         self.split = split
-        self.images = agml.data.AgMLDataLoader('rangeland_weeds_australia', dataset_path="Datasets/DeepWeeds", overwrite=False)
-        self._root_path = self.images.dataset_root
-        self._image_files = sorted(nested_file_list(self._root_path))
+        #self.images = agml.data.AgMLDataLoader('rangeland_weeds_australia', dataset_path="Datasets/DeepWeeds", overwrite=False)
+
+        self.images = ImageFolder(root,transform=transform)
+        # self._root_path = self.images.dataset_root
+        # self._image_files = sorted(nested_file_list(self._root_path))
         self.classes = self.images.classes
-        # Map class names to their corresponding integer values
-        self.class_to_num = self.images.class_to_num
+        self.targets = self.images.targets
+
+        #Change meta properties to remove "No Weeds"
+        # self.images._meta_properties['classes'] = self.images._meta_properties['classes'][1:]
+        # self.images._meta_properties['num_classes'] = self.images._meta_properties['num_classes']-1
+        # self.images._meta_properties['num_to_class'].pop(0)
+        # self.images._meta_properties['class_to_num'].pop('no_weeds')
+
+        # #Change "Negative" to class index 0
+        # self.images._meta_properties['classes'] = self.images._meta_properties['classes'][-1:] + self.images._meta_properties['classes'][:-1]
+        # neg_class = self.images._meta_properties['num_to_class'][self.images._meta_properties['num_classes']]
+        # self.images._meta_properties['num_to_class'].pop(self.images._meta_properties['num_classes'])
+        # self.images._meta_properties['num_to_class'].update({0: neg_class}) 
+        # self.images._meta_properties['class_to_num'][neg_class] = 0
+
+        # # Map class names to their corresponding integer values
+        # self.class_to_num = self.images.class_to_num
 
 
     def __getitem__(self, index):
-        image_path = self._image_files[index]
-        image = Image.open(image_path).convert('RGB')
+        data, target = self.images[index]
         
-        target = self.targets[index]
-
-        if self.transform is not None:
-            image = self.transform(image)
-
-        return image, target
+        return data, target
 
     def __len__(self):
-        return len(self._image_files)
+        return len(self.images)
     
 
 

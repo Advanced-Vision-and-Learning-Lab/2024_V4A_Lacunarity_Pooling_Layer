@@ -12,6 +12,7 @@ from functools import lru_cache
 import torch
 from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.model_selection import train_test_split
+from torch.utils.data import random_split
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -21,14 +22,14 @@ import pdb
 
 class DataSplit:
 
-    def __init__(self, dataset, test_train_split=0.8, val_train_split=0.1, 
+    def __init__(self, train_dataset,val_dataset,test_dataset, test_train_split=0.8, val_train_split=0.1, 
                  random_seed=0,shuffle=False,stratify=True):
         
-        self.dataset = dataset
+        #self.dataset = dataset
         self.stratify = stratify
         self.random_seed = random_seed
-        dataset_size = len(dataset)
-        labels = dataset.targets
+        dataset_size = len(train_dataset)
+        labels = train_dataset.targets
         
         self.indices = list(range(dataset_size))
         test_split = int(np.floor(test_train_split * dataset_size))
@@ -50,6 +51,8 @@ class DataSplit:
         else:
             _,_,_,_,self.train_indices,self.val_indices = train_test_split(labels,labels,self.train_indices,stratify=labels[train_indices])
 
+        # self.train_dataset, self.val_dataset, self.test_dataset = random_split(dataset,[.7,.1,.2])
+        self.train_dataset, self.val_dataset, self.test_dataset = train_dataset, val_dataset, test_dataset
         self.train_sampler = SubsetRandomSampler(self.train_indices)
         self.val_sampler = SubsetRandomSampler(self.val_indices)
         self.test_sampler = SubsetRandomSampler(self.test_indices)
@@ -105,7 +108,7 @@ class DataSplit:
     @lru_cache(maxsize=4)
     def get_train_loader(self, batch_size=4, num_workers=4,collate_fn = None):
         logging.debug('Initializing train dataloader')
-        self.train_loader = torch.utils.data.DataLoader(self.dataset, batch_size=batch_size, 
+        self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, 
                                                         sampler=self.train_sampler, shuffle=False, 
                                                         num_workers=num_workers, worker_init_fn=self.seed_worker,
                                                         collate_fn = collate_fn)
@@ -114,7 +117,7 @@ class DataSplit:
     @lru_cache(maxsize=4)
     def get_validation_loader(self, batch_size=4, num_workers=4,collate_fn = None):
         logging.debug('Initializing validation dataloader')
-        self.val_loader = torch.utils.data.DataLoader(self.dataset, batch_size=batch_size, 
+        self.val_loader = torch.utils.data.DataLoader(self.val_dataset, batch_size=batch_size, 
                                                       sampler=self.val_sampler, shuffle=False, 
                                                       num_workers=num_workers, worker_init_fn=self.seed_worker,
                                                       collate_fn = collate_fn)
@@ -123,7 +126,7 @@ class DataSplit:
     @lru_cache(maxsize=4)
     def get_test_loader(self, batch_size=4, num_workers=4,collate_fn = None):
         logging.debug('Initializing test dataloader')
-        self.test_loader = torch.utils.data.DataLoader(self.dataset, batch_size=batch_size, 
+        self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, 
                                                        sampler=self.test_sampler, shuffle=False, 
                                                        num_workers=num_workers, worker_init_fn=self.seed_worker,
                                                        collate_fn = collate_fn)
