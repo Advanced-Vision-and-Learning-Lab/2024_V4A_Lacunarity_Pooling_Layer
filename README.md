@@ -6,14 +6,14 @@ _Akshatha Mohan and Joshua Peeples_
 ![Fig1_Workflow](Images/overviewimage.png)
 
 Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. 
-[`Zendo`](https://zenodo.org/record/8023959). https://doi.org/10.5281/zenodo.8023959
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8023959.svg)](https://doi.org/10.5281/zenodo.8023959)
+[`Zendo`](). https://doi.org/10.5281/zenodo.8023959
+[![DOI]()
 
-[`IEEE Xplore (IGARRS)`](TBD)
+[`IEEE Xplore (IGARRS)`]()
 
-[`arXiv`](TBD)
+[`arXiv`]()
 
-[`BibTeX`](TBD)
+[`BibTeX`]()
 
 In this repository, we provide the paper and code for the "Quantitative Analysis of Primary Attribution Explainable Artificial Intelligence Methods for Remote Sensing Image Classification."
 
@@ -55,7 +55,7 @@ The parameters can be set in the following script:
 ## Inventory
 
 ```
-https://github.com/Peeples-Lab/XAI_Analysis
+https://github.com/Advanced-Vision-and-Learning-Lab/V4A_Lacunarity_Pooling_Layer
 
 └── root dir
 	├── demo.py   //Run this. Main demo file.
