@@ -15,7 +15,7 @@ Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples.
 
 [`BibTeX`]()
 
-In this repository, we provide the paper and code for the "Quantitative Analysis of Primary Attribution Explainable Artificial Intelligence Methods for Remote Sensing Image Classification."
+In this repository, we provide the paper and code for the "Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis."
 
 ## Installation Prerequisites
 
