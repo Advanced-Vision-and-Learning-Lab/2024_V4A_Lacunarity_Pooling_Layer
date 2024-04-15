@@ -5,11 +5,11 @@ _Akshatha Mohan and Joshua Peeples_
 
 ![Fig1_Workflow](Images/overviewimage.png)
 
-Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. 
-[`Zendo`](). https://doi.org/10.5281/zenodo.8023959
+Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This code's public release is a work-in-progress and will be cleaned up following submissions to arXiv and CVPR Vision for Agriculture Workshop
+[`Zendo`](). 
 [![DOI]()
 
-[`IEEE Xplore (IGARRS)`]()
+[`IEEE Xplore (CVPRW, TBD)`]()
 
 [`arXiv`]()
 
@@ -96,7 +96,7 @@ reference using the following entry.
 
 **Plain Text:**
 
-TBD
+A. Mohan and J. Peeples, “Lacunarity Pooling Layers for Plant Image Texture Analysis”, Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops, 2024, in Press.
 
 **BibTex:**
 ```
