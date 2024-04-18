@@ -79,8 +79,6 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
                 labels = classes.to(device, torch.long)
                 
                 GT_val = np.concatenate((GT_val, labels.cpu().numpy()),axis = None)
-                # if images.shape[1] == 1:
-                #     images = np.repeat(images, 3, axis=1)
                 features = model(images)
                     
                 features = torch.flatten(features, start_dim=1)
@@ -116,8 +114,6 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
                 ax6.scatter(x, y, color = colors[texture,:],label=class_names[texture])
              
             plt.title('TSNE Visualization of {} Data Features'.format(phase.capitalize()))
-            # plt.legend(class_names,loc='lower right')
-            
             box = ax6.get_position()
             ax6.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
             ax6.legend(loc="center left", bbox_to_anchor=(1, 0.5), fancybox=True, ncol=1)
@@ -127,17 +123,6 @@ def Generate_TSNE_visual(dataloaders_dict,model,sub_dir,device,class_names,
             fig6.savefig((sub_dir + 'TSNE_Visual_{}_Data.png'.format(phase.capitalize())), 
                          dpi=fig6.dpi, bbox_inches="tight")
             plt.close()
-            
-            # #Plot tSNE with images
-            # fig9, ax9 = plt.subplots()
-            # plot_components(features_extracted,features_embedded,thumb_frac=0.1,
-            #                 images=saved_imgs,cmap=None)
-            # # plt.title('TSNE Visualization of Train Data Features with Images')
-            # plt.grid('off')
-            # plt.axis('off')
-            
-            # fig9.savefig((sub_dir + 'TSNE_Visual_{}_Data_Images.png'.format(phase.capitalize())),dpi=fig9.dpi)
-            # plt.close()
     
        
         # del dataloaders_dict,features_embedded

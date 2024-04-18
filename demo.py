@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Main script for XAI experiments
+Main script for Lacunarity experiments
 """
 import argparse
 import numpy as np
@@ -14,7 +14,7 @@ from Prepare_Data import Prepare_DataLoaders
 from Utils.Network_functions import initialize_model, train_model, test_model
 import os
 import pdb
-import lightning.pytorch.utilities as lightning
+
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #Turn off plotting
 plt.ioff()
@@ -63,34 +63,16 @@ def main(Params):
                                                poolingLayer = Params["pooling_layer"],
                                                aggFunc = Params["agg_func"])
 
-    #    with torch.device("meta"):
-    #     model = model_ft.to(torch.device("meta"))
-    #     x = torch.randn(1,3,224,224).to(torch.device("meta"))
-
-    #    model_fwd = lambda: model(x)
-    #    fwd_flops = lightning.measure_flops(model, model_fwd)
-    #    print(fwd_flops)
-
-
-    #    model_features = model_ft.features.to(torch.device("meta"))
-    #    x = torch.randn(1,3,224,224).to(torch.device("meta"))
-
-    #    model_fwd_features = lambda: model_features(x)
-    #    fwd_flops_features = lightning.measure_flops(model_features, model_fwd_features)
-
-    #    print(fwd_flops - fwd_flops_features)
-
 
 
        # Send the model to GPU if available, use multiple if available
        if torch.cuda.device_count() > 1:
            print("Using", torch.cuda.device_count(), "GPUs!")
-           # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
            model_ft = nn.DataParallel(model_ft)
        
        model_ft = model_ft.to(device)
-      # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
 
+      # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
        num_params = sum(p.numel() for p in model_ft.parameters() if p.requires_grad)
        num_params_classifier = sum(p.numel() for p in model_ft.classifier.parameters() if p.requires_grad)
        num_params_backbone = sum(p.numel() for p in model_ft.features.parameters() if p.requires_grad)
@@ -119,8 +101,7 @@ def main(Params):
 
        # Save results
        if (Params['save_results']):
-           #Delete previous dataloaders and training/validation data
-           #without data augmentation
+           #Delete previous dataloaders and training/validation data without data augmentation
            save_results(train_dict, test_dict, split, Params,
                          num_params,model_ft)
           
@@ -148,18 +129,13 @@ def parse_args():
                    help='Input scales')
    parser.add_argument('--num_levels', type=int, default=2,
                        help='Input number of levels')
-   parser.add_argument('--sigma', type=float, default=0.2,
-                       help='Input sigma value')
-   parser.add_argument('--min_size', type=int, default=2,
-                       help='Input min size')
    parser.add_argument('--pooling_layer', type=int, default=1,
-                       help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
-                        6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline, 10: L2')
+                       help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:BuildPyramid, 5:DBC, 6: Baseline, 7: L2')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=3,
+   parser.add_argument('--data_selection', type=int, default=1,
                        help='Dataset selection: 1:LeavesTex1200, 2:PlantVillage, 3:DeepWeeds')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag for feature extraction. False, train whole model. True, only update \

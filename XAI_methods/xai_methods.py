@@ -1,15 +1,9 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from pytorch_grad_cam.utils.image import show_cam_on_image
-import random
-import warnings
 from pytorch_grad_cam import EigenCAM
-from torchvision.models import resnet50
-import torch
 from PIL import Image
 import torchvision.transforms as transforms
-import cv2
 import pdb
 
 def get_attributions(Params, dataloaders, model):

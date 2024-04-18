@@ -39,6 +39,7 @@ def get_transform(Network_parameters, input_size=224):
             ]),
         }
                 
+                
     elif Dataset == 'PlantVillage':
                 data_transforms = {
             'train': transforms.Compose([
@@ -55,6 +56,7 @@ def get_transform(Network_parameters, input_size=224):
                 transforms.Normalize([0.467, 0.489, 0.412], [0.177, 0.152, 0.194])
             ]),
         }
+        
         
     elif Dataset == 'DeepWeeds':
                 data_transforms = {

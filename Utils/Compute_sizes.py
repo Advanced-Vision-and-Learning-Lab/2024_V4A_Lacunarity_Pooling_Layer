@@ -17,7 +17,6 @@ import torch.nn as nn
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity
 import math
 
 

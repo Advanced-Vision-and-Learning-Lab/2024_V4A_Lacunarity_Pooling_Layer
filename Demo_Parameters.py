@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Parameters for XAI experiments
+Parameters for lacunarity experiments
 """
-import os
-import sys
 
 def Parameters(args):
     
@@ -17,14 +15,13 @@ def Parameters(args):
     fusion = args.fusion
     xai = args.xai
     bias = args.bias
-
     earlystoppping = args.earlystoppping
     
     #Location to store trained models
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'Pixel_Lacunarity', 5:'ScalePyramid_Lacunarity', 6:'BuildPyramid', 7:'DBC', 8:'GDCB', 9: 'Baseline', 10: 'L2'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'BuildPyramid', 5:'DBC', 6: 'Baseline', 7: 'L2'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -43,8 +40,6 @@ def Parameters(args):
     conv_padding = args.padding
     scales = args.scales
     num_levels = args.num_levels
-    sigma = args.sigma
-    min_size = args.min_size
     
     #Flag for feature extraction. False, train whole model. True, only update
     #Flag to use pretrained model from ImageNet or train from scratch (default: True)
@@ -106,9 +101,7 @@ def Parameters(args):
     TSNE_visual = False
     Num_TSNE_images = 5000
     
-    #Set to True if more than one GPU was used 
-    #False for UCMerced dataset only
-    #True for EuroSAT and MSTAR dataset
+    #Set to True if more than one GPU was used
     Parallelize_model = False
     
     ######## ONLY CHANGE PARAMETERS ABOVE ########
@@ -118,13 +111,12 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/',
+    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
                 'PlantVillage': 'Datasets/PlantVillage/plant_village_classification',
                 'DeepWeeds': 'Datasets/DeepWeeds/rangeland_weeds_australia'}
     
     #Backbone architecture
-    #Options are resnet18, resnet50, resnet50_wide, resnet50_next, VGG16, inception_v3
-    # densenet161, inception_v3
+    #Options are convnext_lacunarity, resnet18_lacunarity, densenet161_lacunarity
     Model_name = args.model
     
     #channels in each dataset
@@ -151,8 +143,7 @@ def Parameters(args):
             'Dataset': Dataset, 'data_dir': data_dir,
             'num_workers': num_workers, 'mode': mode,
             'kernel': args.kernel, 'stride': args.stride, 'conv_padding': args.padding,
-            'scales': args.scales, 'num_levels': args.num_levels, 'sigma':args.sigma,
-            'min_size': args.min_size,
+            'scales': args.scales, 'num_levels': args.num_levels,
             'earlystoppping': args.earlystoppping,
             'lr': lr,'step_size': step_size,'gamma': gamma,
             'batch_size' : batch_size, 'num_epochs': num_epochs, 

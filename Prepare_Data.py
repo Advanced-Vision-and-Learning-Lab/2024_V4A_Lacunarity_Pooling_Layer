@@ -40,13 +40,11 @@ def Compute_Mean_STD(trainloader):
     return mean, std
 
 
-def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results = True):
+def Prepare_DataLoaders(Network_parameters, split):
     ssl._create_default_https_context = ssl._create_unverified_context
     
     Dataset = Network_parameters['Dataset']
-    data_dir = Network_parameters['data_dir']
-
-    
+    data_dir = Network_parameters['data_dir']    
     global data_transforms
     data_transforms = get_transform(Network_parameters, input_size=224)
 
@@ -56,17 +54,16 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         val_dataset = LeavesTex1200(data_dir,transform=data_transforms["test"])
         test_dataset = LeavesTex1200(data_dir,transform=data_transforms["test"])
     
-         #Create train/val/test loader based on mean and std
+         #Create train/val/test loader
         split = DataSplit(train_dataset,val_dataset,test_dataset, shuffle=False,random_seed=split)
         train_loader, val_loader , test_loader = split.get_split(batch_size=Network_parameters['batch_size']['train'], 
                                                                 num_workers=Network_parameters['num_workers'],
                                                                 show_sample=False,
                                                                 val_batch_size=Network_parameters['batch_size']['val'],
                                                                 test_batch_size=Network_parameters['batch_size']['test'])
-        # Create training and validation dataloaders, using validation set as testing for segmentation experiments
-
-
         dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
+
+
 
     
     elif Dataset == "PlantVillage":
@@ -87,6 +84,8 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
         val_dataset.as_torch_dataset()
         val_dataset.transform = data_transforms['test']
 
+
+
     elif Dataset == "DeepWeeds":
         train_dataset = DeepWeeds(data_dir,transform=data_transforms["train"])
         val_dataset = DeepWeeds(data_dir,transform=data_transforms["test"])
@@ -99,9 +98,6 @@ def Prepare_DataLoaders(Network_parameters, split,input_size=224, view_results =
                                                                 show_sample=False,
                                                                 val_batch_size=Network_parameters['batch_size']['val'],
                                                                 test_batch_size=Network_parameters['batch_size']['test'])
-        # Create training and validation dataloaders, using validation set as testing for segmentation experiments
-
-
         dataloaders_dict = {'train': train_loader,'val': val_loader,'test': test_loader}
 
 

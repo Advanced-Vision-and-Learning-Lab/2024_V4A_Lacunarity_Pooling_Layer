@@ -237,10 +237,6 @@ def parse_args():
                    help='Input scales')
    parser.add_argument('--num_levels', type=int, default=2,
                        help='Input number of levels')
-   parser.add_argument('--sigma', type=float, default=0.2,
-                       help='Input sigma value')
-   parser.add_argument('--min_size', type=int, default=2,
-                       help='Input min size')
    parser.add_argument('--pooling_layer', type=int, default=9,
                        help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:Pixel_Lacunarity, 5:ScalePyramid_Lacunarity, \
                         6:BuildPyramid, 7:DBC, 8:GDCB, 9: Baseline, 10: L2')

@@ -19,11 +19,11 @@ from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
 import torch.nn.functional as F
-from Utils.LacunarityPoolingLayer import Pixel_Lacunarity, ScalePyramid_Lacunarity, BuildPyramid, DBC, GDCB, Base_Lacunarity
-from Utils.CustomNN import Net, densenet161_lacunarity
-from Utils.fusion_model import fusion_model, fractal_model
+from Utils.DenseNet161 import densenet161_lacunarity
+from Utils.Fusion_Fractal import fusion_model, fractal_model
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
+from Utils.Get_Pooling import get_pooling
 
 
 
@@ -69,14 +69,12 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                     optimizer.zero_grad()
                   
                     # forward
-                    # pdb.set_trace()
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
                         
                         # Get model outputs and calculate loss
                         outputs = model(inputs)
                         labels=labels.squeeze().long()
-                        # pdb.set_trace()
                         loss = criterion(outputs, labels).mean()
                        
                      
@@ -237,14 +235,6 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     
     model_ft = None
     input_size = 0
-    kernel = Params["kernel"]
-    stride = Params["stride"]
-    padding = Params["conv_padding"]
-    scales = Params["scales"]
-    num_levels = Params["num_levels"]
-    sigma = Params["sigma"]
-    min_size = Params["min_size"]
-    bias = Params["bias"]
   
     #Select backbone architecture
     if model_name == "convnext_lacunarity":
@@ -253,49 +243,12 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         set_parameter_requires_grad(model_ft, feature_extract)
         if not(channels == 3):
             model_ft.features[0][0] = nn.Conv2d(channels, 96, kernel_size=(4,4),stride=(4,4))
-        
-        if aggFunc == "local":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                            
-                model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-        
-        elif aggFunc == "global":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                            
-                model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-            elif poolingLayer == "L2":                                                                                                                                                                                                                           
-                model_ft.global_pool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 7)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-        
+
         if poolingLayer == "Baseline":
             num_ftrs = model_ft.classifier[2].in_features
             model_ft.classifier[2] = nn.Linear(model_ft.classifier[2].in_features, num_classes)
         else:
+            model_ft.avgpool = get_pooling(model_name, Params)
             num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
             model_ft.classifier[2] =  nn.Linear(num_ftrs, num_classes)
 
@@ -306,51 +259,14 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         model_ft = models.resnet18(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         
-        if aggFunc == "local":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                            
-                model_ft.avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-        
-        elif aggFunc == "global":
-            if poolingLayer == "max":
-                model_ft.avgpool = nn.AdaptiveMaxPool2d((1,1))
-            elif poolingLayer == "avg":                                                                                                                                                                                                                            
-                model_ft.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-            elif poolingLayer == "L2":                                                                                                                                                                                                                           
-                model_ft.global_pool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
-            elif poolingLayer == "Base_Lacunarity":
-                model_ft.avgpool = Base_Lacunarity(model_name=model_name, scales=scales,bias=bias)
-            elif poolingLayer == "Pixel_Lacunarity":
-                model_ft.avgpool = Pixel_Lacunarity(model_name=model_name, scales=scales, bias=bias)
-            elif poolingLayer == "ScalePyramid_Lacunarity":
-                model_ft.avgpool = ScalePyramid_Lacunarity(model_name=model_name, num_levels=num_levels, sigma = sigma, min_size = min_size)
-            elif poolingLayer == "BuildPyramid":
-                model_ft.avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
-            elif poolingLayer == "DBC":
-                model_ft.avgpool = DBC(model_name=model_name, r_values = scales, window_size = 7)
-            elif poolingLayer == "GDCB":
-                model_ft.avgpool = GDCB(3,5)
-
-        
+                
         # Modify the final fully connected layer for the desired number of classes
         if poolingLayer == "Baseline":
             model_ft.avgpool = model_ft.avgpool
             num_ftrs = model_ft.fc.in_features
             model_ft.fc = nn.Linear(num_ftrs, num_classes)
         else:
+            model_ft.avgpool = get_pooling(model_name, Params)
             num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
             model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
@@ -372,7 +288,7 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
         input_size = 224
 
 
-
+    #For the fractal model, poolingLayer is Baseline and the parameter fractal should be set to True
     elif Params['fractal'] == True:
         num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
         model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)        
