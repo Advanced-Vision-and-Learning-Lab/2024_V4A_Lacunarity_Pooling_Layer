@@ -18,12 +18,12 @@ from barbar import Bar
 from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
+from timm.layers import create_classifier
 import torch.nn.functional as F
-from Utils.DenseNet161 import densenet161_lacunarity
-from Utils.Fusion_Fractal import fusion_model, fractal_model
+from Utils.Timm_Models import densenet161_lacunarity, resnet18_lacunarity, convnext_lacunarity
 from Utils.Compute_sizes import get_feat_size
 import matplotlib.pyplot as plt
-from Utils.Get_Pooling import get_pooling
+import timm
 
 
 
@@ -238,62 +238,28 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
   
     #Select backbone architecture
     if model_name == "convnext_lacunarity":
-        model_ft = models.convnext_tiny(pretrained=use_pretrained,
-                                        weights='ConvNeXt_Tiny_Weights.IMAGENET1K_V1')
-        set_parameter_requires_grad(model_ft, feature_extract)
-        if not(channels == 3):
-            model_ft.features[0][0] = nn.Conv2d(channels, 96, kernel_size=(4,4),stride=(4,4))
-
-        if poolingLayer == "Baseline":
-            num_ftrs = model_ft.classifier[2].in_features
-            model_ft.classifier[2] = nn.Linear(model_ft.classifier[2].in_features, num_classes)
-        else:
-            model_ft.avgpool = get_pooling(model_name, Params)
-            num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-            model_ft.classifier[2] =  nn.Linear(num_ftrs, num_classes)
-
+        model_ft = convnext_lacunarity(num_ftrs=768, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
+        num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
 
     elif model_name == "resnet18_lacunarity":
-        model_ft = models.resnet18(pretrained=use_pretrained)
-        set_parameter_requires_grad(model_ft, feature_extract)
-        
-                
-        # Modify the final fully connected layer for the desired number of classes
-        if poolingLayer == "Baseline":
-            model_ft.avgpool = model_ft.avgpool
-            num_ftrs = model_ft.fc.in_features
-            model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        else:
-            model_ft.avgpool = get_pooling(model_name, Params)
-            num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-            model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        model_ft = resnet18_lacunarity(num_ftrs=512, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
+        num_ftrs = get_feat_size (Params, dataloaders=dataloaders)
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
 
     elif model_name == "densenet161_lacunarity":
-        model_ft = densenet161_lacunarity(2208, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        model_ft = densenet161_lacunarity(num_ftrs=2208, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
+        num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
     else:
         raise RuntimeError('{} not implemented'.format(model_name))
     
-    if Params['fusion'] == True:
-        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = fusion_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)
-        model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-
-    #For the fractal model, poolingLayer is Baseline and the parameter fractal should be set to True
-    elif Params['fractal'] == True:
-        num_ftrs = get_feat_size(model_name, Params, pooling_layer=poolingLayer, agg_func=aggFunc, dataloaders=dataloaders)
-        model_ft = fractal_model(model_name=model_name, backbone = model_ft, num_classes=num_classes, Params=Params)        
-        model_ft.classifier =  nn.Linear(num_ftrs, num_classes)
-        input_size = 224
 
     return model_ft, input_size
 

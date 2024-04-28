@@ -19,6 +19,8 @@ import os
 from Utils.Base_Lacunarity import Base_Lacunarity
 from Utils.Multi_Scale_Lacunarity import BuildPyramid
 from Utils.DBC import DBC
+from Utils.Fractal_Pooling import fractal_pooling
+from Utils.Lacunarity_Pooling import lacunarity_pooling
 
 
 def get_pooling(model_name, Params):
@@ -33,30 +35,35 @@ def get_pooling(model_name, Params):
 
     if aggFunc == "local":
         if poolingLayer == "max":
-            avgpool = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            pool_layer = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
         elif poolingLayer == "avg":                                                                                                                                                                                                                            
-            avgpool = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            pool_layer = nn.pool_layer2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
         elif poolingLayer == "L2":                                                                                                                                                                                                                           
-            avgpool = nn.LPPool2d(norm_type=2, kernel_size=(kernel, kernel))
+            pool_layer = nn.LPPool2d(norm_type=2, kernel_size=(kernel, kernel))
         elif poolingLayer == "Base_Lacunarity":
-            avgpool = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
+            pool_layer = Base_Lacunarity(model_name=model_name, scales=scales, kernel=(kernel, kernel), stride =(stride, stride), bias=bias)
         elif poolingLayer == "BuildPyramid":
-            avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
+            pool_layer = BuildPyramid(model_name=model_name, num_levels=num_levels, kernel=(kernel, kernel), stride =(stride, stride))
         elif poolingLayer == "DBC":
-            avgpool = DBC(model_name=model_name, r_values = scales, window_size = kernel)
+            pool_layer = DBC(model_name=model_name, r_values = scales, window_size = kernel)
     
     elif aggFunc == "global":
         if poolingLayer == "max":
-            avgpool = nn.AdaptiveMaxPool2d((1,1))
+            pool_layer = nn.AdaptiveMaxPool2d((1,1))
         elif poolingLayer == "avg":                                                                                                                                                                                                                            
-            avgpool = nn.AdaptiveAvgPool2d((1, 1))
+            pool_layer = nn.Adaptivepool_layer2d((1, 1))
         elif poolingLayer == "L2":                                                                                                                                                                                                                           
-            avgpool = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
+            pool_layer = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
         elif poolingLayer == "Base_Lacunarity":
-            avgpool = Base_Lacunarity(model_name=model_name, scales=scales, bias=bias)
+            lacunarity_layer = Base_Lacunarity(model_name=model_name, scales=scales, bias=bias)
+            pool_layer = lacunarity_pooling(lacunarity_layer=lacunarity_layer, Params=Params)
         elif poolingLayer == "BuildPyramid":
-            avgpool = BuildPyramid(model_name=model_name, num_levels=num_levels)
+            lacunarity_layer = BuildPyramid(model_name=model_name, num_levels=num_levels)
+            pool_layer = lacunarity_pooling(lacunarity_layer=lacunarity_layer, Params=Params)
         elif poolingLayer == "DBC":
-            avgpool = DBC(model_name=model_name, r_values = scales, window_size = 7)
+            lacunarity_layer = DBC(model_name=model_name, r_values = scales, window_size = 7)
+            pool_layer = lacunarity_pooling(lacunarity_layer=lacunarity_layer, Params=Params)
+        elif poolingLayer == "fractal":
+            pool_layer = fractal_pooling(Params=Params)
 
-    return avgpool
+    return pool_layer

@@ -11,8 +11,6 @@ def Parameters(args):
     save_results = args.save_results
 
     #use xai interpretability
-    fractal = args.fractal
-    fusion = args.fusion
     xai = args.xai
     bias = args.bias
     earlystoppping = args.earlystoppping
@@ -21,7 +19,7 @@ def Parameters(args):
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'Base_Lacunarity', 4:'BuildPyramid', 5:'DBC', 6: 'Baseline', 7: 'L2'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'L2', 4:'fractal', 5:'Base_Lacunarity', 6: 'BuildPyramid', 7: 'DBC'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -33,6 +31,10 @@ def Parameters(args):
     Dataset_names = {1: 'LeavesTex',
                      2: 'PlantVillage',
                      3: 'DeepWeeds'}
+    
+    num_ftrs = {"resnet18_lacunarity": 512,
+                "densenet161_lacunarity": 2208,
+                "convnext_lacunarity": 768}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -149,9 +151,10 @@ def Parameters(args):
             'batch_size' : batch_size, 'num_epochs': num_epochs, 
             'resize_size': resize_size, 'center_size': center_size, 
             'padding': padding,'Model_name': Model_name, 'num_classes': num_classes, 
+            'num_ftrs': num_ftrs,
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
-            'xai': xai, 'bias':bias, 'fusion': fusion, 'fractal': fractal,
+            'xai': xai, 'bias':bias, 
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,

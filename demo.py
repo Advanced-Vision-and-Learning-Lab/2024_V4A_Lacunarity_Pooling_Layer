@@ -74,11 +74,10 @@ def main(Params):
 
       # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
        num_params = sum(p.numel() for p in model_ft.parameters() if p.requires_grad)
-       num_params_classifier = sum(p.numel() for p in model_ft.classifier.parameters() if p.requires_grad)
-       num_params_backbone = sum(p.numel() for p in model_ft.features.parameters() if p.requires_grad)
+       num_params_classifier = sum(p.numel() for p in model_ft.fc.parameters() if p.requires_grad)
       
        print("Number of parameters: %d" % (num_params))
-       print("Number of parameters_pooling: %d" % (num_params - num_params_classifier - num_params_backbone))
+       print("Number of parameters_pooling: %d" % (num_params_classifier))
 
      
        optimizer_ft = optim.Adam(model_ft.parameters(), lr=Params['lr'])
@@ -117,7 +116,7 @@ def parse_args():
    parser = argparse.ArgumentParser(description='Run Angular Losses and Baseline experiments for dataset')
    parser.add_argument('--save_results', default=True, action=argparse.BooleanOptionalAction,
                        help='Save results of experiments(default: True)')
-   parser.add_argument('--folder', type=str, default='Saved_Models/CM_TEST/',
+   parser.add_argument('--folder', type=str, default='Saved_Models',
                        help='Location to save models')
    parser.add_argument('--kernel', type=int, default=None,
                        help='Input kernel size')
@@ -129,8 +128,8 @@ def parse_args():
                    help='Input scales')
    parser.add_argument('--num_levels', type=int, default=2,
                        help='Input number of levels')
-   parser.add_argument('--pooling_layer', type=int, default=1,
-                       help='pooling layer selection: 1:max, 2:avg, 3:Base_Lacunarity, 4:BuildPyramid, 5:DBC, 6: Baseline, 7: L2')
+   parser.add_argument('--pooling_layer', type=int, default=5,
+                       help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:BuildPyramid, 7:DBC')
    parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
                        help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
@@ -142,17 +141,13 @@ def parse_args():
                         fully connected/encoder parameters (default: True)')
    parser.add_argument('--use_pretrained', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
-   parser.add_argument('--fusion', default=False, action=argparse.BooleanOptionalAction,
-                       help='enables fusion model')
-   parser.add_argument('--fractal', default=False, action=argparse.BooleanOptionalAction,
-                       help='enables fusion model')
    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                        help='enables xai interpretability')
    parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
                        help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
-   parser.add_argument('--train_batch_size', type=int, default=4,
+   parser.add_argument('--train_batch_size', type=int, default=2,
                        help='input batch size for training (default: 128)')
    parser.add_argument('--val_batch_size', type=int, default=128,
                        help='input batch size for validation (default: 512)')
@@ -164,7 +159,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='convnext_lacunarity',
+   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

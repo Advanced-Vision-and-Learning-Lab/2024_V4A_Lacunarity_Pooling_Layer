@@ -23,59 +23,38 @@ def get_transform(Network_parameters, input_size=224):
     data_dir = Network_parameters['data_dir']
     
     if Dataset == 'LeavesTex':
-                data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize([0.3544, 0.4080, 0.1334], [0.0312, 0.0344, 0.0638])
-            ]),
-            'test': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.CenterCrop(input_size),
-                transforms.ToTensor(),
-                transforms.Normalize([0.3544, 0.4080, 0.1334], [0.0312, 0.0344, 0.0638])
-            ]),
-        }
+                mean = [0.3544, 0.4080, 0.1334]
+                std = [0.0312, 0.0344, 0.0638]
                 
                 
     elif Dataset == 'PlantVillage':
-                data_transforms = {
-            'train': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize([0.467, 0.489, 0.412], [0.177, 0.152, 0.194])
-            ]),
-            'test': transforms.Compose([
-                transforms.Resize(Network_parameters['resize_size']),
-                transforms.CenterCrop(input_size),
-                transforms.ToTensor(),
-                transforms.Normalize([0.467, 0.489, 0.412], [0.177, 0.152, 0.194])
-            ]),
-        }
+                mean = [0.467, 0.489, 0.412]
+                std = [0.177, 0.152, 0.194]
         
         
     elif Dataset == 'DeepWeeds':
-                data_transforms = {
+                mean = [0.379, 0.39, 0.38]
+                std = [0.224, 0.225, 0.223]
+    
+    else:
+        raise RuntimeError('{} Dataset not implemented'.format(Dataset))
+    
+    
+    data_transforms = {
             'train': transforms.Compose([
                 transforms.Resize(Network_parameters['resize_size']),
                 transforms.RandomResizedCrop(input_size,scale=(.8,1.0)),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
-                transforms.Normalize([0.379, 0.39, 0.38], [0.224, 0.225, 0.223])
+                transforms.Normalize(mean=mean, std=std)
             ]),
             'test': transforms.Compose([
                 transforms.Resize(Network_parameters['resize_size']),
                 transforms.CenterCrop(input_size),
                 transforms.ToTensor(),
-                transforms.Normalize([0.379, 0.39, 0.38], [0.224, 0.225, 0.223])
+                transforms.Normalize(mean=mean, std=std)
             ]),
         }
 
-    else:
-        raise RuntimeError('{} Dataset not implemented'.format(Dataset))
     
     return data_transforms

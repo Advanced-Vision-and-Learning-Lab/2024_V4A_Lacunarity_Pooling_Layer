@@ -20,9 +20,12 @@ import torch.nn.functional as F
 import math
 
 
-def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
+def get_feat_size(Params, dataloaders):
     kernel = Params["kernel"]
     stride = Params["stride"]
+    model_name = Params["Model_name"]
+    pooling_layer = Params["pooling_layer"]
+    agg_func = Params["agg_func"]
 
     if model_name == "Net":
         if agg_func == "global":
@@ -74,15 +77,6 @@ def get_feat_size(model_name, Params, pooling_layer, agg_func, dataloaders):
                 num_ftrs = 2208
             else:
                 num_ftrs = 2208
-
-    elif model_name == "efficientnet_lacunarity":
-        if agg_func == "local":
-            feature_height = 7
-            out_channels = 1280
-            pooling_output = math.floor((feature_height - kernel) / stride) + 1
-            num_ftrs = out_channels * pooling_output * pooling_output
-        elif agg_func == "global":
-            num_ftrs = 1280
 
 
     return num_ftrs
