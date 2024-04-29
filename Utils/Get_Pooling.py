@@ -37,7 +37,7 @@ def get_pooling(model_name, Params):
         if poolingLayer == "max":
             pool_layer = nn.MaxPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
         elif poolingLayer == "avg":                                                                                                                                                                                                                            
-            pool_layer = nn.pool_layer2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
+            pool_layer = nn.AvgPool2d(kernel_size=(kernel, kernel), stride =(stride, stride), padding=(padding, padding))
         elif poolingLayer == "L2":                                                                                                                                                                                                                           
             pool_layer = nn.LPPool2d(norm_type=2, kernel_size=(kernel, kernel))
         elif poolingLayer == "Base_Lacunarity":
@@ -51,7 +51,7 @@ def get_pooling(model_name, Params):
         if poolingLayer == "max":
             pool_layer = nn.AdaptiveMaxPool2d((1,1))
         elif poolingLayer == "avg":                                                                                                                                                                                                                            
-            pool_layer = nn.Adaptivepool_layer2d((1, 1))
+            pool_layer = nn.AdaptiveAvgPool2d((1, 1))
         elif poolingLayer == "L2":                                                                                                                                                                                                                           
             pool_layer = nn.LPPool2d(norm_type=2, kernel_size=(7, 7))
         elif poolingLayer == "Base_Lacunarity":
