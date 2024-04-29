@@ -6,17 +6,7 @@ Functions to train/test model
 from __future__ import print_function
 from __future__ import division
 ## PyTorch dependencies
-import torch
 import torch.nn as nn
-
-## Local external libraries
-import torch
-import torch.nn as nn
-import os
-import math
-import timm
-import pdb
-
 
 
 class lacunarity_pooling(nn.Module):

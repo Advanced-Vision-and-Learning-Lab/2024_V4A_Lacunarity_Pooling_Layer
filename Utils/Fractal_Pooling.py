@@ -9,14 +9,6 @@ from __future__ import division
 import torch
 import torch.nn as nn
 
-## Local external libraries
-import torch
-import torch.nn as nn
-import os
-import math
-import timm
-import pdb
-
 class GDCB(nn.Module):
     def __init__(self,mfs_dim=25,nlv_bcd=6):
         super(GDCB,self).__init__()

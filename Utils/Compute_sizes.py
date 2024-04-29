@@ -5,18 +5,6 @@ Functions to train/test model
 ## Python standard libraries
 from __future__ import print_function
 from __future__ import division
-import numpy as np
-import time
-import copy
-
-## PyTorch dependencies
-import torch
-import torch.nn as nn
-
-## Local external libraries
-import pdb
-import os
-import torch.nn.functional as F
 import math
 
 

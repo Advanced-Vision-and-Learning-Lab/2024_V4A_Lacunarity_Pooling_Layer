@@ -5,6 +5,8 @@ Saved_Models/
 *.zip
 *.pyc
 __pycache__/
+*.ipynb_checkpoints/
+*.vscode/
 Utils/__pycache__
 Datasets/BloodMNIST
 Datasets/FashionMNIST

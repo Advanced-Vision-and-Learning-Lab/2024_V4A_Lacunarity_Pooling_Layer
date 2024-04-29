@@ -5,18 +5,10 @@ Functions to train/test model
 ## Python standard libraries
 from __future__ import print_function
 from __future__ import division
-import numpy as np
-import time
-import copy
 
 ## PyTorch dependencies
 import torch
 import torch.nn as nn
-
-## Local external libraries
-from torchvision import models
-import pdb
-import os
 import torch.nn.functional as F
 from Utils.Get_Pooling import get_pooling
 import timm

@@ -22,8 +22,6 @@ from timm.layers import create_classifier
 import torch.nn.functional as F
 from Utils.Timm_Models import densenet161_lacunarity, resnet18_lacunarity, convnext_lacunarity
 from Utils.Compute_sizes import get_feat_size
-import matplotlib.pyplot as plt
-import timm
 
 
 

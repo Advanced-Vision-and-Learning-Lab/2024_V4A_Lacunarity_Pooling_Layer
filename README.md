@@ -71,14 +71,19 @@ https://github.com/Advanced-Vision-and-Learning-Lab/V4A_Lacunarity_Pooling_Layer
 	└── Utils  //utility functions
 		├── Compute_FDR.py  // Compute Fisher Score
 		├── Confusion_mats.py  // Create and plot confusion matrix.
-    		├── Generating_Learning_Curves.py  // Plot training and validation accuracy and error measures.
-    		├── Generate_TSNE_visual.py  // Create TSNE visual for results.
-    		├── Network_functions.py  // Contains functions to initialize, train, and test model. 
-    		├── pytorchtools.py // Function for early stopping.
+		├── Generating_Learning_Curves.py  // Plot training and validation accuracy and error measures.
+		├── Generate_TSNE_visual.py  // Create TSNE visual for results.
+		├── Network_functions.py  // Contains functions to initialize, train, and test model. 
+		├── pytorchtools.py // Function for early stopping.
 		├── CustomNN.py // Contains the shallow neural network and densenet161 model implementation
-		├── Lacunarity_Pooling_Layer.py // Implemented all the lacunarity calculation variants. (Base, DBC, multi-scale)
-		├── Fusion_Model.py // Contains fractal pooling and fusion model
-    		├── Save_Results.py  // Save results from demo script.
+		├── Timm_Models.py // Contains the timm models implementation
+		├── Computer_sizes.py // Function for computing features for fully connected layer
+		├── DBC.py // Compute Differential BoX Counting pooling layer
+		├── Multi_Scale_Lacunarity.py // Compute Multi-scale pooling layer
+		├── Base_Lacunarity.py // Compute Base lacunarity pooling layer
+		├── Lacunarity_Pooling.py // Contains fusion pooling approach for all lacunarity layer
+		├── Fractal_Pooling.py // Contains fractal pooling approach
+    	├── Save_Results.py  // Save results from demo script.
 	└── XAI_Methods  // XAI functions
 		├── xai_methods.py //Function to visualize EigenCAM on feature maps
 ```
