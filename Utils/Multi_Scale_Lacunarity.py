@@ -12,12 +12,12 @@ feature_maps =  {"resnet18_lacunarity": 512,
                 "convnext_lacunarity": 768}
 
 
-class BuildPyramid(nn.Module):
+class MS_Lacunarity(nn.Module):
     def __init__(self, dim=2, eps = 10E-6, model_name='resnet18_lacunarity', num_levels = None, kernel = None, stride = None, padding = None):
 
 
         # inherit nn.module
-        super(BuildPyramid, self).__init__()
+        super(MS_Lacunarity, self).__init__()
         # define layer properties
         self.model_name = model_name
         self.dim = dim
@@ -77,10 +77,6 @@ class BuildPyramid(nn.Module):
 
             #Lacunarity is L_numerator / L_denominator - 1
             L_r = (L_numerator / (L_denominator + self.eps)) - 1
-            lambda_param = 0.5 #boxcox transformation
-            y = (torch.pow(L_r.abs() + 1, lambda_param) - 1) / lambda_param
-
-
             lacunarity_values.append(L_r)
             reference_size = lacunarity_values[0].shape[-2:]
             pyr_images_resized = [T.resize(img, size=reference_size, interpolation="bilinear") for img in lacunarity_values]

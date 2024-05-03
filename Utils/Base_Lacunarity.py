@@ -5,19 +5,19 @@ import pdb
 
 
 class Base_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, model_name=None, scales = None, kernel = None, stride = None, padding = None, bias = False):
+    def __init__(self, dim=2, eps = 10E-6, model_name=None, kernel = None, stride = None, padding = None):
 
         # inherit nn.module
         super(Base_Lacunarity, self).__init__()
 
-        self.bias = bias
+
         # define layer properties
         self.dim = dim
         self.eps = eps
         self.kernel = kernel
         self.stride = stride
         self.padding = padding
-        self.scales = scales
+        
         self.model_name = model_name
         self.normalize = nn.Tanh()
         

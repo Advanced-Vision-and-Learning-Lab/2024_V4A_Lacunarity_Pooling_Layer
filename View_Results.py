@@ -117,8 +117,9 @@ def main(Params):
 
 
         # If parallelized, need to set change model
-        if Params['Parallelize']:
-            model = nn.DataParallel(model)
+        if torch.cuda.device_count() > 1:
+           print("Using", torch.cuda.device_count(), "GPUs!")
+           model = nn.DataParallel(model)
   
         model.load_state_dict(torch.load(sub_dir + 'Best_Weights.pt', map_location=device_loc))
         model = model.to(device)
@@ -239,8 +240,6 @@ def parse_args():
                        help='Input number of levels')
    parser.add_argument('--pooling_layer', type=int, default=5,
                        help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:BuildPyramid, 7:DBC')
-   parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
-                       help='enables bias in Pixel Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
    parser.add_argument('--data_selection', type=int, default=1,
@@ -252,8 +251,6 @@ def parse_args():
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                        help='enables xai interpretability')
-   parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
-                       help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
    parser.add_argument('--train_batch_size', type=int, default=2,

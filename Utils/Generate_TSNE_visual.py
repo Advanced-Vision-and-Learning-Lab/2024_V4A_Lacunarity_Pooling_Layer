@@ -13,7 +13,6 @@ import torch
 from matplotlib import offsetbox
 from Utils.Compute_FDR import Compute_Fisher_Score
 import pdb
-from sklearn.metrics import silhouette_score
 
 def pass_image(x):
     return x

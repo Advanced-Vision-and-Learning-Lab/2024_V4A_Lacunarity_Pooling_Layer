@@ -8,6 +8,7 @@ from __future__ import division
 ## PyTorch dependencies
 import torch
 import torch.nn as nn
+import math
 
 class GDCB(nn.Module):
     def __init__(self,mfs_dim=25,nlv_bcd=6):

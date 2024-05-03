@@ -12,14 +12,13 @@ def Parameters(args):
 
     #use xai interpretability
     xai = args.xai
-    bias = args.bias
     earlystoppping = args.earlystoppping
     
     #Location to store trained models
     #Always add slash (/) after folder name
     folder = args.folder
     pooling_layer_selection = args.pooling_layer
-    pooling_layer_names = {1:'max', 2:'avg', 3:'L2', 4:'fractal', 5:'Base_Lacunarity', 6: 'BuildPyramid', 7: 'DBC'}
+    pooling_layer_names = {1:'max', 2:'avg', 3:'L2', 4:'fractal', 5:'Base_Lacunarity', 6: 'MS_Lacunarity', 7: 'DBC_Lacunarity'}
     pooling_layer = pooling_layer_names[pooling_layer_selection]
 
     agg_func_selection = args.agg_func
@@ -32,9 +31,9 @@ def Parameters(args):
                      2: 'PlantVillage',
                      3: 'DeepWeeds'}
     
-    num_ftrs = {"resnet18_lacunarity": 512,
-                "densenet161_lacunarity": 2208,
-                "convnext_lacunarity": 768}
+    num_ftrs = {"resnet18": 512,
+                "densenet161": 2208,
+                "convnext_tiny": 768}
     
     #Lacunarity Parameters
     kernel = args.kernel
@@ -103,9 +102,6 @@ def Parameters(args):
     TSNE_visual = False
     Num_TSNE_images = 5000
     
-    #Set to True if more than one GPU was used
-    Parallelize_model = False
-    
     ######## ONLY CHANGE PARAMETERS ABOVE ########
     if feature_extraction:
         mode = 'Feature_Extraction'
@@ -113,7 +109,7 @@ def Parameters(args):
         mode = 'Fine_Tuning'
     
     #Location of texture datasets
-    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200/LeavesTex1200',
+    Data_dirs = {'LeavesTex': 'Datasets/LeavesTex1200',
                 'PlantVillage': 'Datasets/PlantVillage/plant_village_classification',
                 'DeepWeeds': 'Datasets/DeepWeeds/rangeland_weeds_australia'}
     
@@ -154,11 +150,11 @@ def Parameters(args):
             'num_ftrs': num_ftrs,
             'Splits': Splits, 'feature_extraction': feature_extraction,
             'use_pretrained': use_pretrained,
-            'xai': xai, 'bias':bias, 
+            'xai': xai,
             'add_bn': add_bn, 'pin_memory': pin_memory, 'scale': scale,
             'degrees': degrees, 'rotation': rotation, 
             'TSNE_visual': TSNE_visual,
-            'Parallelize': Parallelize_model,'Num_TSNE_images': Num_TSNE_images,
+            'Num_TSNE_images': Num_TSNE_images,
             'fig_size': fig_size,'font_size': font_size,
             'channels': channels}
     

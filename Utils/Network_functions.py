@@ -18,9 +18,8 @@ from barbar import Bar
 from Utils.pytorchtools import EarlyStopping
 import pdb
 import os
-from timm.layers import create_classifier
 import torch.nn.functional as F
-from Utils.Timm_Models import densenet161_lacunarity, resnet18_lacunarity, convnext_lacunarity
+from Utils.Timm_Models import backbone_model
 from Utils.Compute_sizes import get_feat_size
 
 
@@ -225,8 +224,7 @@ def test_model(dataloader,model,criterion,device,model_weights=None):
     return test_dict
 
 
-def initialize_model(model_name, num_classes,dataloaders, Params, feature_extract=False,
-                     use_pretrained=False, channels = 3, poolingLayer="max", aggFunc="global"):
+def initialize_model(model_name, num_classes, dataloaders, Params, aggFunc="global"):
     
     # Initialize these variables which will be set in this if statement. Each of these
     # variables is model specific.
@@ -235,28 +233,15 @@ def initialize_model(model_name, num_classes,dataloaders, Params, feature_extrac
     input_size = 0
   
     #Select backbone architecture
-    if model_name == "convnext_lacunarity":
-        model_ft = convnext_lacunarity(num_ftrs=768, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
+    
+    model_ft = backbone_model(num_classes=num_classes, Params=Params, agg_func=aggFunc)
+    num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
+    model_ft.fc = nn.Linear(num_ftrs, num_classes)
+    input_size = 224
 
 
-    elif model_name == "resnet18_lacunarity":
-        model_ft = resnet18_lacunarity(num_ftrs=512, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        num_ftrs = get_feat_size (Params, dataloaders=dataloaders)
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-
-    elif model_name == "densenet161_lacunarity":
-        model_ft = densenet161_lacunarity(num_ftrs=2208, num_classes=num_classes, Params=Params, pooling_layer=poolingLayer, agg_func=aggFunc)
-        num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-
-    else:
-        raise RuntimeError('{} not implemented'.format(model_name))
+    # else:
+    #     raise RuntimeError('{} not implemented'.format(model_name))
     
 
     return model_ft, input_size

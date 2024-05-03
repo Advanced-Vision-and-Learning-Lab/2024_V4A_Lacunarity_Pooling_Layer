@@ -57,12 +57,7 @@ def main(Params):
 
        # Initialize the histogram model for this run
        model_ft, input_size = initialize_model(model_name, num_classes, dataloaders_dict, Params,
-                                               feature_extract=Params['feature_extraction'],
-                                               use_pretrained=Params['use_pretrained'],
-                                               channels = Params["channels"][Dataset],
-                                               poolingLayer = Params["pooling_layer"],
                                                aggFunc = Params["agg_func"])
-
 
 
        # Send the model to GPU if available, use multiple if available
@@ -72,7 +67,7 @@ def main(Params):
        
        model_ft = model_ft.to(device)
 
-      # Print number of trainable parameters (if using ACE/Embeddding, only loss layer has params)
+      # Print number of trainable parameters
        num_params = sum(p.numel() for p in model_ft.parameters() if p.requires_grad)
        num_params_classifier = sum(p.numel() for p in model_ft.fc.parameters() if p.requires_grad)
       
@@ -129,9 +124,7 @@ def parse_args():
    parser.add_argument('--num_levels', type=int, default=2,
                        help='Input number of levels')
    parser.add_argument('--pooling_layer', type=int, default=5,
-                       help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:BuildPyramid, 7:DBC')
-   parser.add_argument('--bias', default=True, action=argparse.BooleanOptionalAction,
-                       help='enables bias in Pixel Lacunarity')
+                       help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:MS_Lacunarity, 7:DBC_Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
    parser.add_argument('--data_selection', type=int, default=1,
@@ -143,8 +136,6 @@ def parse_args():
                        help='Flag to use pretrained model from ImageNet or train from scratch (default: True)')
    parser.add_argument('--xai', default=False, action=argparse.BooleanOptionalAction,
                        help='enables xai interpretability')
-   parser.add_argument('--Parallelize', default=True, action=argparse.BooleanOptionalAction,
-                       help='enables parallel functionality')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
    parser.add_argument('--train_batch_size', type=int, default=2,
@@ -159,7 +150,7 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
+   parser.add_argument('--model', type=str, default='convnext_tiny',
                        help='backbone architecture to use (default: 0.01)')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')

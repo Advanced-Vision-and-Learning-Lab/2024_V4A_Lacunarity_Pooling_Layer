@@ -29,7 +29,7 @@ def get_feat_size(Params, dataloaders):
                 pooling_output = math.floor((conv_parameters - kernel) / stride) + 1
                 num_ftrs = out_channels * pooling_output * pooling_output
     
-    elif model_name == "resnet18_lacunarity":
+    elif model_name == "resnet18":
         if agg_func == "local":
             feature_height = 7
             out_channels = 512
@@ -41,7 +41,7 @@ def get_feat_size(Params, dataloaders):
             else:
                 num_ftrs = 512
     
-    elif model_name == "convnext_lacunarity":
+    elif model_name == "convnext_tiny":
         
         if agg_func == "local":
             feature_height = 7
@@ -54,7 +54,7 @@ def get_feat_size(Params, dataloaders):
             else:
                 num_ftrs = 768
 
-    elif model_name == "densenet161_lacunarity":
+    elif model_name == "densenet161":
         if agg_func == "local":
             feature_height = 7
             out_channels = 2208

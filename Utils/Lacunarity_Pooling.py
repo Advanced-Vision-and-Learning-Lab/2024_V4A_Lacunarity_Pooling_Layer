@@ -15,7 +15,6 @@ class lacunarity_pooling(nn.Module):
         super(lacunarity_pooling, self).__init__()
         self.lacunarity_layer = lacunarity_layer
         self.model_name = Params["Model_name"]
-        self.dense_feature_dim = Params["num_ftrs"][self.model_name]
         self.dataset = Params["Dataset"]
         self.num_classes = Params["num_classes"][self.dataset]
         self.feature_extraction = Params['feature_extraction']
