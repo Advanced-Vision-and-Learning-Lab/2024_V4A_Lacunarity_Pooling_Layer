@@ -12,7 +12,7 @@ Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This cod
 
 [`IEEE Xplore (CVPRW, TBD)`]()
 
-[`arXiv`]()
+[`arXiv`](https://arxiv.org/abs/2404.16268)
 
 [`BibTeX`]()
 
