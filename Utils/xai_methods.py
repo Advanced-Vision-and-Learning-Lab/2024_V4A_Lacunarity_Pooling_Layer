@@ -5,6 +5,8 @@ from pytorch_grad_cam import EigenCAM
 from PIL import Image
 import torchvision.transforms as transforms
 import pdb
+import random
+import os
 
 def get_attributions(Params, dataloaders, model):
     NumRuns = Params['Splits'][Params['Dataset']]
@@ -24,50 +26,40 @@ def get_attributions(Params, dataloaders, model):
                                                      split+1)
 
         # Specify target layers based on model and configuration
-        if fractal and model_name == "resnet18_lacunarity":
+        if fractal and model_name == "resnet18":
             target_layers = model.module.features[-1]
-        elif fusion and model_name == "resnet18_lacunarity":
+        elif fusion and model_name == "resnet18":
             target_layers = model.module.features[-1]
-        elif model_name == "resnet18_lacunarity":
+        elif model_name == "resnet18":
             target_layers = [model.module.layer4[-1]]
-        elif model_name == "convnext_lacunarity":
+        elif model_name == "convnext_tiny":
             target_layers = [model.module.features[-1]]
-        elif fusion and model_name == "densenet161_lacunarity":
+        elif fusion and model_name == "densenet161":
             target_layers = [model.module.features.norm5 ]
-        elif model_name == "densenet161_lacunarity":
+        elif model_name == "densenet161":
             target_layers = [model.module.features[-1]]
 
         if parallel:
             target_layers = target_layers
         else:
             target_layers = [model.avgpool]
+
+
+        # Get a list of image paths dynamically from the root directory
+        dataset = Params["Dataset"]
+        root_dir = Params['data_dir'][dataset]
+        image_paths = []
+
+        for subdir, dirs, files in os.walk(root_dir):
+            for file in files:
+                if file.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    image_paths.append(os.path.join(subdir, file))
         
-        
-        if dataset == "PlantVillage":
-            image_paths = [
-                "Datasets/PlantVillage/plant_village_classification/Corn___Northern_Leaf_Blight/image (104).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Apple___Cedar_apple_rust/image (105).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Tomato___Late_blight/image (1022).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Squash___Powdery_mildew/image (1103).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Tomato___Bacterial_spot/image (1020).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Potato___Late_blight/image (124).JPG",
-                "Datasets/PlantVillage/plant_village_classification/Corn___Cercospora_leaf_spot Gray_leaf_spot/image (108).JPG"
-            ]
-        elif dataset == "DeepWeeds":
-            image_paths = ["Datasets/DeepWeeds/rangeland_weeds_australia/prickly_acacia/20170727-111748-3.jpg",
-                "Datasets/DeepWeeds/rangeland_weeds_australia/parthenium/20170906-092043-1.jpg",
-                "Datasets/DeepWeeds/rangeland_weeds_australia/siam_weed/20171113-061016-1.jpg",
-                "Datasets/DeepWeeds/rangeland_weeds_australia/snake_weed/20170207-141531-0.jpg",
-                 "Datasets/DeepWeeds/rangeland_weeds_australia/chinee_apple/20161207-110837-0.jpg"
-            ]
-        elif dataset == "LeavesTex":
-            image_paths = ["Datasets/LeavesTex1200/LeavesTex1200/c20_018_a_w02.png",
-                "Datasets/LeavesTex1200/LeavesTex1200/c11_002_a_w03.png",
-                "Datasets/LeavesTex1200/LeavesTex1200/c06_017_a_w03.png",
-                "Datasets/LeavesTex1200/LeavesTex1200/c04_017_a_w02.png"
-            ]
+        #Choose upto 10 images
+        num_images_to_select = min(len(image_paths), 10)
+        selected_image_paths = random.sample(image_paths, num_images_to_select)
             
-        for i, image_path in enumerate(image_paths):
+        for i, image_path in enumerate(selected_image_paths):
             # Load the original image and resize
             original_image = Image.open(image_path)
             original_image_resized = original_image.resize((224, 224))

@@ -151,7 +151,7 @@ def parse_args():
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
    parser.add_argument('--model', type=str, default='convnext_tiny',
-                       help='backbone architecture to use (default: 0.01)')
+                       help='backbone architecture to use (default: 0.01). Model choices = resnet18, densenet161, convnext_tiny')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')
    args = parser.parse_args()

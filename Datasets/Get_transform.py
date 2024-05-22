@@ -57,4 +57,5 @@ def get_transform(Network_parameters, input_size=224):
         }
 
     
+    
     return data_transforms

@@ -30,7 +30,7 @@ from Prepare_Data import Prepare_DataLoaders
 from Utils.Confusion_mats import plot_confusion_matrix, plot_avg_confusion_matrix
 from Utils.Generate_Learning_Curves import Plot_Learning_Curves
 from Datasets.Pytorch_Dataset_Names import Get_Class_Names
-from XAI_methods.xai_methods import *
+from Utils.xai_methods import *
 
 
 plt.ioff()
