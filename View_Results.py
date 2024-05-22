@@ -98,12 +98,7 @@ def main(Params):
         dataloaders_dict = Prepare_DataLoaders(Params, split)
     
         model, input_size = initialize_model(model_name, num_classes, dataloaders_dict, Params,
-                                                feature_extract=Params['feature_extraction'],
-                                                use_pretrained=Params['use_pretrained'],
-                                                channels = Params["channels"][Dataset],
-                                                poolingLayer = Params["pooling_layer"],
-                                                aggFunc = Params["agg_func"])
-
+                                               aggFunc = Params["agg_func"])
     
         # Set device to cpu or gpu (if available)
         device_loc = torch.device(device)
