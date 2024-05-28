@@ -83,9 +83,9 @@ https://github.com/Advanced-Vision-and-Learning-Lab/V4A_Lacunarity_Pooling_Layer
 		├── Base_Lacunarity.py // Compute Base lacunarity pooling layer
 		├── Lacunarity_Pooling.py // Contains fusion pooling approach for all lacunarity layer
 		├── Fractal_Pooling.py // Contains fractal pooling approach
-    	├── Save_Results.py  // Save results from demo script.
-	└── XAI_Methods  // XAI functions
 		├── xai_methods.py //Function to visualize EigenCAM on feature maps
+    	├── Save_Results.py  // Save results from demo script.
+		
 ```
 
 ## License
