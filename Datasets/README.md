@@ -6,7 +6,7 @@ to ensure the code works. If any of these datasets are used,
 please cite the appropiate sources (papers, repositories, etc.) as mentioned
 on the webpages and provided here.
 
-## LeavesTex1200 dataset [[`BibTeX`]()]
+## LeavesTex1200 dataset [[`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-leavestex1200)]
 To download the LeavesTex1200 dataset. Download the <a href="http://scg-turing.ifsc.usp.br/data/bases/LeavesTex1200.zip">download.zip</a>.
 The structure of the `LeavesTex1200` folder is as follows:
 ```
@@ -34,14 +34,20 @@ If you use this dataset in your research, please cite the following paper:
 }
 ```
 
-## PlantVillage dataset [[`BibTeX`]()]
-To download the PlantVillage dataset. Download the <a href="">download.zip</a>.
+## PlantVillage dataset [[`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-plantvillage)]
+To download the PlantVillage dataset. Download the dataset through <a href="https://github.com/Project-AgML/AgML">AgML</a>. If you use AgML in your research or project, please cite it as shown <a href="https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-agml">below</a>. 
+
+``` python
+import agml
+loader = agml.data.AgMLDataLoader('plant_village_classification', dataset_path="Datasets/PlantVillage")
+```
+
 The structure of the `PlantVillage` folder is as follows:
 ```
 └── root dir
     ├── PlantVillage
-    ├── plant_village_classification
-    	├── Classes
+    	├── plant_village_classification
+    		├── Classes
 ``` 
 
 ## <a name="CitingPlantVillage"></a>Citing PlantVillage
@@ -58,8 +64,13 @@ If you use this dataset in your research, please cite the following paper:
 }
 ```
 
-## DeepWeeds dataset [[`BibTeX`]()]
-To download the DeepWeeds dataset. Download the <a href="https://github.com/jangsoopark/AConvNet-pytorch/releases/download/v2.2.0/dataset.zip">download.zip</a>.
+## DeepWeeds dataset [[`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-deepweeds)]
+To download the DeepWeeds dataset. Download the dataset through <a href="https://github.com/Project-AgML/AgML">AgML</a>. <a href="https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-agml">below</a>. 
+
+``` python
+import agml
+loader = agml.data.AgMLDataLoader('rangeland_weeds_australia', dataset_path="Datasets/DeepWeeds")
+```
 The structure of the `DeepWeeds` folder is as follows:
 ```
 └── root dir
@@ -101,3 +112,19 @@ If you use this dataset in your research, please cite the following paper:
   doi = "10.1038/s41598-018-38343-3"
 }
 ```
+
+## <a name="CitingAgML"></a>Citing AgML
+
+**BibTex:**
+```
+@misc{joshi2021agml,
+  author = {Amogh Joshi et al.},
+  title = {AgML},
+  year = {2021},
+  month = {November 5},
+  publisher = {GitHub},
+  url = {https://github.com/Project-AgML/AgML}
+}
+
+```
+
