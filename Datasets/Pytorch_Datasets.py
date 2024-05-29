@@ -25,15 +25,12 @@ class PlantVillage(Dataset):
         self._root_path = self.images.dataset_root
         self._image_files = sorted(nested_file_list(self._root_path))
         self.classes = self.images.classes
-        # Map class names to their corresponding integer values
         self.class_to_num = self.images.class_to_num
-        # Extract class names from file paths and map them to integer labels
         self.targets = [self.class_to_num[os.path.basename(os.path.dirname(file_path))] for file_path in self._image_files]
 
     def __getitem__(self, index):
         image_path = self._image_files[index]
-        image = Image.open(image_path).convert('RGB')
-        
+        image = Image.open(image_path).convert('RGB')        
         target = self.targets[index]
 
         if self.transform is not None:

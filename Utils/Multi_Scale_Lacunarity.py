@@ -7,27 +7,26 @@ import kornia.geometry.transform as T
 
 
 global feature_maps
-feature_maps =  {"resnet18_lacunarity": 512,
-                "densenet161_lacunarity": 2208,
-                "convnext_lacunarity": 768}
+feature_maps =  {"resnet18": 512,
+                "densenet161": 2208,
+                "convnext_tiny": 768}
 
 
 class MS_Lacunarity(nn.Module):
-    def __init__(self, dim=2, eps = 10E-6, model_name='resnet18_lacunarity', num_levels = None, kernel = None, stride = None, padding = None):
-
-
+    def __init__(self, dim=2, eps = 10E-6, model_name='resnet18_lacunarity', num_ftrs=None, num_levels = None, kernel = None, stride = None, padding = None):
         # inherit nn.module
         super(MS_Lacunarity, self).__init__()
         # define layer properties
         self.model_name = model_name
         self.dim = dim
         self.eps = eps
+        self.num_ftrs = num_ftrs
         self.kernel = kernel
         self.stride = stride
         self.padding = padding
         self.num_levels = num_levels
         self.normalize = nn.Tanh()
-        self.conv1x1 = nn.Conv2d(feature_maps[self.model_name]*self.num_levels, feature_maps[self.model_name], kernel_size=1, groups = feature_maps[self.model_name])
+        self.conv1x1 = nn.Conv2d(self.num_ftrs*self.num_levels, self.num_ftrs, kernel_size=1, groups = self.num_ftrs)
 
         if self.kernel is None:
             if self.dim == 1:

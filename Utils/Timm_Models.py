@@ -24,7 +24,7 @@ class backbone_model(nn.Module):
         self.feature_extraction = Params["feature_extraction"]
         self.set_parameter_requires_grad()
         
-        self.avgpool = get_pooling(model_name, Params)
+        self.avgpool = get_pooling(model_name, num_ftrs, Params)
         
         self.fc = nn.Linear(num_ftrs, num_classes)
         self.agg_func = agg_func
@@ -33,8 +33,7 @@ class backbone_model(nn.Module):
 
     def forward(self,x):
         features = self.model_dense(x)
-        out = F.relu(features, inplace=True)
-        out = self.avgpool(out)
+        out = self.avgpool(features)
         out = torch.flatten(out, 1)
         out = self.fc(out)
         return out

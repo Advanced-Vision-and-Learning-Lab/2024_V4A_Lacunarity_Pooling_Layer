@@ -58,22 +58,24 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
     
                 # Iterate over data.
                 for idx, (inputs, labels) in enumerate(Bar(dataloaders[phase])):
+                    #torch.autograd.set_detect_anomaly(True)
                     inputs = inputs.to(device)
                     inputs.requires_grad = True
                     labels = labels.to(device)
+                    #index = index.to(device)
   
                     # zero the parameter gradients
                     optimizer.zero_grad()
                   
                     # forward
                     # track history if only in train
-                    with torch.set_grad_enabled(phase == 'train'):
-                        
+                    with torch.set_grad_enabled(phase == 'train'):                        
                         # Get model outputs and calculate loss
                         outputs = model(inputs)
                         labels=labels.squeeze().long()
+                        # labels = labels.clone().detach()
                         loss = criterion(outputs, labels).mean()
-                       
+                        loss = loss.clone()
                      
                         _, preds = torch.max(outputs, 1)
         
@@ -160,6 +162,7 @@ def train_model(model, dataloaders, criterion, optimizer, device, patience,
                   'train_error_track': train_loss,'best_epoch': best_epoch}
     
     return train_dict
+
 
 def set_parameter_requires_grad(model, feature_extracting):
     if feature_extracting:
