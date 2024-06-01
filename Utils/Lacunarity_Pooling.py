@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import division
 ## PyTorch dependencies
 import torch.nn as nn
+import pdb
 
 
 class lacunarity_pooling(nn.Module):

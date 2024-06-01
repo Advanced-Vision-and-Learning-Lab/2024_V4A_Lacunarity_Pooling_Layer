@@ -55,7 +55,7 @@ class MS_Lacunarity(nn.Module):
                 self.gap_layer = nn.AvgPool3d((kernel[0], kernel[1], kernel[2]), stride=(stride[0], stride[1], stride[2]), padding=(0, 0, 0))
              
             else:
-                raise RuntimeError('Invalid dimension for global lacunarity layer')
+                raise RuntimeError('Invalid dimension for local lacunarity layer')
 
     
     def forward(self,x):

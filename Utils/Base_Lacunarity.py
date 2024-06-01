@@ -49,12 +49,11 @@ class Base_Lacunarity(nn.Module):
                 self.gap_layer = nn.AvgPool3d((kernel[0], kernel[1], kernel[2]), stride=(stride[0], stride[1], stride[2]), padding=(0, 0, 0))
              
             else:
-                raise RuntimeError('Invalid dimension for global lacunarity layer')
+                raise RuntimeError('Invalid dimension for local lacunarity layer')
 
         
     def forward(self,x):
         #Compute squared tensor
-        lacunarity_values = []
         x = ((self.normalize(x) + 1)/2)* 255
         squared_x_tensor = x ** 2
 
@@ -69,6 +68,4 @@ class Base_Lacunarity(nn.Module):
 
         #Lacunarity is L_numerator / L_denominator - 1
         L_r = (L_numerator / (L_denominator + self.eps)) - 1
-        lacunarity_values.append(L_r)
-        result = torch.cat(lacunarity_values, dim=1)
-        return result
+        return L_r

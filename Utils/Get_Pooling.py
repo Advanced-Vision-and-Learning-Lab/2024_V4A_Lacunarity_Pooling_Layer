@@ -28,7 +28,6 @@ def get_pooling(model_name, num_ftrs, Params):
     kernel = Params["kernel"]
     stride = Params["stride"]
     padding = Params["conv_padding"]
-    scales = Params["scales"]
     num_levels = Params["num_levels"]
     poolingLayer = Params["pooling_layer"]
     aggFunc = Params["agg_func"]

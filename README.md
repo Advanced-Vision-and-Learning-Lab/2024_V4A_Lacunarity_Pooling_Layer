@@ -95,19 +95,19 @@ file in the root directory of this source tree.
 
 This product is Copyright (c) 2023 A. Mohan and J. Peeples. All rights reserved.
 
-## <a name="CitingLacunarity"></a>Citing Lacunarity Pooling Layers for Plant Image Texture Analysis
+## <a name="CitingLacunarity"></a>Citing Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis
 
 If you use the code, please cite the following 
 reference using the following entry.
 
 **Plain Text:**
 
-A. Mohan and J. Peeples, “Lacunarity Pooling Layers for Plant Image Texture Analysis”, Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops, 2024, in Press.
+A. Mohan and J. Peeples, “Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis”, Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops, 2024, in Press.
 
 **BibTex:**
 ```
 @inproceedings{mohan2024lacunarity,
-  title={Lacunarity Pooling Layers for Plant Image Texture Analysis},
+  title={Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis},
   author={Mohan, Akshatha and Peeples, Joshua},
   booktitle={2024 Agriculture-vision IEEE/CVF CVPR 2024},
   pages={950-953},

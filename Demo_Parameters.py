@@ -39,7 +39,6 @@ def Parameters(args):
     kernel = args.kernel
     stride = args.stride
     conv_padding = args.padding
-    scales = args.scales
     num_levels = args.num_levels
     
     #Flag for feature extraction. False, train whole model. True, only update
@@ -141,7 +140,7 @@ def Parameters(args):
             'Dataset': Dataset, 'data_dir': data_dir,
             'num_workers': num_workers, 'mode': mode,
             'kernel': args.kernel, 'stride': args.stride, 'conv_padding': args.padding,
-            'scales': args.scales, 'num_levels': args.num_levels,
+            'num_levels': args.num_levels,
             'earlystoppping': args.earlystoppping,
             'lr': lr,'step_size': step_size,'gamma': gamma,
             'batch_size' : batch_size, 'num_epochs': num_epochs, 

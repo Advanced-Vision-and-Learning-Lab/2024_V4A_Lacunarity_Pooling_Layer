@@ -106,48 +106,6 @@ def plot_avg_confusion_matrix(cm, classes,
         print("Normalized confusion matrix")
     else:
         print('Confusion matrix, without normalization')
-    
-    classes =  [
-    'Apple_scab',
-    'Apple Black_rot',
-    'Apple Cedar_apple_rust',
-    'Apple healthy',
-    'Background_without_leaves',
-    'Blueberry healthy',
-    'Cherry Powdery_mildew',
-    'Cherry healthy',
-    'Corn Cercospora_leaf_spot',
-    'Corn Common_rust',
-    'Corn Northern_Leaf_Blight',
-    'Corn healthy',
-    'Grape Black_rot',
-    'Grape Esca',
-    'Grape Leaf_blight',
-    'Grape healthy',
-    'Orange Haunglongbing',
-    'Peach Bacterial_spot',
-    'Peach healthy',
-    'Pepper, bell Bacterial_spot',
-    'Pepper, bell healthy',
-    'Potato Early_blight',
-    'Potato Late_blight',
-    'Potato healthy',
-    'Raspberry healthy',
-    'Soybean healthy',
-    'Squash Powdery_mildew',
-    'Strawberry Leaf_scorch',
-    'Strawberry healthy',
-    'Tomato Bacterial_spot',
-    'Tomato Early_blight',
-    'Tomato Late_blight',
-    'Tomato Leaf_Mold',
-    'Tomato Septoria_leaf_spot',
-    'Tomato Spider_mites',
-    'Tomato Target_Spot',
-    'Tomato_Yellow_Leaf_Curl_Virus',
-    'Tomato_mosaic_virus',
-    'Tomato healthy'
-]
 
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, fontsize = fontsize)

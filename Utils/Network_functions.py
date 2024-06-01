@@ -238,14 +238,11 @@ def initialize_model(model_name, num_classes, dataloaders, Params, aggFunc="glob
     #Select backbone architecture
     
     model_ft = backbone_model(num_classes=num_classes, Params=Params, agg_func=aggFunc)
-    num_ftrs = get_feat_size(Params, dataloaders=dataloaders)
+    features = model_ft.fc.in_features
+    num_ftrs = get_feat_size(Params, dataloaders=dataloaders, features=features)
     model_ft.fc = nn.Linear(num_ftrs, num_classes)
     input_size = 224
 
-
-    # else:
-    #     raise RuntimeError('{} not implemented'.format(model_name))
-    
 
     return model_ft, input_size
 

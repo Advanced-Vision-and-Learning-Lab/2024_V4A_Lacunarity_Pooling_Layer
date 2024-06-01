@@ -229,15 +229,13 @@ def parse_args():
                        help='Input stride size')
    parser.add_argument('--padding', type=int, default=0,
                        help='Input padding size')
-   parser.add_argument('--scales', type=float, nargs='+', default=[1],
-                   help='Input scales')
    parser.add_argument('--num_levels', type=int, default=2,
                        help='Input number of levels')
    parser.add_argument('--pooling_layer', type=int, default=5,
-                       help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:BuildPyramid, 7:DBC')
+                       help='pooling layer selection: 1:max, 2:avg, 3:L2, 4:fractal, 5:Base_Lacunarity, 6:MS_Lacunarity, 7:DBC_Lacunarity')
    parser.add_argument('--agg_func', type=int, default=1,
                        help='agg func: 1:global, 2:local')
-   parser.add_argument('--data_selection', type=int, default=1,
+   parser.add_argument('--data_selection', type=int, default=3,
                        help='Dataset selection: 1:LeavesTex1200, 2:PlantVillage, 3:DeepWeeds')
    parser.add_argument('--feature_extraction', default=True, action=argparse.BooleanOptionalAction,
                        help='Flag for feature extraction. False, train whole model. True, only update \
@@ -248,7 +246,7 @@ def parse_args():
                        help='enables xai interpretability')
    parser.add_argument('--earlystoppping', type=int, default=10,
                        help='early stopping for training')
-   parser.add_argument('--train_batch_size', type=int, default=2,
+   parser.add_argument('--train_batch_size', type=int, default=128,
                        help='input batch size for training (default: 128)')
    parser.add_argument('--val_batch_size', type=int, default=128,
                        help='input batch size for validation (default: 512)')
@@ -260,8 +258,8 @@ def parse_args():
                        help='Resize the image before center crop. (default: 256)')
    parser.add_argument('--lr', type=float, default=0.01,
                        help='learning rate (default: 0.01)')
-   parser.add_argument('--model', type=str, default='resnet18_lacunarity',
-                       help='backbone architecture to use (default: 0.01)')
+   parser.add_argument('--model', type=str, default='resnet18',
+                       help='backbone architecture to use (default: 0.01). Model choices = resnet18, densenet161, convnext_tiny.fb_in22k')
    parser.add_argument('--use-cuda', action='store_true', default=True,
                        help='enables CUDA training')
    args = parser.parse_args()
