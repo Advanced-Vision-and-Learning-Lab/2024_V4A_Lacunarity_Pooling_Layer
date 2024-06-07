@@ -14,7 +14,7 @@ Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This cod
 
 [`arXiv`](https://arxiv.org/abs/2404.16268)
 
-[`BibTeX`]()
+[`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main#citing-lacunarity-pooling-layers-for-plant-image-classification-using-texture-analysis)
 
 In this repository, we provide the paper and code for the "Lacunarity Pooling Layers for Plant Image Classification using Texture Analysis."
 
