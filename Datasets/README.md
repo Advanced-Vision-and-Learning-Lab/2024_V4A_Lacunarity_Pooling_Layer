@@ -65,7 +65,7 @@ If you use this dataset in your research, please cite the following paper:
 ```
 
 ## DeepWeeds dataset [[`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-deepweeds)]
-To download the DeepWeeds dataset. Download the dataset through <a href="https://github.com/Project-AgML/AgML">AgML</a>. <a href="https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-agml">below</a>. 
+To download the DeepWeeds dataset. Download the dataset through <a href="https://github.com/Project-AgML/AgML">AgML</a>. If you use AgML in your research or project, please cite it as shown <a href="https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main/Datasets#citing-agml">below</a>. 
 
 ``` python
 import agml
