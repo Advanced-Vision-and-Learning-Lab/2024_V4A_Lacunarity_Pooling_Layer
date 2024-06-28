@@ -12,7 +12,7 @@ Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This cod
 
 [`IEEE Xplore (CVPRW, TBD)`]()
 
-[`arXiv`](https://arxiv.org/abs/2404.16268)
+[`arXiv`](https://openaccess.thecvf.com/content/CVPR2024W/Vision4Ag/html/Mohan_Lacunarity_Pooling_Layers_for_Plant_Image_Classification_using_Texture_Analysis_CVPRW_2024_paper.html)
 
 [`BibTeX`](https://github.com/Advanced-Vision-and-Learning-Lab/2024_V4A_Lacunarity_Pooling_Layer/tree/main#citing-lacunarity-pooling-layers-for-plant-image-classification-using-texture-analysis)
 
