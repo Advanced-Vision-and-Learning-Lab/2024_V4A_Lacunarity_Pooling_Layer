@@ -74,7 +74,7 @@ class DataSplit:
                   test_batch_size=4,collate_fn = None):
         logging.debug('Initializing train-validation-test dataloaders')
         
-        if val_batch_size is not None:
+        if val_batch_size is None:
             self.train_loader = self.get_train_loader(batch_size=batch_size, 
                                                       num_workers=num_workers,
                                                       collate_fn = collate_fn)
