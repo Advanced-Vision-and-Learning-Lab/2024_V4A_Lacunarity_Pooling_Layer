@@ -10,7 +10,7 @@ Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This cod
 [`Zendo`](https://zenodo.org/records/11561363). 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11561363.svg)]
 
-[`IEEE Xplore (CVPRW, TBD)`]()
+[`IEEE Xplore (CVPRW)`](https://openaccess.thecvf.com/content/CVPR2024W/Vision4Ag/papers/Mohan_Lacunarity_Pooling_Layers_for_Plant_Image_Classification_using_Texture_Analysis_CVPRW_2024_paper.pdf)
 
 [`arXiv`](https://openaccess.thecvf.com/content/CVPR2024W/Vision4Ag/html/Mohan_Lacunarity_Pooling_Layers_for_Plant_Image_Classification_using_Texture_Analysis_CVPRW_2024_paper.html)
 
