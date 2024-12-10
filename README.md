@@ -5,7 +5,7 @@ _Akshatha Mohan and Joshua Peeples_
 
 ![Fig1_Workflow](Images/overviewimage.png)
 
-Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples. This code's public release is a work-in-progress and will be cleaned up following submissions to arXiv and CVPR Vision for Agriculture Workshop
+Note: If this code is used, cite it: Akshatha Mohan and Joshua Peeples.
 
 [`Zendo`](https://zenodo.org/records/11561363). 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11561363.svg)]
